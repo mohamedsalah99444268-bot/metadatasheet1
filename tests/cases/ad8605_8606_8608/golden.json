@@ -1,0 +1,322 @@
+{
+  "document": {
+    "source_file": "input.pdf",
+    "manufacturer": "Analog Devices",
+    "base_part": "AD8605/AD8606/AD8608",
+    "document_title": "Precision, Low Noise, CMOS, Rail-to-Rail, Input/Output Operational Amplifiers"
+  },
+  "must_have": {
+    "manufacturer": "Analog Devices",
+    "base_part": "AD8605/AD8606/AD8608",
+    "qualified_variants": [],
+    "orderable_parts": [
+      {
+        "mpn": "AD8605ACBZ-REEL7",
+        "status": "Active",
+        "package_code": "CB-5-1",
+        "package_name": "5-Ball WLCSP",
+        "normalized_package": "WLCSP-5",
+        "pin_count": 5,
+        "package_quantity": 0,
+        "carrier": "REEL7",
+        "rohs": true,
+        "lead_finish": "",
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": ["A1J"]
+      },
+      {
+        "mpn": "AD8605ARTZ-R2",
+        "status": "Active",
+        "package_code": "RJ-5",
+        "package_name": "5-Lead SOT-23",
+        "normalized_package": "SOT-23-5",
+        "pin_count": 5,
+        "package_quantity": 0,
+        "carrier": "R2",
+        "rohs": true,
+        "lead_finish": "",
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": ["B3A#"]
+      },
+      {
+        "mpn": "AD8605ARTZ-REEL",
+        "status": "Active",
+        "package_code": "RJ-5",
+        "package_name": "5-Lead SOT-23",
+        "normalized_package": "SOT-23-5",
+        "pin_count": 5,
+        "package_quantity": 0,
+        "carrier": "REEL",
+        "rohs": true,
+        "lead_finish": "",
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": ["B3A#"]
+      },
+      {
+        "mpn": "AD8605ARTZ-REEL7",
+        "status": "Active",
+        "package_code": "RJ-5",
+        "package_name": "5-Lead SOT-23",
+        "normalized_package": "SOT-23-5",
+        "pin_count": 5,
+        "package_quantity": 0,
+        "carrier": "REEL7",
+        "rohs": true,
+        "lead_finish": "",
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": ["B3A#"]
+      },
+      {
+        "mpn": "AD8606ARM-REEL",
+        "status": "Active",
+        "package_code": "RM-8",
+        "package_name": "8-Lead MSOP",
+        "normalized_package": "MSOP-8",
+        "pin_count": 8,
+        "package_quantity": 0,
+        "carrier": "REEL",
+        "rohs": false,
+        "lead_finish": "",
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": ["B6A"]
+      },
+      {
+        "mpn": "AD8606ARMZ-R7",
+        "status": "Active",
+        "package_code": "RM-8",
+        "package_name": "8-Lead MSOP",
+        "normalized_package": "MSOP-8",
+        "pin_count": 8,
+        "package_quantity": 0,
+        "carrier": "R7",
+        "rohs": true,
+        "lead_finish": "",
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": ["B6A#"]
+      },
+      {
+        "mpn": "AD8606ARMZ-REEL",
+        "status": "Active",
+        "package_code": "RM-8",
+        "package_name": "8-Lead MSOP",
+        "normalized_package": "MSOP-8",
+        "pin_count": 8,
+        "package_quantity": 0,
+        "carrier": "REEL",
+        "rohs": true,
+        "lead_finish": "",
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": ["B6A#"]
+      },
+      {
+        "mpn": "AD8606ARZ",
+        "status": "Active",
+        "package_code": "R-8",
+        "package_name": "8-Lead SOIC_N",
+        "normalized_package": "SOIC-8",
+        "pin_count": 8,
+        "package_quantity": 0,
+        "carrier": "",
+        "rohs": true,
+        "lead_finish": "",
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": []
+      },
+      {
+        "mpn": "AD8606ARZ-REEL",
+        "status": "Active",
+        "package_code": "R-8",
+        "package_name": "8-Lead SOIC_N",
+        "normalized_package": "SOIC-8",
+        "pin_count": 8,
+        "package_quantity": 0,
+        "carrier": "REEL",
+        "rohs": true,
+        "lead_finish": "",
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": []
+      },
+      {
+        "mpn": "AD8606ARZ-REEL7",
+        "status": "Active",
+        "package_code": "R-8",
+        "package_name": "8-Lead SOIC_N",
+        "normalized_package": "SOIC-8",
+        "pin_count": 8,
+        "package_quantity": 0,
+        "carrier": "REEL7",
+        "rohs": true,
+        "lead_finish": "",
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": []
+      },
+      {
+        "mpn": "AD8606ACBZ-REEL7",
+        "status": "Active",
+        "package_code": "CB-8-1",
+        "package_name": "8-Ball WLCSP",
+        "normalized_package": "WLCSP-8",
+        "pin_count": 8,
+        "package_quantity": 0,
+        "carrier": "REEL7",
+        "rohs": true,
+        "lead_finish": "",
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": ["B6A#"]
+      },
+      {
+        "mpn": "AD8608ARZ",
+        "status": "Active",
+        "package_code": "R-14",
+        "package_name": "14-Lead SOIC_N",
+        "normalized_package": "SOIC-14",
+        "pin_count": 14,
+        "package_quantity": 0,
+        "carrier": "",
+        "rohs": true,
+        "lead_finish": "",
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": []
+      },
+      {
+        "mpn": "AD8608ARZ-REEL",
+        "status": "Active",
+        "package_code": "R-14",
+        "package_name": "14-Lead SOIC_N",
+        "normalized_package": "SOIC-14",
+        "pin_count": 14,
+        "package_quantity": 0,
+        "carrier": "REEL",
+        "rohs": true,
+        "lead_finish": "",
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": []
+      },
+      {
+        "mpn": "AD8608ARZ-REEL7",
+        "status": "Active",
+        "package_code": "R-14",
+        "package_name": "14-Lead SOIC_N",
+        "normalized_package": "SOIC-14",
+        "pin_count": 14,
+        "package_quantity": 0,
+        "carrier": "REEL7",
+        "rohs": true,
+        "lead_finish": "",
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": []
+      },
+      {
+        "mpn": "AD8608ARUZ",
+        "status": "Active",
+        "package_code": "RU-14",
+        "package_name": "14-Lead TSSOP",
+        "normalized_package": "TSSOP-14",
+        "pin_count": 14,
+        "package_quantity": 0,
+        "carrier": "",
+        "rohs": true,
+        "lead_finish": "",
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": []
+      },
+      {
+        "mpn": "AD8608ARUZ-REEL",
+        "status": "Active",
+        "package_code": "RU-14",
+        "package_name": "14-Lead TSSOP",
+        "normalized_package": "TSSOP-14",
+        "pin_count": 14,
+        "package_quantity": 0,
+        "carrier": "REEL",
+        "rohs": true,
+        "lead_finish": "",
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": []
+      }
+    ]
+  },
+  "nice_to_have": {
+    "device_family": {
+      "parts": ["AD8605", "AD8606", "AD8608"],
+      "category": "Operational amplifier family"
+    },
+    "description": "Precision, low noise, CMOS, rail-to-rail input/output operational amplifiers",
+    "supply_voltage_range_v": {
+      "min": 2.7,
+      "max": 5.5
+    },
+    "operating_temperature_range_c": {
+      "min": -40,
+      "max": 125
+    },
+    "packages": [
+      {
+        "package_code": "CB-5-1",
+        "package_name": "5-Ball WLCSP",
+        "normalized_package": "WLCSP-5",
+        "pin_count": 5
+      },
+      {
+        "package_code": "RJ-5",
+        "package_name": "5-Lead SOT-23",
+        "normalized_package": "SOT-23-5",
+        "pin_count": 5
+      },
+      {
+        "package_code": "CB-8-1",
+        "package_name": "8-Ball WLCSP",
+        "normalized_package": "WLCSP-8",
+        "pin_count": 8
+      },
+      {
+        "package_code": "RM-8",
+        "package_name": "8-Lead MSOP",
+        "normalized_package": "MSOP-8",
+        "pin_count": 8
+      },
+      {
+        "package_code": "R-8",
+        "package_name": "8-Lead SOIC_N",
+        "normalized_package": "SOIC-8",
+        "pin_count": 8
+      },
+      {
+        "package_code": "R-14",
+        "package_name": "14-Lead SOIC_N",
+        "normalized_package": "SOIC-14",
+        "pin_count": 14
+      },
+      {
+        "package_code": "RU-14",
+        "package_name": "14-Lead TSSOP",
+        "normalized_package": "TSSOP-14",
+        "pin_count": 14
+      }
+    ],
+    "notable_characteristics": {
+      "rail_to_rail_io": true,
+      "unity_gain_stable": true,
+      "bandwidth_mhz_typ": 10,
+      "input_offset_voltage_uv_max": 65,
+      "input_bias_current_pa_max": 1,
+      "voltage_noise_density_nv_per_rt_hz_typ": 8
+    }
+  }
+}
