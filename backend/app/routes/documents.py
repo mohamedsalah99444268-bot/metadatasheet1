@@ -49,7 +49,12 @@ def _build_table_rows(table: ExtractedTable) -> tuple[list[list[str]], list[list
     return rows, cell_bboxes
 
 
-def _refresh_parsed_fields(db: Session, doc_id: int, blocks: list[BlockInput], tables: list[TableInput]) -> None:
+def _refresh_parsed_fields(
+    db: Session,
+    doc_id: int,
+    blocks: list[BlockInput],
+    tables: list[TableInput],
+) -> None:
     db.query(ParsedField).filter(ParsedField.document_id == doc_id).delete()
     from ..parsers.orchestrator import run_all_parsers
 

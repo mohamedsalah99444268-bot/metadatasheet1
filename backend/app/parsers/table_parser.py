@@ -28,6 +28,7 @@ PACKAGE_VALID = re.compile(
 # Temperature range extraction
 TEMP_EXTRACT = re.compile(r'([+\-–]?\d+)\s*°?\s*C?\s*to\s*([+\-–]?\d+)\s*°?\s*C?', re.I)
 PACKAGE_AND_PIN_RE = re.compile(r"^(.*?)\s*\|\s*(\d+)\s*$")
+PACKAGE_QTY_AND_CARRIER_RE = re.compile(r"^\s*(\d+)\s*\|\s*(.*?)\s*$")
 
 
 def _normalize_text(text: str) -> str:
@@ -124,7 +125,25 @@ class TableParser(BaseParser):
                                 variant_group=variant_id,
                             ))
 
-                if any(f.field_type == "part_number" for f in row_results):
+                    if field_type == "package_quantity" and "carrier" in header.lower():
+                        quantity_match = PACKAGE_QTY_AND_CARRIER_RE.match(cell_text)
+                        if quantity_match:
+                            carrier_value = quantity_match.group(2).strip()
+                            row_results[-1].value = quantity_match.group(1)
+                            if carrier_value and carrier_value.lower() != "null":
+                                row_results.append(ParsedFieldResult(
+                                    field_type="carrier",
+                                    value=carrier_value,
+                                    confidence=0.88,
+                                    parser_rule="table_package_quantity_carrier_split",
+                                    page_number=table.page_number,
+                                    source_text=cell_text,
+                                    x0=bx0, y0=by0, x1=bx1, y1=by1,
+                                    section_name="Ordering Information",
+                                    variant_group=variant_id,
+                                ))
+
+                if self._is_orderable_variant_row(row_results):
                     results.extend(row_results)
 
         return results
@@ -155,11 +174,21 @@ class TableParser(BaseParser):
             if not header:
                 continue
             normalized = " ".join(header.lower().split())
-            if "package qty" in normalized or "carrier" in normalized or normalized == "spq":
+            if "package qty" in normalized:
+                col_map[idx] = "package_quantity"
+                continue
+            if normalized == "spq":
+                col_map[idx] = "package_quantity"
+                continue
+            if normalized == "carrier":
+                col_map[idx] = "carrier"
                 continue
             if "length" in normalized or "width" in normalized or "height" in normalized:
                 continue
-            if "part marking" in normalized or "package drawing" in normalized:
+            if "part marking" in normalized:
+                col_map[idx] = "part_marking"
+                continue
+            if "package drawing" in normalized:
                 col_map[idx] = "package_code"
                 continue
             if "orderable part number" in normalized or "part number" in normalized or "device name" in normalized:
@@ -185,6 +214,9 @@ class TableParser(BaseParser):
                 continue
             if "status" in normalized or "availability" in normalized or "lifecycle" in normalized:
                 col_map[idx] = "status"
+                continue
+            if "lead finish" in normalized or "ball material" in normalized:
+                col_map[idx] = "lead_finish"
         return col_map
 
     def _validate_cell(self, field_type: str, text: str) -> tuple[str | None, float]:
@@ -218,6 +250,24 @@ class TableParser(BaseParser):
                 return None, 0
             return normalize_package_code(text), 0.85
 
+        if field_type == "package_quantity":
+            quantity_match = re.search(r"\d+", text)
+            if not quantity_match:
+                return None, 0
+            return quantity_match.group(0), 0.88
+
+        if field_type == "carrier":
+            value = " ".join(text.split())
+            return (None, 0) if not value or value.lower() == "null" else (value, 0.82)
+
+        if field_type == "lead_finish":
+            value = " ".join(text.split())
+            return (None, 0) if not value else (value, 0.82)
+
+        if field_type == "part_marking":
+            value = " ".join(text.split())
+            return (None, 0) if not value else (value, 0.82)
+
         if field_type == "description":
             if text.lower() in {"production", "preview", "active"}:
                 return None, 0
@@ -225,3 +275,28 @@ class TableParser(BaseParser):
 
         # For other types, pass through
         return text, 0.75
+
+    def _is_orderable_variant_row(self, row_results: list[ParsedFieldResult]) -> bool:
+        """Require structural support before promoting a table row into an orderable part.
+
+        This suppresses product-summary and note tables that contain identifiers
+        but do not carry enough packaging or ordering context to represent
+        purchasable orderable rows.
+        """
+        field_types = {field.field_type for field in row_results}
+        if "part_number" not in field_types:
+            return False
+
+        has_package_shape = "package_name" in field_types or "pin_count" in field_types
+        support_score = 0
+        for field_type in (
+            "package_name",
+            "pin_count",
+            "package_code",
+            "status",
+            "temperature_grade",
+        ):
+            if field_type in field_types:
+                support_score += 1
+
+        return has_package_shape and support_score >= 3

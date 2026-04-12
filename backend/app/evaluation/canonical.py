@@ -120,6 +120,8 @@ def _build_orderable_parts(
     parts: list[OrderablePart] = []
     part_field_map: dict[str, list[ParsedFieldResult]] = {}
     for variant_group, fields in grouped.items():
+        if not _is_structured_orderable_variant(fields):
+            continue
         part_number = _best_from_fields(fields, "part_number")
         if part_number is None:
             continue
@@ -144,6 +146,20 @@ def _build_orderable_parts(
 
     parts.sort(key=lambda item: item.mpn)
     return parts, part_field_map
+
+
+def _is_structured_orderable_variant(fields: list[ParsedFieldResult]) -> bool:
+    field_types = {field.field_type for field in fields}
+    if "part_number" not in field_types:
+        return False
+
+    has_package_shape = "package_name" in field_types or "pin_count" in field_types
+    support_score = sum(
+        1
+        for field_type in ("package_name", "pin_count", "package_code", "status", "temperature_grade")
+        if field_type in field_types
+    )
+    return has_package_shape and support_score >= 3
 
 
 def _build_qualified_variants(

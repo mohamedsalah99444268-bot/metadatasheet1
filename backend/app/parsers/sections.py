@@ -54,4 +54,3 @@ def classify_sections(blocks: list[BlockInput]) -> list[SectionMatch]:
                 )
             )
     return sections
-
