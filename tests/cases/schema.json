@@ -1,0 +1,26 @@
+{
+  "document": {},
+  "must_have": {
+    "manufacturer": "",
+    "base_part": "",
+    "qualified_variants": [],
+    "orderable_parts": [
+      {
+        "mpn": "",
+        "status": "",
+        "package_code": "",
+        "package_name": "",
+        "normalized_package": "",
+        "pin_count": 0,
+        "package_quantity": 0,
+        "carrier": "",
+        "rohs": true,
+        "lead_finish": "",
+        "operating_temperature_min_c": 0,
+        "operating_temperature_max_c": 0,
+        "part_marking": []
+      }
+    ]
+  },
+  "nice_to_have": {}
+}
