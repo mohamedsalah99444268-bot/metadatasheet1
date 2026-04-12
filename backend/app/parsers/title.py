@@ -6,7 +6,7 @@ that isn't a manufacturer name or generic header.
 """
 
 import re
-from .base import BaseParser, BlockInput, ParsedFieldResult
+from .base import BaseParser, ParseContext, ParsedFieldResult
 
 # Words that suggest a block is NOT a title
 NOISE = re.compile(
@@ -36,8 +36,8 @@ TITLE_START_RE = re.compile(r"\b([A-Z]{2,}[A-Z0-9-]*\d[A-Z0-9-]*\b.*)")
 
 
 class TitleParser(BaseParser):
-    def parse(self, blocks: list[BlockInput], tables=None) -> list[ParsedFieldResult]:
-        page1 = [b for b in blocks if b.page_number == 1]
+    def parse(self, context: ParseContext) -> list[ParsedFieldResult]:
+        page1 = [b for b in context.blocks if b.page_number == 1]
         if not page1:
             return []
 

@@ -6,87 +6,20 @@ the PDF text extraction does not include the vendor name explicitly.
 """
 
 import re
-from .base import BaseParser, BlockInput, ParsedFieldResult
-
-# Common electronic component manufacturers
-# (display_name, pattern) — pattern must be a word-boundary-safe regex
-# Short names (<=3 chars) require word boundaries to avoid substring matches
-KNOWN_MANUFACTURERS: list[tuple[str, str]] = [
-    ("Texas Instruments", r"Texas\s+Instruments"),
-    ("Analog Devices", r"Analog\s+Devices"),
-    ("STMicroelectronics", r"STMicroelectronics"),
-    ("NXP Semiconductors", r"NXP\s+Semiconductors"),
-    ("NXP", r"\bNXP\b"),
-    ("Microchip Technology", r"Microchip\s+Technology"),
-    ("Microchip", r"\bMicrochip\b"),
-    ("Infineon Technologies", r"Infineon\s+Technologies"),
-    ("Infineon", r"\bInfineon\b"),
-    ("ON Semiconductor", r"ON\s+Semiconductor"),
-    ("onsemi", r"\bonsemi\b"),
-    ("Maxim Integrated", r"Maxim\s+Integrated"),
-    ("Renesas Electronics", r"Renesas\s+Electronics"),
-    ("Renesas", r"\bRenesas\b"),
-    ("Nordic Semiconductor", r"Nordic\s+Semiconductor"),
-    ("Broadcom", r"\bBroadcom\b"),
-    ("Qualcomm", r"\bQualcomm\b"),
-    ("Intel", r"\bIntel\b"),
-    ("AMD", r"\bAMD\b"),
-    ("ROHM", r"\bROHM\b"),
-    ("Vishay", r"\bVishay\b"),
-    ("Murata", r"\bMurata\b"),
-    ("TDK", r"\bTDK\b"),
-    ("Bosch Sensortec", r"Bosch\s+Sensortec"),
-    ("Silicon Labs", r"Silicon\s+Labs"),
-    ("Silicon Laboratories", r"Silicon\s+Laboratories"),
-    ("Cypress Semiconductor", r"Cypress\s+Semiconductor"),
-    ("Lattice Semiconductor", r"Lattice\s+Semiconductor"),
-    ("Xilinx", r"\bXilinx\b"),
-    ("Diodes Incorporated", r"Diodes\s+Incorporated"),
-    ("ISSI", r"\bISSI\b"),
-    ("Winbond", r"\bWinbond\b"),
-    ("Nexperia", r"\bNexperia\b"),
-    ("Semtech", r"\bSemtech\b"),
-    ("Monolithic Power Systems", r"Monolithic\s+Power\s+Systems"),
-    ("MPS", r"\bMPS\b"),
-    ("Power Integrations", r"Power\s+Integrations"),
-    ("Linear Technology", r"Linear\s+Technology"),
-    ("Allegro MicroSystems", r"Allegro\s+MicroSystems"),
-    ("Sensirion", r"\bSensirion\b"),
-    ("ams-OSRAM", r"ams-OSRAM"),
-    ("Melexis", r"\bMelexis\b"),
-    ("u-blox", r"\bu-blox\b"),
-    ("Espressif", r"\bEspressif\b"),
-    ("MediaTek", r"\bMediaTek\b"),
-    ("Realtek", r"\bRealtek\b"),
-    ("FTDI", r"\bFTDI\b"),
-]
+from .base import BaseParser, BlockInput, ParseContext, ParsedFieldResult
+from ..vendors.signatures import KNOWN_MANUFACTURERS, PREFIX_HINTS
 
 # Compiled patterns, longest display name first
 _PATTERNS = [(name, re.compile(pat, re.IGNORECASE))
              for name, pat in sorted(KNOWN_MANUFACTURERS, key=lambda x: len(x[0]), reverse=True)]
 
-# Strong manufacturer-specific part-number prefixes. This is a fallback for
-# PDFs that omit the vendor name from extracted text but include canonical
-# device identifiers near the title or in ordering tables.
-PREFIX_HINTS: list[tuple[str, tuple[str, ...]]] = [
-    ("Texas Instruments", ("SN74", "SN65", "TPS", "TLV", "TCA", "TXS", "OPA", "INA", "BQ", "DRV")),
-    ("Analog Devices", ("LTC", "LT", "ADM", "ADP", "ADF", "ADA", "AD")),
-    ("Microchip Technology", ("PIC", "MCP", "SAM", "AT")),
-    ("STMicroelectronics", ("STM", "ST")),
-    ("NXP Semiconductors", ("PCA", "PCF", "TJA", "S32")),
-    ("Infineon Technologies", ("TLE", "TLI", "IFX", "IR")),
-    ("Renesas Electronics", ("R5F", "R7F", "ISL", "RAA")),
-    ("onsemi", ("NCP", "NCS", "NCV", "MC")),
-    ("Nordic Semiconductor", ("NRF",)),
-    ("Espressif", ("ESP",)),
-]
-
 PART_NUMBER_TOKEN = re.compile(r"\b[A-Z]{2,}[A-Z0-9-]*\d[A-Z0-9./-]*\b", re.IGNORECASE)
 
 
 class ManufacturerParser(BaseParser):
-    def parse(self, blocks: list[BlockInput], tables=None) -> list[ParsedFieldResult]:
+    def parse(self, context: ParseContext) -> list[ParsedFieldResult]:
         best_result: ParsedFieldResult | None = None
+        blocks = context.blocks
 
         # Check page 1 first, then page 2
         for page in [1, 2]:

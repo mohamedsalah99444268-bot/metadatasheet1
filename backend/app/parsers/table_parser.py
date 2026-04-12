@@ -9,7 +9,8 @@ is already structured by the datasheet author.
 """
 
 import re
-from .base import BaseParser, BlockInput, TableInput, ParsedFieldResult
+from .base import BaseParser, BlockInput, ParseContext, ParsedFieldResult, TableInput
+from .normalization import normalize_package_code, normalize_package_name, parse_temperature_range
 
 # Minimum: a table must have a part_number column to be considered an ordering table
 REQUIRED_TYPES = {"part_number"}
@@ -46,7 +47,9 @@ def _classify_temp(low: int, high: int) -> str:
 
 
 class TableParser(BaseParser):
-    def parse(self, blocks: list[BlockInput], tables: list[TableInput] | None = None) -> list[ParsedFieldResult]:
+    def parse(self, context: ParseContext) -> list[ParsedFieldResult]:
+        tables = context.tables
+        blocks = context.blocks
         if not tables:
             return []
 
@@ -195,15 +198,14 @@ class TableParser(BaseParser):
             if "|" in text and not PACKAGE_AND_PIN_RE.match(text):
                 return None, 0
             if PACKAGE_VALID.search(text):
-                return text.upper(), 0.9
+                return normalize_package_name(text), 0.9
             # Still return it but with lower confidence
             return (None, 0) if any(token in text.lower() for token in ("carrier", "large t&r", "small t&r", "null")) else (text, 0.7)
 
         if field_type == "temperature_grade":
-            m = TEMP_EXTRACT.search(text)
-            if m:
-                low = int(m.group(1).replace("–", "-"))
-                high = int(m.group(2).replace("–", "-"))
+            parsed = parse_temperature_range(text)
+            if parsed:
+                low, high = parsed
                 grade = _classify_temp(low, high)
                 value = f"{low} to {high} C"
                 if grade:
@@ -214,7 +216,7 @@ class TableParser(BaseParser):
         if field_type == "package_code":
             if len(text) > 64:
                 return None, 0
-            return text.upper(), 0.85
+            return normalize_package_code(text), 0.85
 
         if field_type == "description":
             if text.lower() in {"production", "preview", "active"}:

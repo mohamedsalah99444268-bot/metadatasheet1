@@ -11,28 +11,7 @@ After all parsers have run independently, the consolidator:
 
 import re
 from .base import ParsedFieldResult
-
-# Known manufacturer prefixes (manufacturer -> part number prefixes)
-MANUFACTURER_PREFIXES: dict[str, list[str]] = {
-    "Texas Instruments": ["TPS", "TLV", "LM", "TMS", "MSP", "SN74", "SN65", "SN", "OPA", "ADS", "INA", "BQ", "DRV", "TCA", "TXS", "LP", "CD4", "UCC", "TPA"],
-    "Analog Devices": ["AD", "ADP", "ADM", "LT", "LTC", "MAX", "HMC"],
-    "STMicroelectronics": ["STM", "ST", "L6", "L7", "VN", "TSV", "TS"],
-    "NXP Semiconductors": ["NX", "PCA", "PCF", "TJA", "S32"],
-    "NXP": ["NX", "PCA", "PCF", "TJA", "S32"],
-    "Microchip Technology": ["PIC", "MCP", "ATM", "AT", "SAM"],
-    "Microchip": ["PIC", "MCP", "ATM", "AT", "SAM"],
-    "Infineon Technologies": ["IFX", "IRF", "TLE", "TLI", "BSP", "IPD"],
-    "Infineon": ["IFX", "IRF", "TLE", "TLI", "BSP", "IPD"],
-    "ON Semiconductor": ["NCV", "NCS", "NCP", "MC"],
-    "onsemi": ["NCV", "NCS", "NCP", "MC"],
-    "Maxim Integrated": ["MAX", "DS"],
-    "Nordic Semiconductor": ["NRF"],
-    "Espressif": ["ESP"],
-    "Renesas Electronics": ["R5F", "R7F", "ISL", "RAA"],
-    "Renesas": ["R5F", "R7F", "ISL", "RAA"],
-    "Silicon Labs": ["SI", "EFM", "EFR", "BGM"],
-    "Silicon Laboratories": ["SI", "EFM", "EFR", "BGM"],
-}
+from ..vendors import resolve_vendor_adapter
 
 # Package name patterns (used to demote false part_number matches)
 PACKAGE_PATTERN = re.compile(
@@ -179,7 +158,8 @@ def _boost_manufacturer_prefix(fields: list[ParsedFieldResult]) -> list[ParsedFi
         return fields
 
     mfr = max(manufacturers, key=lambda f: f.confidence)
-    prefixes = MANUFACTURER_PREFIXES.get(mfr.value, [])
+    adapter = resolve_vendor_adapter(mfr.value)
+    prefixes = list(adapter.part_number_prefixes) if adapter else []
     if not prefixes:
         return fields
 

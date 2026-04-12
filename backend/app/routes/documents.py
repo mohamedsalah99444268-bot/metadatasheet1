@@ -13,10 +13,9 @@ from ..schemas import (
     DocumentOut, PageOut, TextBlockOut, ParsedFieldOut,
     ExtractedTableOut, UploadResponse,
 )
-from ..extraction.extractor import extract_pdf
 from ..extraction.table_quality import filter_credible_tables
 from ..parsers.base import BlockInput, TableInput
-from ..parsers.orchestrator import run_all_parsers
+from ..pipeline import build_pipeline_artifacts
 
 router = APIRouter(prefix="/api/documents", tags=["documents"])
 
@@ -52,6 +51,8 @@ def _build_table_rows(table: ExtractedTable) -> tuple[list[list[str]], list[list
 
 def _refresh_parsed_fields(db: Session, doc_id: int, blocks: list[BlockInput], tables: list[TableInput]) -> None:
     db.query(ParsedField).filter(ParsedField.document_id == doc_id).delete()
+    from ..parsers.orchestrator import run_all_parsers
+
     parsed_results = run_all_parsers(blocks, filter_credible_tables(tables))
     for pf in parsed_results:
         db.add(ParsedField(
@@ -134,8 +135,8 @@ async def upload_document(file: UploadFile = File(...), db: Session = Depends(ge
     final_path = UPLOAD_DIR / f"{file_hash}.pdf"
     shutil.move(str(temp_path), str(final_path))
 
-    # Extract text
-    result = extract_pdf(str(final_path))
+    pipeline = build_pipeline_artifacts(final_path)
+    result = pipeline.extraction
 
     # Create document record
     doc = Document(
@@ -192,29 +193,7 @@ async def upload_document(file: UploadFile = File(...), db: Session = Depends(ge
 
     db.flush()
 
-    block_inputs = [
-        BlockInput(
-            id=0,
-            page_number=b.page_number,
-            text=b.text,
-            x0=b.x0, y0=b.y0, x1=b.x1, y1=b.y1,
-        )
-        for b in result.blocks
-    ]
-    table_inputs = []
-    for t in result.tables:
-        rows, cell_bboxes = _build_table_rows(t)
-        table_inputs.append(TableInput(
-            page_number=t.page_number,
-            table_index=t.table_index,
-            row_count=t.row_count,
-            col_count=t.col_count,
-            headers=t.headers,
-            rows=rows,
-            cell_bboxes=cell_bboxes,
-            x0=t.x0, y0=t.y0, x1=t.x1, y1=t.y1,
-        ))
-    _refresh_parsed_fields(db, doc.id, block_inputs, table_inputs)
+    _refresh_parsed_fields(db, doc.id, pipeline.blocks, pipeline.tables)
 
     db.commit()
     db.refresh(doc)

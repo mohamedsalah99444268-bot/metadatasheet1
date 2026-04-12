@@ -4,7 +4,8 @@ Heuristic: Pattern match for known compliance terms and temperature ranges.
 """
 
 import re
-from .base import BaseParser, BlockInput, ParsedFieldResult
+from .base import BaseParser, ParseContext, ParsedFieldResult
+from .normalization import parse_temperature_range
 
 # RoHS / lead-free patterns
 ROHS_RE = re.compile(r'\b(RoHS)\b', re.IGNORECASE)
@@ -32,10 +33,11 @@ TEMP_CONTEXT = re.compile(
 
 
 class ComplianceParser(BaseParser):
-    def parse(self, blocks: list[BlockInput], tables=None) -> list[ParsedFieldResult]:
+    def parse(self, context: ParseContext) -> list[ParsedFieldResult]:
         results: list[ParsedFieldResult] = []
         found_rohs = False
         found_leadfree = False
+        blocks = context.blocks
 
         for b in blocks:
             # RoHS
@@ -69,10 +71,13 @@ class ComplianceParser(BaseParser):
             # Temperature ranges — only in context of operating temp
             if TEMP_CONTEXT.search(b.text) or TEMP_GRADE_RE.search(b.text):
                 for m in TEMP_RANGE_RE.finditer(b.text):
-                    low, high = m.group(1), m.group(2)
-                    value = f"-{low} to {high} C"
+                    parsed = parse_temperature_range(m.group(0))
+                    if parsed is None:
+                        continue
+                    low, high = parsed
+                    value = f"{low} to {high} C"
                     # Determine grade
-                    grade = self._classify_temp(int(low), int(high))
+                    grade = self._classify_temp(low, high)
 
                     results.append(ParsedFieldResult(
                         field_type="temperature_grade",

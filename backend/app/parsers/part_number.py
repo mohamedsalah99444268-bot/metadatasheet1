@@ -6,7 +6,8 @@ Common patterns: letters + digits + optional suffix (e.g., LM358, TPS65217, STM3
 """
 
 import re
-from .base import BaseParser, BlockInput, ParsedFieldResult
+from .base import BaseParser, ParseContext, ParsedFieldResult
+from .normalization import normalize_part_number
 
 # Part number patterns — letter prefix + digits + optional letter/digit suffix
 # Must start with 2+ letters, contain digits, total length 4-30
@@ -30,9 +31,10 @@ MIN_LEN = 5
 
 
 class PartNumberParser(BaseParser):
-    def parse(self, blocks: list[BlockInput], tables=None) -> list[ParsedFieldResult]:
+    def parse(self, context: ParseContext) -> list[ParsedFieldResult]:
         results: list[ParsedFieldResult] = []
         seen: set[str] = set()
+        blocks = context.blocks
 
         # Prioritize page 1, then early pages
         sorted_blocks = sorted(blocks, key=lambda b: (b.page_number, b.y0))
@@ -43,7 +45,7 @@ class PartNumberParser(BaseParser):
 
             matches = PART_NUMBER_RE.findall(b.text)
             for m in matches:
-                m = m.strip("-/")
+                m = normalize_part_number(m)
                 if len(m) < MIN_LEN:
                     continue
                 if REJECT_RE.match(m):

@@ -5,7 +5,8 @@ and detect package information sections.
 """
 
 import re
-from .base import BaseParser, BlockInput, ParsedFieldResult
+from .base import BaseParser, ParseContext, ParsedFieldResult
+from .normalization import normalize_package_code, normalize_package_name
 
 # Package type patterns
 PACKAGE_TYPES = re.compile(
@@ -18,12 +19,6 @@ PACKAGE_TYPES = re.compile(
 )
 
 # Package section headings
-PACKAGE_SECTION = re.compile(
-    r'(package\s+(information|outline|drawing|options?|types?|dimensions?)|'
-    r'mechanical\s+(data|dimensions?|information))',
-    re.IGNORECASE,
-)
-
 # Package code patterns (e.g., "RGT", "PW", "DBV" — short 2-4 letter codes)
 # Require explicit labeling like "Package Code: DBV" or "PKG: RGT"
 PACKAGE_CODE_RE = re.compile(
@@ -33,14 +28,15 @@ PACKAGE_CODE_RE = re.compile(
 
 
 class PackageParser(BaseParser):
-    def parse(self, blocks: list[BlockInput], tables=None) -> list[ParsedFieldResult]:
+    def parse(self, context: ParseContext) -> list[ParsedFieldResult]:
         results: list[ParsedFieldResult] = []
         seen_packages: set[str] = set()
+        blocks = context.blocks
 
         for b in blocks:
             # Find package type names
             for m in PACKAGE_TYPES.finditer(b.text):
-                pkg = m.group(0).upper()
+                pkg = normalize_package_name(m.group(0))
                 if pkg in seen_packages:
                     continue
                 seen_packages.add(pkg)
@@ -56,7 +52,7 @@ class PackageParser(BaseParser):
 
             # Find package codes
             for m in PACKAGE_CODE_RE.finditer(b.text):
-                code = m.group(1).upper()
+                code = normalize_package_code(m.group(1))
                 results.append(ParsedFieldResult(
                     field_type="package_code",
                     value=code,
