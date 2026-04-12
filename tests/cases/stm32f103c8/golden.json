@@ -1,0 +1,15 @@
+{
+  "document": {
+    "source_file": "input.pdf",
+    "manufacturer": "STMicroelectronics",
+    "base_part": "STM32F103C8",
+    "document_title": "STM32F103x8 STM32F103xB Medium-density performance line Arm-based 32-bit MCU with 64 or 128 KB Flash, USB, CAN, 7 timers, 2 ADCs, 9 com. interfaces"
+  },
+  "must_have": {
+    "manufacturer": "STMicroelectronics",
+    "base_part": "STM32F103C8",
+    "qualified_variants": [],
+    "orderable_parts": []
+  },
+  "nice_to_have": {}
+}

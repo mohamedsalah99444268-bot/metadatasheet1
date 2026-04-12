@@ -1,0 +1,92 @@
+{
+  "document": {
+    "source_file": "input(1).pdf",
+    "manufacturer": "International Rectifier",
+    "base_part": "IRLZ44NPbF",
+    "document_title": "HEXFET Power MOSFET IRLZ44NPbF"
+  },
+  "must_have": {
+    "manufacturer": "International Rectifier",
+    "base_part": "IRLZ44NPbF",
+    "qualified_variants": [],
+    "orderable_parts": [
+      {
+        "mpn": "IRLZ44NPbF",
+        "status": "",
+        "package_code": "TO-220AB",
+        "package_name": "TO-220AB",
+        "normalized_package": "TO-220AB",
+        "pin_count": 4,
+        "package_quantity": 0,
+        "carrier": "",
+        "rohs": true,
+        "lead_finish": "",
+        "operating_temperature_min_c": -55,
+        "operating_temperature_max_c": 175,
+        "part_marking": ["IRLZ44NPbF"]
+      }
+    ]
+  },
+  "nice_to_have": {
+    "device_family": {
+      "parts": ["IRLZ44NPbF"],
+      "category": "N-channel power MOSFET"
+    },
+    "description": "Logic-level N-channel HEXFET power MOSFET",
+    "package": {
+      "package_code": "TO-220AB",
+      "package_name": "TO-220AB",
+      "normalized_package": "TO-220AB",
+      "pin_count": 4,
+      "lead_assignments": {
+        "1": "GATE",
+        "2": "DRAIN",
+        "3": "SOURCE",
+        "4": "DRAIN"
+      }
+    },
+    "absolute_maximum_ratings": {
+      "drain_to_source_voltage_v": 55,
+      "gate_to_source_voltage_v": 16,
+      "continuous_drain_current_a_at_tc_25c": 47,
+      "continuous_drain_current_a_at_tc_100c": 33,
+      "pulsed_drain_current_a": 160,
+      "power_dissipation_w": 94,
+      "linear_derating_w_per_c": 0.63,
+      "avalanche_energy_mj": 400,
+      "peak_diode_recovery_dv_dt_v_per_ns": 5,
+      "operating_junction_temperature_min_c": -55,
+      "operating_junction_temperature_max_c": 175,
+      "storage_temperature_min_c": -55,
+      "storage_temperature_max_c": 175,
+      "soldering_temperature_c": 300
+    },
+    "electrical_summary": {
+      "vds_max_v": 55,
+      "rds_on_ohm_max_at_vgs_10v": 0.022,
+      "rds_on_ohm_max_at_vgs_4v": 0.028,
+      "vgs_th_min_v": 1.0,
+      "vgs_th_max_v": 2.0,
+      "gfs_min_s": 21,
+      "idss_max_uA_at_25c": 25,
+      "idss_max_uA_at_150c": 250,
+      "total_gate_charge_nc_typ": 48,
+      "input_capacitance_pf_typ": 1700,
+      "output_capacitance_pf_typ": 400,
+      "reverse_transfer_capacitance_pf_typ": 150,
+      "turn_on_delay_ns_typ": 11,
+      "rise_time_ns_typ": 84,
+      "turn_off_delay_ns_typ": 26,
+      "fall_time_ns_typ": 15
+    },
+    "thermal": {
+      "rthjc_c_per_w": 1.6,
+      "rthcs_c_per_w": 0.5,
+      "rthja_c_per_w": 62
+    },
+    "part_marking_notes": {
+      "package_marking_contains_part_number": true,
+      "lead_free_indicator_note": "\"P\" in assembly line position indicates lead-free"
+    }
+  }
+}

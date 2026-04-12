@@ -1,0 +1,47 @@
+{
+  "cases": [
+    {
+      "case": "sn74lvc1g125",
+      "schema_valid": false,
+      "schema_score": 87.5,
+      "golden_score": 52.0,
+      "must_have_score": 40.0,
+      "nice_to_have_score": 100.0,
+      "missing": 6,
+      "incorrect": 260,
+      "extra": 48,
+      "weakest_fields": [
+        "must_have.base_part",
+        "must_have.orderable_parts",
+        "must_have.qualified_variants"
+      ]
+    }
+  ],
+  "inventory": {
+    "valid_case_count": 1,
+    "invalid_case_count": 0,
+    "valid_cases": [
+      "sn74lvc1g125"
+    ],
+    "invalid_cases": []
+  },
+  "average_schema_score": 87.5,
+  "average_golden_score": 52.0,
+  "average_must_have_score": 40.0,
+  "average_nice_to_have_score": 100.0,
+  "weakest_fields": [
+    [
+      "must_have.base_part",
+      1
+    ],
+    [
+      "must_have.orderable_parts",
+      1
+    ],
+    [
+      "must_have.qualified_variants",
+      1
+    ]
+  ],
+  "passed": false
+}

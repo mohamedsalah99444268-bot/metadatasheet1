@@ -1,0 +1,19 @@
+{
+  "name": "tps7a02",
+  "vendor": "",
+  "component_type": "",
+  "required_fields": [
+    "must_have.manufacturer",
+    "must_have.base_part",
+    "must_have.orderable_parts"
+  ],
+  "optional_fields": [
+    "document.document_title",
+    "must_have.rohs",
+    "must_have.operating_temperature_range"
+  ],
+  "allowed_adapters": [
+    "generic"
+  ],
+  "notes": "Fill in corpus metadata for this case."
+}

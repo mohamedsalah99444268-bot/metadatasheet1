@@ -1,0 +1,19 @@
+{
+  "valid_case_count": 12,
+  "invalid_case_count": 0,
+  "valid_cases": [
+    "ad8605_8606_8608",
+    "atsamd21g18",
+    "irlz44n",
+    "lm2596",
+    "nrf24l01p",
+    "pca9306",
+    "si5351",
+    "sn74lvc1g125",
+    "sn74lvc1t45",
+    "stm32f103c8",
+    "tlv9062",
+    "tps7a02"
+  ],
+  "invalid_cases": []
+}

@@ -1,0 +1,15 @@
+{
+  "document": {
+    "source_file": "input.pdf",
+    "manufacturer": "Nordic Semiconductor",
+    "base_part": "nRF24L01+",
+    "document_title": "nRF24L01+ Single Chip 2.4GHz Transceiver"
+  },
+  "must_have": {
+    "manufacturer": "Nordic Semiconductor",
+    "base_part": "nRF24L01+",
+    "qualified_variants": [],
+    "orderable_parts": []
+  },
+  "nice_to_have": {}
+}

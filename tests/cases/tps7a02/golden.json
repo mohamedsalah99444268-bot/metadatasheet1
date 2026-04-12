@@ -1,0 +1,15 @@
+{
+  "document": {
+    "source_file": "input.pdf",
+    "manufacturer": "Texas Instruments",
+    "base_part": "TPS7A02",
+    "document_title": "TPS7A02 Nanopower IQ, 25-nA, 200-mA, Low-Dropout Voltage Regulator With Fast Transient Response"
+  },
+  "must_have": {
+    "manufacturer": "Texas Instruments",
+    "base_part": "TPS7A02",
+    "qualified_variants": [],
+    "orderable_parts": []
+  },
+  "nice_to_have": {}
+}

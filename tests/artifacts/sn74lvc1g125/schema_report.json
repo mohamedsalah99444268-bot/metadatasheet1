@@ -1,0 +1,9 @@
+{
+  "valid": false,
+  "score": 87.5,
+  "missing_fields": [
+    "must_have.base_part"
+  ],
+  "ambiguous_fields": [],
+  "errors": []
+}

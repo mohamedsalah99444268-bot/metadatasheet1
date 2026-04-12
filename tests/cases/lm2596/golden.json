@@ -1,0 +1,15 @@
+{
+  "document": {
+    "source_file": "input.pdf",
+    "manufacturer": "Texas Instruments",
+    "base_part": "LM2596",
+    "document_title": "LM2596 SIMPLE SWITCHER Power Converter 150-kHz 3-A Step-Down Voltage Regulator"
+  },
+  "must_have": {
+    "manufacturer": "Texas Instruments",
+    "base_part": "LM2596",
+    "qualified_variants": [],
+    "orderable_parts": []
+  },
+  "nice_to_have": {}
+}

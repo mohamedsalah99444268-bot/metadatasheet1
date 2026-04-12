@@ -1,0 +1,245 @@
+{
+  "document": {
+    "source_file": "input.pdf",
+    "document_title": "Precision, Low Noise, CMOS, Rail-to-Rail, Input/Output Operational Amplifiers",
+    "manufacturer": "Analog Devices",
+    "base_part": "AD8605/AD8606/AD8608"
+  },
+  "must_have": {
+    "manufacturer": "Analog Devices",
+    "base_part": "AD8605/AD8606/AD8608",
+    "lifecycle_status": null,
+    "rohs": true,
+    "operating_temperature_range": {
+      "min_c": 40,
+      "max_c": 125,
+      "label": "Industrial"
+    },
+    "qualified_variants": [],
+    "orderable_parts": []
+  },
+  "nice_to_have": {
+    "document_title": "Precision, Low Noise, CMOS, Rail-to-Rail, Input/Output Operational Amplifiers",
+    "package_names": [
+      "MSOP-8",
+      "SOIC-14",
+      "SOIC-8",
+      "SOT-23",
+      "TSSOP-14",
+      "WLCSP",
+      "WLCSP-5"
+    ],
+    "package_codes": [],
+    "lead_free": null
+  },
+  "field_statuses": {
+    "document.document_title": "present",
+    "document.manufacturer": "present",
+    "document.base_part": "present",
+    "must_have.manufacturer": "present",
+    "must_have.base_part": "present",
+    "must_have.lifecycle_status": "missing",
+    "must_have.rohs": "present",
+    "must_have.operating_temperature_range": "present",
+    "must_have.orderable_parts": "missing",
+    "must_have.qualified_variants": "missing"
+  },
+  "provenance": {
+    "document.document_title": [
+      {
+        "page_number": 1,
+        "parser_rule": "title_top_page1_largest",
+        "source_text": "Precision, Low Noise, CMOS, Rail-to-Rail, \nInput/Output Operational Amplifiers",
+        "bbox": [
+          242.52,
+          43.04,
+          580.97,
+          92.54
+        ],
+        "variant_group": null
+      }
+    ],
+    "document.manufacturer": [
+      {
+        "page_number": 1,
+        "parser_rule": "manufacturer_part_number_prefix",
+        "source_text": "Data Sheet \nAD8605/AD8606/AD8608",
+        "bbox": [
+          54.36,
+          99.5,
+          572.0,
+          122.0
+        ],
+        "variant_group": null
+      }
+    ],
+    "document.base_part": [
+      {
+        "page_number": 1,
+        "parser_rule": "part_number_regex+mfr_prefix_match",
+        "source_text": "Data Sheet \nAD8605/AD8606/AD8608",
+        "bbox": [
+          54.36,
+          99.5,
+          572.0,
+          122.0
+        ],
+        "variant_group": null
+      }
+    ],
+    "must_have.manufacturer": [
+      {
+        "page_number": 1,
+        "parser_rule": "manufacturer_part_number_prefix",
+        "source_text": "Data Sheet \nAD8605/AD8606/AD8608",
+        "bbox": [
+          54.36,
+          99.5,
+          572.0,
+          122.0
+        ],
+        "variant_group": null
+      }
+    ],
+    "must_have.base_part": [
+      {
+        "page_number": 1,
+        "parser_rule": "part_number_regex+mfr_prefix_match",
+        "source_text": "Data Sheet \nAD8605/AD8606/AD8608",
+        "bbox": [
+          54.36,
+          99.5,
+          572.0,
+          122.0
+        ],
+        "variant_group": null
+      }
+    ],
+    "_field_type.rohs": [
+      {
+        "page_number": 24,
+        "parser_rule": "rohs_keyword",
+        "source_text": "ORDERING GUIDE \nModel1 \nTemperature Range  \nPackage Description  \nPackage Option  \nMarking Code \nAD8605ACBZ-REEL7 \n\u221240\u00b0C to +125\u00b0C  \n5-Ball WLCSP  \nCB-5-1 \nA1J \nAD8605ARTZ-R2 \n\u221240\u00b0C to +125\u00b0C  \n5-Lead",
+        "bbox": [
+          36.0,
+          328.26,
+          539.66,
+          567.45
+        ],
+        "variant_group": null
+      }
+    ],
+    "_field_type.temperature_grade": [
+      {
+        "page_number": 1,
+        "parser_rule": "temp_range_regex",
+        "source_text": "The AD8605, AD8606, and AD8608 are specified over the \nextended industrial temperature range (\u221240\u00b0C to +125\u00b0C). The \nAD8605 single is available in 5-lead SOT-23 and 5-ball WLCSP \npackages. The AD8606 ",
+        "bbox": [
+          54.0,
+          566.06,
+          296.03,
+          684.65
+        ],
+        "variant_group": null
+      },
+      {
+        "page_number": 8,
+        "parser_rule": "temp_range_regex",
+        "source_text": "All Packages \n\u221265\u00b0C to +150\u00b0C \nOperating Temperature Range",
+        "bbox": [
+          36.0,
+          189.67,
+          248.74,
+          213.21
+        ],
+        "variant_group": null
+      }
+    ],
+    "_field_type.package_name": [
+      {
+        "page_number": 1,
+        "parser_rule": "package_type_regex",
+        "source_text": "The AD8605, AD8606, and AD8608 are specified over the \nextended industrial temperature range (\u221240\u00b0C to +125\u00b0C). The \nAD8605 single is available in 5-lead SOT-23 and 5-ball WLCSP \npackages. The AD8606 ",
+        "bbox": [
+          54.0,
+          566.06,
+          296.03,
+          684.65
+        ],
+        "variant_group": null
+      },
+      {
+        "page_number": 1,
+        "parser_rule": "package_type_regex",
+        "source_text": "Low offset voltage: 65 \u03bcV maximum \nLow input bias currents: 1 pA maximum \nLow noise: 8 nV/\u221aHz \nWide bandwidth: 10 MHz \nHigh open-loop gain: 1000 V/mV \nUnity gain stable \nSingle-supply operation: 2.7 V",
+        "bbox": [
+          54.0,
+          152.82,
+          273.13,
+          257.8
+        ],
+        "variant_group": null
+      },
+      {
+        "page_number": 16,
+        "parser_rule": "package_type_regex",
+        "source_text": "MSOP-8",
+        "bbox": [
+          355.04,
+          375.71,
+          378.05,
+          384.04
+        ],
+        "variant_group": null
+      },
+      {
+        "page_number": 16,
+        "parser_rule": "package_type_regex",
+        "source_text": "SOIC-14",
+        "bbox": [
+          405.7,
+          296.32,
+          428.95,
+          304.65
+        ],
+        "variant_group": null
+      },
+      {
+        "page_number": 16,
+        "parser_rule": "package_type_regex",
+        "source_text": "SOIC-8",
+        "bbox": [
+          361.84,
+          346.77,
+          381.86,
+          355.1
+        ],
+        "variant_group": null
+      },
+      {
+        "page_number": 16,
+        "parser_rule": "package_type_regex",
+        "source_text": "TSSOP-14",
+        "bbox": [
+          368.95,
+          320.21,
+          397.94,
+          328.54
+        ],
+        "variant_group": null
+      },
+      {
+        "page_number": 16,
+        "parser_rule": "package_type_regex",
+        "source_text": "WLCSP-5",
+        "bbox": [
+          383.34,
+          384.96,
+          410.34,
+          393.28
+        ],
+        "variant_group": null
+      }
+    ]
+  }
+}

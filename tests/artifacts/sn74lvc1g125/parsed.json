@@ -1,0 +1,5032 @@
+{
+  "document": {
+    "source_file": "input.pdf",
+    "document_title": "SN74LVC1G125 Single Bus Buffer Gate With 3-State Output",
+    "manufacturer": "Texas Instruments",
+    "base_part": null
+  },
+  "must_have": {
+    "manufacturer": "Texas Instruments",
+    "base_part": null,
+    "lifecycle_status": "Active",
+    "rohs": true,
+    "operating_temperature_range": {
+      "min_c": -40,
+      "max_c": 125,
+      "label": "Industrial"
+    },
+    "qualified_variants": [],
+    "orderable_parts": [
+      {
+        "mpn": "74LVC1G125DBVRE4",
+        "status": "Active",
+        "package_code": "(C255, C25F, C25K, C25R)",
+        "package_name": "SOT-23 (DBV)",
+        "normalized_package": "SOT-23 (DBV)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "74LVC1G125DBVRE4.B",
+        "status": "Active",
+        "package_code": "(C255, C25F, C25K, C25R)",
+        "package_name": "SOT-23 (DBV)",
+        "normalized_package": "SOT-23 (DBV)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "74LVC1G125DBVRG4",
+        "status": "Active",
+        "package_code": "(C255, C25F, C25K, C25R)",
+        "package_name": "SOT-23 (DBV)",
+        "normalized_package": "SOT-23 (DBV)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "74LVC1G125DBVRG4.B",
+        "status": "Active",
+        "package_code": "(C255, C25F, C25K, C25R)",
+        "package_name": "SOT-23 (DBV)",
+        "normalized_package": "SOT-23 (DBV)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "74LVC1G125DBVTE4",
+        "status": "Active",
+        "package_code": "(C255, C25F, C25K, C25R)",
+        "package_name": "SOT-23 (DBV)",
+        "normalized_package": "SOT-23 (DBV)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "74LVC1G125DBVTE4.B",
+        "status": "Active",
+        "package_code": "(C255, C25F, C25K, C25R)",
+        "package_name": "SOT-23 (DBV)",
+        "normalized_package": "SOT-23 (DBV)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "74LVC1G125DBVTG4",
+        "status": "Active",
+        "package_code": "(C255, C25F, C25K, C25R)",
+        "package_name": "SOT-23 (DBV)",
+        "normalized_package": "SOT-23 (DBV)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "74LVC1G125DBVTG4.B",
+        "status": "Active",
+        "package_code": "(C255, C25F, C25K, C25R)",
+        "package_name": "SOT-23 (DBV)",
+        "normalized_package": "SOT-23 (DBV)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "74LVC1G125DCKRE4",
+        "status": "Active",
+        "package_code": "CM5",
+        "package_name": "SC70 (DCK)",
+        "normalized_package": "SC70 (DCK)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "74LVC1G125DCKRG4",
+        "status": "Active",
+        "package_code": "CM5",
+        "package_name": "SC70 (DCK)",
+        "normalized_package": "SC70 (DCK)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "74LVC1G125DCKRG4.B",
+        "status": "Active",
+        "package_code": "CM5",
+        "package_name": "SC70 (DCK)",
+        "normalized_package": "SC70 (DCK)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "74LVC1G125DCKTE4",
+        "status": "Active",
+        "package_code": "CM5",
+        "package_name": "SC70 (DCK)",
+        "normalized_package": "SC70 (DCK)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "74LVC1G125DCKTG4",
+        "status": "Active",
+        "package_code": "CM5",
+        "package_name": "SC70 (DCK)",
+        "normalized_package": "SC70 (DCK)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "74LVC1G125DCKTG4.B",
+        "status": "Active",
+        "package_code": "CM5",
+        "package_name": "SC70 (DCK)",
+        "normalized_package": "SC70 (DCK)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "SN74LVC1G125",
+        "status": null,
+        "package_code": null,
+        "package_name": "SOT-23 (5)",
+        "normalized_package": "SOT-23 (5)",
+        "pin_count": null,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": null,
+        "operating_temperature_max_c": null,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "SN74LVC1G125DBVR",
+        "status": "Active",
+        "package_code": "(C255, C25F, C25J, C25K, C25R, C 25T)",
+        "package_name": "SOT-23 (DBV)",
+        "normalized_package": "SOT-23 (DBV)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "SN74LVC1G125DBVR.B",
+        "status": "Active",
+        "package_code": "(C255, C25F, C25J, C25K, C25R, C 25T)",
+        "package_name": "SOT-23 (DBV)",
+        "normalized_package": "SOT-23 (DBV)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "SN74LVC1G125DBVT",
+        "status": "Active",
+        "package_code": "(C255, C25F, C25K, C25R)",
+        "package_name": "SOT-23 (DBV)",
+        "normalized_package": "SOT-23 (DBV)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "SN74LVC1G125DBVT.B",
+        "status": "Active",
+        "package_code": "(C255, C25F, C25K, C25R)",
+        "package_name": "SOT-23 (DBV)",
+        "normalized_package": "SOT-23 (DBV)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "SN74LVC1G125DCK3",
+        "status": "Active",
+        "package_code": "(CMF, CMZ)",
+        "package_name": "SC70 (DCK)",
+        "normalized_package": "SC70 (DCK)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 85,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "SN74LVC1G125DCK3.B",
+        "status": "Active",
+        "package_code": "(CMF, CMZ)",
+        "package_name": "SC70 (DCK)",
+        "normalized_package": "SC70 (DCK)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 85,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "SN74LVC1G125DCKR",
+        "status": "Active",
+        "package_code": "(CM5, CMF, CMJ, CM K, CMR, CMT)",
+        "package_name": "SC70 (DCK)",
+        "normalized_package": "SC70 (DCK)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "SN74LVC1G125DCKR.B",
+        "status": "Active",
+        "package_code": "(CM5, CMF, CMJ, CM K, CMR, CMT)",
+        "package_name": "SC70 (DCK)",
+        "normalized_package": "SC70 (DCK)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "SN74LVC1G125DCKT",
+        "status": "Active",
+        "package_code": "(CM5, CMF, CMJ, CM K, CMR, CMT)",
+        "package_name": "SC70 (DCK)",
+        "normalized_package": "SC70 (DCK)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "SN74LVC1G125DCKT.B",
+        "status": "Active",
+        "package_code": "(CM5, CMF, CMJ, CM K, CMR, CMT)",
+        "package_name": "SC70 (DCK)",
+        "normalized_package": "SC70 (DCK)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "SN74LVC1G125DCKTG4.B",
+        "status": "Active",
+        "package_code": null,
+        "package_name": "SC70 (DCK)",
+        "normalized_package": "SC70 (DCK)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "SN74LVC1G125DPWR",
+        "status": "Active",
+        "package_code": "R4",
+        "package_name": "X2SON (DPW)",
+        "normalized_package": "X2SON (DPW)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "SN74LVC1G125DPWR.B",
+        "status": "Active",
+        "package_code": "R4",
+        "package_name": "X2SON (DPW)",
+        "normalized_package": "X2SON (DPW)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "SN74LVC1G125DRLR",
+        "status": "Active",
+        "package_code": "(CM7, CMR)",
+        "package_name": "SOT-5X3 (DRL)",
+        "normalized_package": "SOT-5X3 (DRL)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "SN74LVC1G125DRLR.B",
+        "status": "Active",
+        "package_code": "(CM7, CMR)",
+        "package_name": "SOT-5X3 (DRL)",
+        "normalized_package": "SOT-5X3 (DRL)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "SN74LVC1G125DRYR",
+        "status": "Active",
+        "package_code": "(CM, DM)",
+        "package_name": "SON (DRY)",
+        "normalized_package": "SON (DRY)-6",
+        "pin_count": 6,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "SN74LVC1G125DRYR.B",
+        "status": "Active",
+        "package_code": "(CM, DM)",
+        "package_name": "SON (DRY)",
+        "normalized_package": "SON (DRY)-6",
+        "pin_count": 6,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "SN74LVC1G125DRYRG4.B",
+        "status": "Active",
+        "package_code": "CM",
+        "package_name": "SON (DRY)",
+        "normalized_package": "SON (DRY)-6",
+        "pin_count": 6,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "SN74LVC1G125DSFR",
+        "status": "Active",
+        "package_code": "CM",
+        "package_name": "SON (DSF)",
+        "normalized_package": "SON (DSF)-6",
+        "pin_count": 6,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "SN74LVC1G125DSFR.B",
+        "status": "Active",
+        "package_code": "CM",
+        "package_name": "SON (DSF)",
+        "normalized_package": "SON (DSF)-6",
+        "pin_count": 6,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "SN74LVC1G125DSFRG4",
+        "status": "Active",
+        "package_code": "CM",
+        "package_name": "SON (DSF)",
+        "normalized_package": "SON (DSF)-6",
+        "pin_count": 6,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "SN74LVC1G125DSFRG4.B",
+        "status": "Active",
+        "package_code": "CM",
+        "package_name": "SON (DSF)",
+        "normalized_package": "SON (DSF)-6",
+        "pin_count": 6,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "SN74LVC1G125YZPR",
+        "status": "Active",
+        "package_code": "(CM7, CMN)",
+        "package_name": "DSBGA (YZP)",
+        "normalized_package": "DSBGA (YZP)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      },
+      {
+        "mpn": "SN74LVC1G125YZPR.B",
+        "status": "Active",
+        "package_code": "(CM7, CMN)",
+        "package_name": "DSBGA (YZP)",
+        "normalized_package": "DSBGA (YZP)-5",
+        "pin_count": 5,
+        "package_quantity": null,
+        "carrier": null,
+        "rohs": true,
+        "lead_finish": null,
+        "operating_temperature_min_c": -40,
+        "operating_temperature_max_c": 125,
+        "part_marking": [],
+        "qualified": null
+      }
+    ]
+  },
+  "nice_to_have": {
+    "document_title": "SN74LVC1G125 Single Bus Buffer Gate With 3-State Output",
+    "package_names": [
+      "DSBGA (YZP)",
+      "SC70 (DCK)",
+      "SON (DRY)",
+      "SON (DSF)",
+      "SOT-23",
+      "SOT-23 (5)",
+      "SOT-23 (DBV)",
+      "SOT-5X3 (DRL)",
+      "X2SON (DPW)"
+    ],
+    "package_codes": [
+      "(C255, C25F, C25J, C25K, C25R, C 25T)",
+      "(C255, C25F, C25K, C25R)",
+      "(CM, DM)",
+      "(CM5, CMF, CMJ, CM K, CMR, CMT)",
+      "(CM7, CMN)",
+      "(CM7, CMR)",
+      "(CMF, CMZ)",
+      "CM",
+      "CM5",
+      "R4"
+    ],
+    "lead_free": null
+  },
+  "field_statuses": {
+    "document.document_title": "present",
+    "document.manufacturer": "present",
+    "document.base_part": "missing",
+    "must_have.manufacturer": "present",
+    "must_have.base_part": "missing",
+    "must_have.lifecycle_status": "present",
+    "must_have.rohs": "present",
+    "must_have.operating_temperature_range": "present",
+    "must_have.orderable_parts": "present",
+    "must_have.qualified_variants": "missing",
+    "must_have.orderable_parts.74LVC1G125DBVRE4": "present",
+    "must_have.orderable_parts.74LVC1G125DBVRE4.B": "present",
+    "must_have.orderable_parts.74LVC1G125DBVRG4": "present",
+    "must_have.orderable_parts.74LVC1G125DBVRG4.B": "present",
+    "must_have.orderable_parts.74LVC1G125DBVTE4": "present",
+    "must_have.orderable_parts.74LVC1G125DBVTE4.B": "present",
+    "must_have.orderable_parts.74LVC1G125DBVTG4": "present",
+    "must_have.orderable_parts.74LVC1G125DBVTG4.B": "present",
+    "must_have.orderable_parts.74LVC1G125DCKRE4": "present",
+    "must_have.orderable_parts.74LVC1G125DCKRG4": "present",
+    "must_have.orderable_parts.74LVC1G125DCKRG4.B": "present",
+    "must_have.orderable_parts.74LVC1G125DCKTE4": "present",
+    "must_have.orderable_parts.74LVC1G125DCKTG4": "present",
+    "must_have.orderable_parts.74LVC1G125DCKTG4.B": "present",
+    "must_have.orderable_parts.SN74LVC1G125": "present",
+    "must_have.orderable_parts.SN74LVC1G125DBVR": "present",
+    "must_have.orderable_parts.SN74LVC1G125DBVR.B": "present",
+    "must_have.orderable_parts.SN74LVC1G125DBVT": "present",
+    "must_have.orderable_parts.SN74LVC1G125DBVT.B": "present",
+    "must_have.orderable_parts.SN74LVC1G125DCK3": "present",
+    "must_have.orderable_parts.SN74LVC1G125DCK3.B": "present",
+    "must_have.orderable_parts.SN74LVC1G125DCKR": "present",
+    "must_have.orderable_parts.SN74LVC1G125DCKR.B": "present",
+    "must_have.orderable_parts.SN74LVC1G125DCKT": "present",
+    "must_have.orderable_parts.SN74LVC1G125DCKT.B": "present",
+    "must_have.orderable_parts.SN74LVC1G125DCKTG4.B": "present",
+    "must_have.orderable_parts.SN74LVC1G125DPWR": "present",
+    "must_have.orderable_parts.SN74LVC1G125DPWR.B": "present",
+    "must_have.orderable_parts.SN74LVC1G125DRLR": "present",
+    "must_have.orderable_parts.SN74LVC1G125DRLR.B": "present",
+    "must_have.orderable_parts.SN74LVC1G125DRYR": "present",
+    "must_have.orderable_parts.SN74LVC1G125DRYR.B": "present",
+    "must_have.orderable_parts.SN74LVC1G125DRYRG4.B": "present",
+    "must_have.orderable_parts.SN74LVC1G125DSFR": "present",
+    "must_have.orderable_parts.SN74LVC1G125DSFR.B": "present",
+    "must_have.orderable_parts.SN74LVC1G125DSFRG4": "present",
+    "must_have.orderable_parts.SN74LVC1G125DSFRG4.B": "present",
+    "must_have.orderable_parts.SN74LVC1G125YZPR": "present",
+    "must_have.orderable_parts.SN74LVC1G125YZPR.B": "present"
+  },
+  "provenance": {
+    "document.document_title": [
+      {
+        "page_number": 1,
+        "parser_rule": "title_top_page1_largest",
+        "source_text": "SCES223T \u2013APRIL 1999\u2013REVISED OCTOBER 2014\nSN74LVC1G125 Single Bus Buffer Gate With 3-State Output",
+        "bbox": [
+          139.6,
+          69.17,
+          557.65,
+          96.06
+        ],
+        "variant_group": null
+      }
+    ],
+    "document.manufacturer": [
+      {
+        "page_number": 2,
+        "parser_rule": "manufacturer_known_name",
+        "source_text": "2\nSubmit Documentation Feedback\nCopyright \u00a9 1999\u20132014, Texas Instruments Incorporated",
+        "bbox": [
+          54.0,
+          740.97,
+          557.79,
+          748.99
+        ],
+        "variant_group": null
+      }
+    ],
+    "must_have.manufacturer": [
+      {
+        "page_number": 2,
+        "parser_rule": "manufacturer_known_name",
+        "source_text": "2\nSubmit Documentation Feedback\nCopyright \u00a9 1999\u20132014, Texas Instruments Incorporated",
+        "bbox": [
+          54.0,
+          740.97,
+          557.79,
+          748.99
+        ],
+        "variant_group": null
+      }
+    ],
+    "must_have.lifecycle_status": [
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          178.58,
+          369.07,
+          235.27,
+          382.57
+        ],
+        "variant_group": "table_14_0_row_5"
+      }
+    ],
+    "_field_type.rohs": [
+      {
+        "page_number": 14,
+        "parser_rule": "rohs_keyword",
+        "source_text": "Package | Pins\nPackage qty | Carrier\nRoHS",
+        "bbox": [
+          249.77,
+          122.7,
+          444.58,
+          133.71
+        ],
+        "variant_group": null
+      }
+    ],
+    "_field_type.temperature_grade": [
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          178.58,
+          513.57,
+          235.27,
+          537.07
+        ],
+        "variant_group": "table_14_0_row_5"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          235.27,
+          513.57,
+          320.31,
+          537.07
+        ],
+        "variant_group": "table_14_0_row_7"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          405.35,
+          318.57,
+          462.04,
+          342.07
+        ],
+        "variant_group": "table_14_0_row_10"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          462.04,
+          513.57,
+          547.08,
+          537.07
+        ],
+        "variant_group": "table_14_0_row_13"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          547.08,
+          513.57,
+          632.12,
+          537.07
+        ],
+        "variant_group": "table_14_0_row_15"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          632.12,
+          513.57,
+          717.16,
+          537.07
+        ],
+        "variant_group": "table_14_0_row_17"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          136.0,
+          266.86,
+          178.58,
+          280.36
+        ],
+        "variant_group": "table_15_0_row_2"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          178.58,
+          266.86,
+          235.27,
+          280.36
+        ],
+        "variant_group": "table_15_0_row_4"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          235.27,
+          401.86,
+          320.31,
+          415.36
+        ],
+        "variant_group": "table_15_0_row_7"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          320.31,
+          401.86,
+          405.35,
+          415.36
+        ],
+        "variant_group": "table_15_0_row_9"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          405.35,
+          401.86,
+          462.04,
+          415.36
+        ],
+        "variant_group": "table_15_0_row_11"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          547.08,
+          266.86,
+          632.12,
+          280.36
+        ],
+        "variant_group": "table_15_0_row_14"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          632.12,
+          266.86,
+          717.16,
+          280.36
+        ],
+        "variant_group": "table_15_0_row_16"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          717.16,
+          266.86,
+          816.32,
+          280.36
+        ],
+        "variant_group": "table_15_0_row_18"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          22.67,
+          513.57,
+          136.0,
+          537.07
+        ],
+        "variant_group": "table_14_0_row_1"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          136.0,
+          318.57,
+          178.58,
+          342.07
+        ],
+        "variant_group": "table_14_0_row_2"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          136.0,
+          513.57,
+          178.58,
+          537.07
+        ],
+        "variant_group": "table_14_0_row_3"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          178.58,
+          318.57,
+          235.27,
+          342.07
+        ],
+        "variant_group": "table_14_0_row_4"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          235.27,
+          318.57,
+          320.31,
+          342.07
+        ],
+        "variant_group": "table_14_0_row_6"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          320.31,
+          318.57,
+          405.35,
+          342.07
+        ],
+        "variant_group": "table_14_0_row_8"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          320.31,
+          513.57,
+          405.35,
+          537.07
+        ],
+        "variant_group": "table_14_0_row_9"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          405.35,
+          513.57,
+          462.04,
+          537.07
+        ],
+        "variant_group": "table_14_0_row_11"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          462.04,
+          318.57,
+          547.08,
+          342.07
+        ],
+        "variant_group": "table_14_0_row_12"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          547.08,
+          318.57,
+          632.12,
+          342.07
+        ],
+        "variant_group": "table_14_0_row_14"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          632.12,
+          318.57,
+          717.16,
+          342.07
+        ],
+        "variant_group": "table_14_0_row_16"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          717.16,
+          318.57,
+          816.32,
+          342.07
+        ],
+        "variant_group": "table_14_0_row_18"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 85",
+        "bbox": [
+          717.16,
+          513.57,
+          816.32,
+          537.07
+        ],
+        "variant_group": "table_14_0_row_19"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          136.0,
+          401.86,
+          178.58,
+          415.36
+        ],
+        "variant_group": "table_15_0_row_3"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          178.58,
+          401.86,
+          235.27,
+          415.36
+        ],
+        "variant_group": "table_15_0_row_5"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          235.27,
+          266.86,
+          320.31,
+          280.36
+        ],
+        "variant_group": "table_15_0_row_6"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          320.31,
+          266.86,
+          405.35,
+          280.36
+        ],
+        "variant_group": "table_15_0_row_8"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          405.35,
+          266.86,
+          462.04,
+          280.36
+        ],
+        "variant_group": "table_15_0_row_10"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          462.04,
+          266.86,
+          547.08,
+          280.36
+        ],
+        "variant_group": "table_15_0_row_12"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          462.04,
+          401.86,
+          547.08,
+          415.36
+        ],
+        "variant_group": "table_15_0_row_13"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          547.08,
+          401.86,
+          632.12,
+          415.36
+        ],
+        "variant_group": "table_15_0_row_15"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          632.12,
+          401.86,
+          717.16,
+          415.36
+        ],
+        "variant_group": "table_15_0_row_17"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          717.16,
+          401.86,
+          816.32,
+          415.36
+        ],
+        "variant_group": "table_15_0_row_19"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 85",
+        "bbox": [
+          22.67,
+          401.86,
+          136.0,
+          415.36
+        ],
+        "variant_group": "table_15_0_row_1"
+      },
+      {
+        "page_number": 2,
+        "parser_rule": "temp_range_regex",
+        "source_text": "\u2022\nAdded \u201340\u00b0C to 125\u00b0C Temperature range to Electrical Characteristics............................................................................... 6",
+        "bbox": [
+          54.0,
+          632.11,
+          557.82,
+          641.11
+        ],
+        "variant_group": null
+      },
+      {
+        "page_number": 6,
+        "parser_rule": "temp_range_regex",
+        "source_text": "over recommended operating free-air temperature range of \u201340\u00b0C to 85\u00b0C, CL = 15 pF (unless otherwise noted)\n(see Figure 3)",
+        "bbox": [
+          54.0,
+          426.71,
+          500.97,
+          446.71
+        ],
+        "variant_group": null
+      }
+    ],
+    "_field_type.package_name": [
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          178.58,
+          396.07,
+          235.27,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_5"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          235.27,
+          396.07,
+          320.31,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_7"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          547.08,
+          396.07,
+          632.12,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_15"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          632.12,
+          396.07,
+          717.16,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_17"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "DSBGA (YZP) | 5",
+        "bbox": [
+          717.16,
+          169.36,
+          816.32,
+          192.86
+        ],
+        "variant_group": "table_15_0_row_18"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-5X3 (DRL) | 5",
+        "bbox": [
+          320.31,
+          334.36,
+          405.35,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_9"
+      },
+      {
+        "page_number": 1,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-23 (5)",
+        "bbox": [
+          405.08,
+          307.05,
+          477.79,
+          320.25
+        ],
+        "variant_group": "table_1_0_row_1"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          22.67,
+          396.07,
+          136.0,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_1"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          136.0,
+          201.07,
+          178.58,
+          224.57
+        ],
+        "variant_group": "table_14_0_row_2"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          136.0,
+          396.07,
+          178.58,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_3"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          178.58,
+          201.07,
+          235.27,
+          224.57
+        ],
+        "variant_group": "table_14_0_row_4"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          235.27,
+          201.07,
+          320.31,
+          224.57
+        ],
+        "variant_group": "table_14_0_row_6"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          320.31,
+          201.07,
+          405.35,
+          224.57
+        ],
+        "variant_group": "table_14_0_row_8"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          632.12,
+          201.07,
+          717.16,
+          224.57
+        ],
+        "variant_group": "table_14_0_row_16"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          717.16,
+          201.07,
+          816.32,
+          224.57
+        ],
+        "variant_group": "table_14_0_row_18"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "DSBGA (YZP) | 5",
+        "bbox": [
+          717.16,
+          334.36,
+          816.32,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_19"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-5X3 (DRL) | 5",
+        "bbox": [
+          405.35,
+          169.36,
+          462.04,
+          192.86
+        ],
+        "variant_group": "table_15_0_row_10"
+      },
+      {
+        "page_number": 1,
+        "parser_rule": "package_type_regex",
+        "source_text": "SOT-23 (5)\n2.90 mm \u00d7 1.60 mm\n\u2013\n2000-V Human-Body Model (A114-A)",
+        "bbox": [
+          69.0,
+          297.39,
+          552.89,
+          311.04
+        ],
+        "variant_group": null
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          405.35,
+          201.07,
+          462.04,
+          224.57
+        ],
+        "variant_group": "table_14_0_row_10"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          462.04,
+          396.07,
+          547.08,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_13"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          136.0,
+          169.36,
+          178.58,
+          192.86
+        ],
+        "variant_group": "table_15_0_row_2"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          178.58,
+          169.36,
+          235.27,
+          192.86
+        ],
+        "variant_group": "table_15_0_row_4"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SON (DRY) | 6",
+        "bbox": [
+          405.35,
+          334.36,
+          462.04,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_11"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SON (DSF) | 6",
+        "bbox": [
+          547.08,
+          169.36,
+          632.12,
+          192.86
+        ],
+        "variant_group": "table_15_0_row_14"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SON (DSF) | 6",
+        "bbox": [
+          632.12,
+          169.36,
+          717.16,
+          192.86
+        ],
+        "variant_group": "table_15_0_row_16"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "X2SON (DPW) | 5",
+        "bbox": [
+          235.27,
+          334.36,
+          320.31,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_7"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          320.31,
+          396.07,
+          405.35,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_9"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          405.35,
+          396.07,
+          462.04,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_11"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          462.04,
+          201.07,
+          547.08,
+          224.57
+        ],
+        "variant_group": "table_14_0_row_12"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          547.08,
+          201.07,
+          632.12,
+          224.57
+        ],
+        "variant_group": "table_14_0_row_14"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          717.16,
+          396.07,
+          816.32,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_19"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          22.67,
+          334.36,
+          136.0,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_1"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          136.0,
+          334.36,
+          178.58,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_3"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          178.58,
+          334.36,
+          235.27,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_5"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          235.27,
+          169.36,
+          320.31,
+          192.86
+        ],
+        "variant_group": "table_15_0_row_6"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SON (DRY) | 6",
+        "bbox": [
+          462.04,
+          169.36,
+          547.08,
+          192.86
+        ],
+        "variant_group": "table_15_0_row_12"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SON (DRY) | 6",
+        "bbox": [
+          462.04,
+          334.36,
+          547.08,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_13"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SON (DSF) | 6",
+        "bbox": [
+          547.08,
+          334.36,
+          632.12,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_15"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SON (DSF) | 6",
+        "bbox": [
+          632.12,
+          334.36,
+          717.16,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_17"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "X2SON (DPW) | 5",
+        "bbox": [
+          320.31,
+          169.36,
+          405.35,
+          192.86
+        ],
+        "variant_group": "table_15_0_row_8"
+      }
+    ],
+    "_field_type.package_code": [
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "(C255, C25F, C25J,\nC25K, C25R, C\n25T)",
+        "bbox": [
+          547.08,
+          537.07,
+          632.12,
+          550.32
+        ],
+        "variant_group": "table_14_0_row_15"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "(C255, C25F, C25K,\nC25R)",
+        "bbox": [
+          178.58,
+          537.07,
+          235.27,
+          550.32
+        ],
+        "variant_group": "table_14_0_row_5"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "(C255, C25F, C25K,\nC25R)",
+        "bbox": [
+          235.27,
+          537.07,
+          320.31,
+          550.32
+        ],
+        "variant_group": "table_14_0_row_7"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "(C255, C25F, C25K,\nC25R)",
+        "bbox": [
+          632.12,
+          537.07,
+          717.16,
+          550.32
+        ],
+        "variant_group": "table_14_0_row_17"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "CM5",
+        "bbox": [
+          405.35,
+          342.07,
+          462.04,
+          355.57
+        ],
+        "variant_group": "table_14_0_row_10"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "CM5",
+        "bbox": [
+          462.04,
+          537.07,
+          547.08,
+          550.32
+        ],
+        "variant_group": "table_14_0_row_13"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "(CM, DM)",
+        "bbox": [
+          405.35,
+          415.36,
+          462.04,
+          428.7
+        ],
+        "variant_group": "table_15_0_row_11"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "(CM5, CMF, CMJ, CM\nK, CMR, CMT)",
+        "bbox": [
+          136.0,
+          280.36,
+          178.58,
+          293.86
+        ],
+        "variant_group": "table_15_0_row_2"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "(CM5, CMF, CMJ, CM\nK, CMR, CMT)",
+        "bbox": [
+          178.58,
+          280.36,
+          235.27,
+          293.86
+        ],
+        "variant_group": "table_15_0_row_4"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "(CM7, CMN)",
+        "bbox": [
+          717.16,
+          280.36,
+          816.32,
+          293.86
+        ],
+        "variant_group": "table_15_0_row_18"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "(CM7, CMR)",
+        "bbox": [
+          320.31,
+          415.36,
+          405.35,
+          428.7
+        ],
+        "variant_group": "table_15_0_row_9"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "CM",
+        "bbox": [
+          547.08,
+          280.36,
+          632.12,
+          293.86
+        ],
+        "variant_group": "table_15_0_row_14"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "CM",
+        "bbox": [
+          632.12,
+          280.36,
+          717.16,
+          293.86
+        ],
+        "variant_group": "table_15_0_row_16"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "R4",
+        "bbox": [
+          235.27,
+          415.36,
+          320.31,
+          428.7
+        ],
+        "variant_group": "table_15_0_row_7"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "(C255, C25F, C25J,\nC25K, C25R, C\n25T)",
+        "bbox": [
+          632.12,
+          342.07,
+          717.16,
+          355.57
+        ],
+        "variant_group": "table_14_0_row_16"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "(C255, C25F, C25K,\nC25R)",
+        "bbox": [
+          22.67,
+          537.07,
+          136.0,
+          550.32
+        ],
+        "variant_group": "table_14_0_row_1"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "(C255, C25F, C25K,\nC25R)",
+        "bbox": [
+          136.0,
+          342.07,
+          178.58,
+          355.57
+        ],
+        "variant_group": "table_14_0_row_2"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "(C255, C25F, C25K,\nC25R)",
+        "bbox": [
+          136.0,
+          537.07,
+          178.58,
+          550.32
+        ],
+        "variant_group": "table_14_0_row_3"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "(C255, C25F, C25K,\nC25R)",
+        "bbox": [
+          178.58,
+          342.07,
+          235.27,
+          355.57
+        ],
+        "variant_group": "table_14_0_row_4"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "(C255, C25F, C25K,\nC25R)",
+        "bbox": [
+          235.27,
+          342.07,
+          320.31,
+          355.57
+        ],
+        "variant_group": "table_14_0_row_6"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "(C255, C25F, C25K,\nC25R)",
+        "bbox": [
+          320.31,
+          342.07,
+          405.35,
+          355.57
+        ],
+        "variant_group": "table_14_0_row_8"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "(C255, C25F, C25K,\nC25R)",
+        "bbox": [
+          717.16,
+          342.07,
+          816.32,
+          355.57
+        ],
+        "variant_group": "table_14_0_row_18"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "(CMF, CMZ)",
+        "bbox": [
+          717.16,
+          537.07,
+          816.32,
+          550.32
+        ],
+        "variant_group": "table_14_0_row_19"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "CM5",
+        "bbox": [
+          320.31,
+          537.07,
+          405.35,
+          550.32
+        ],
+        "variant_group": "table_14_0_row_9"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "CM5",
+        "bbox": [
+          405.35,
+          537.07,
+          462.04,
+          550.32
+        ],
+        "variant_group": "table_14_0_row_11"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "CM5",
+        "bbox": [
+          462.04,
+          342.07,
+          547.08,
+          355.57
+        ],
+        "variant_group": "table_14_0_row_12"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "CM5",
+        "bbox": [
+          547.08,
+          342.07,
+          632.12,
+          355.57
+        ],
+        "variant_group": "table_14_0_row_14"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "(CM, DM)",
+        "bbox": [
+          462.04,
+          280.36,
+          547.08,
+          293.86
+        ],
+        "variant_group": "table_15_0_row_12"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "(CM5, CMF, CMJ, CM\nK, CMR, CMT)",
+        "bbox": [
+          136.0,
+          415.36,
+          178.58,
+          428.7
+        ],
+        "variant_group": "table_15_0_row_3"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "(CM5, CMF, CMJ, CM\nK, CMR, CMT)",
+        "bbox": [
+          178.58,
+          415.36,
+          235.27,
+          428.7
+        ],
+        "variant_group": "table_15_0_row_5"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "(CM7, CMN)",
+        "bbox": [
+          717.16,
+          415.36,
+          816.32,
+          428.7
+        ],
+        "variant_group": "table_15_0_row_19"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "(CM7, CMR)",
+        "bbox": [
+          405.35,
+          280.36,
+          462.04,
+          293.86
+        ],
+        "variant_group": "table_15_0_row_10"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "(CMF, CMZ)",
+        "bbox": [
+          22.67,
+          415.36,
+          136.0,
+          428.7
+        ],
+        "variant_group": "table_15_0_row_1"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "CM",
+        "bbox": [
+          462.04,
+          415.36,
+          547.08,
+          428.7
+        ],
+        "variant_group": "table_15_0_row_13"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "CM",
+        "bbox": [
+          547.08,
+          415.36,
+          632.12,
+          428.7
+        ],
+        "variant_group": "table_15_0_row_15"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "CM",
+        "bbox": [
+          632.12,
+          415.36,
+          717.16,
+          428.7
+        ],
+        "variant_group": "table_15_0_row_17"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "R4",
+        "bbox": [
+          320.31,
+          280.36,
+          405.35,
+          293.86
+        ],
+        "variant_group": "table_15_0_row_8"
+      }
+    ],
+    "must_have.orderable_parts.74LVC1G125DBVRE4": [
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          22.67,
+          396.07,
+          136.0,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_1"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "74LVC1G125DBVRE4\nActive\nProduction\nSOT-23 (DBV) | 5\n3000 | null\nYes\nNIPDAU\nLevel-1-260C-UNLIM\n-40 to 125\n(C255, C25F, C25K,\n     C25R)",
+        "bbox": [
+          39.21,
+          155.76,
+          802.94,
+          176.75
+        ],
+        "variant_group": "table_14_0_row_1"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          22.67,
+          513.57,
+          136.0,
+          537.07
+        ],
+        "variant_group": "table_14_0_row_1"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          22.67,
+          396.07,
+          136.0,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_1"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "(C255, C25F, C25K,\nC25R)",
+        "bbox": [
+          22.67,
+          537.07,
+          136.0,
+          550.32
+        ],
+        "variant_group": "table_14_0_row_1"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          22.67,
+          369.07,
+          136.0,
+          382.57
+        ],
+        "variant_group": "table_14_0_row_1"
+      }
+    ],
+    "must_have.orderable_parts.74LVC1G125DBVRE4.B": [
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          136.0,
+          201.07,
+          178.58,
+          224.57
+        ],
+        "variant_group": "table_14_0_row_2"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "74LVC1G125DBVRE4.B\nActive\nProduction\nSOT-23 (DBV) | 5\n3000 | null\nYes\nNIPDAU\nLevel-1-260C-UNLIM\n-40 to 125\n(C255, C25F, C25K,\n     C25R)",
+        "bbox": [
+          35.43,
+          179.26,
+          802.94,
+          200.25
+        ],
+        "variant_group": "table_14_0_row_2"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          136.0,
+          318.57,
+          178.58,
+          342.07
+        ],
+        "variant_group": "table_14_0_row_2"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          136.0,
+          201.07,
+          178.58,
+          224.57
+        ],
+        "variant_group": "table_14_0_row_2"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "(C255, C25F, C25K,\nC25R)",
+        "bbox": [
+          136.0,
+          342.07,
+          178.58,
+          355.57
+        ],
+        "variant_group": "table_14_0_row_2"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          136.0,
+          154.07,
+          178.58,
+          177.57
+        ],
+        "variant_group": "table_14_0_row_2"
+      }
+    ],
+    "must_have.orderable_parts.74LVC1G125DBVRG4": [
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          136.0,
+          396.07,
+          178.58,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_3"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "74LVC1G125DBVRG4\nActive\nProduction\nSOT-23 (DBV) | 5\n3000 | null\nYes\nNIPDAU\nLevel-1-260C-UNLIM\n-40 to 125\n(C255, C25F, C25K,\n     C25R)",
+        "bbox": [
+          38.77,
+          202.76,
+          802.94,
+          223.75
+        ],
+        "variant_group": "table_14_0_row_3"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          136.0,
+          513.57,
+          178.58,
+          537.07
+        ],
+        "variant_group": "table_14_0_row_3"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          136.0,
+          396.07,
+          178.58,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_3"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "(C255, C25F, C25K,\nC25R)",
+        "bbox": [
+          136.0,
+          537.07,
+          178.58,
+          550.32
+        ],
+        "variant_group": "table_14_0_row_3"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          136.0,
+          369.07,
+          178.58,
+          382.57
+        ],
+        "variant_group": "table_14_0_row_3"
+      }
+    ],
+    "must_have.orderable_parts.74LVC1G125DBVRG4.B": [
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          178.58,
+          201.07,
+          235.27,
+          224.57
+        ],
+        "variant_group": "table_14_0_row_4"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "74LVC1G125DBVRG4.B\nActive\nProduction\nSOT-23 (DBV) | 5\n3000 | null\nYes\nNIPDAU\nLevel-1-260C-UNLIM\n-40 to 125\n(C255, C25F, C25K,\n     C25R)",
+        "bbox": [
+          34.99,
+          226.26,
+          802.94,
+          247.25
+        ],
+        "variant_group": "table_14_0_row_4"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          178.58,
+          318.57,
+          235.27,
+          342.07
+        ],
+        "variant_group": "table_14_0_row_4"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          178.58,
+          201.07,
+          235.27,
+          224.57
+        ],
+        "variant_group": "table_14_0_row_4"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "(C255, C25F, C25K,\nC25R)",
+        "bbox": [
+          178.58,
+          342.07,
+          235.27,
+          355.57
+        ],
+        "variant_group": "table_14_0_row_4"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          178.58,
+          154.07,
+          235.27,
+          177.57
+        ],
+        "variant_group": "table_14_0_row_4"
+      }
+    ],
+    "must_have.orderable_parts.74LVC1G125DBVTE4": [
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          178.58,
+          396.07,
+          235.27,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_5"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "74LVC1G125DBVTE4\nActive\nProduction\nSOT-23 (DBV) | 5\n250 | SMALL T&R\nYes\nNIPDAU\nLevel-1-260C-UNLIM\n-40 to 125\n(C255, C25F, C25K,\n     C25R)",
+        "bbox": [
+          39.66,
+          249.76,
+          802.94,
+          270.75
+        ],
+        "variant_group": "table_14_0_row_5"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          178.58,
+          513.57,
+          235.27,
+          537.07
+        ],
+        "variant_group": "table_14_0_row_5"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          178.58,
+          396.07,
+          235.27,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_5"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "(C255, C25F, C25K,\nC25R)",
+        "bbox": [
+          178.58,
+          537.07,
+          235.27,
+          550.32
+        ],
+        "variant_group": "table_14_0_row_5"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          178.58,
+          369.07,
+          235.27,
+          382.57
+        ],
+        "variant_group": "table_14_0_row_5"
+      }
+    ],
+    "must_have.orderable_parts.74LVC1G125DBVTE4.B": [
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          235.27,
+          201.07,
+          320.31,
+          224.57
+        ],
+        "variant_group": "table_14_0_row_6"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "74LVC1G125DBVTE4.B\nActive\nProduction\nSOT-23 (DBV) | 5\n250 | SMALL T&R\nYes\nNIPDAU\nLevel-1-260C-UNLIM\n-40 to 125\n(C255, C25F, C25K,\n     C25R)",
+        "bbox": [
+          35.88,
+          273.26,
+          802.94,
+          294.25
+        ],
+        "variant_group": "table_14_0_row_6"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          235.27,
+          318.57,
+          320.31,
+          342.07
+        ],
+        "variant_group": "table_14_0_row_6"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          235.27,
+          201.07,
+          320.31,
+          224.57
+        ],
+        "variant_group": "table_14_0_row_6"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "(C255, C25F, C25K,\nC25R)",
+        "bbox": [
+          235.27,
+          342.07,
+          320.31,
+          355.57
+        ],
+        "variant_group": "table_14_0_row_6"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          235.27,
+          154.07,
+          320.31,
+          177.57
+        ],
+        "variant_group": "table_14_0_row_6"
+      }
+    ],
+    "must_have.orderable_parts.74LVC1G125DBVTG4": [
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          235.27,
+          396.07,
+          320.31,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_7"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "74LVC1G125DBVTG4\nActive\nProduction\nSOT-23 (DBV) | 5\n250 | SMALL T&R\nYes\nNIPDAU\nLevel-1-260C-UNLIM\n-40 to 125\n(C255, C25F, C25K,\n     C25R)",
+        "bbox": [
+          39.21,
+          296.76,
+          802.94,
+          317.75
+        ],
+        "variant_group": "table_14_0_row_7"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          235.27,
+          513.57,
+          320.31,
+          537.07
+        ],
+        "variant_group": "table_14_0_row_7"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          235.27,
+          396.07,
+          320.31,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_7"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "(C255, C25F, C25K,\nC25R)",
+        "bbox": [
+          235.27,
+          537.07,
+          320.31,
+          550.32
+        ],
+        "variant_group": "table_14_0_row_7"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          235.27,
+          369.07,
+          320.31,
+          382.57
+        ],
+        "variant_group": "table_14_0_row_7"
+      }
+    ],
+    "must_have.orderable_parts.74LVC1G125DBVTG4.B": [
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          320.31,
+          201.07,
+          405.35,
+          224.57
+        ],
+        "variant_group": "table_14_0_row_8"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "74LVC1G125DBVTG4.B\nActive\nProduction\nSOT-23 (DBV) | 5\n250 | SMALL T&R\nYes\nNIPDAU\nLevel-1-260C-UNLIM\n-40 to 125\n(C255, C25F, C25K,\n     C25R)",
+        "bbox": [
+          35.43,
+          320.26,
+          802.94,
+          341.25
+        ],
+        "variant_group": "table_14_0_row_8"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          320.31,
+          318.57,
+          405.35,
+          342.07
+        ],
+        "variant_group": "table_14_0_row_8"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          320.31,
+          201.07,
+          405.35,
+          224.57
+        ],
+        "variant_group": "table_14_0_row_8"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "(C255, C25F, C25K,\nC25R)",
+        "bbox": [
+          320.31,
+          342.07,
+          405.35,
+          355.57
+        ],
+        "variant_group": "table_14_0_row_8"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          320.31,
+          154.07,
+          405.35,
+          177.57
+        ],
+        "variant_group": "table_14_0_row_8"
+      }
+    ],
+    "must_have.orderable_parts.74LVC1G125DCKRE4": [
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "74LVC1G125DCKRE4\nActive\nProduction\nSC70 (DCK) | 5\n3000 | LARGE T&R\nYes\nNIPDAU\nLevel-1-260C-UNLIM\n-40 to 125\nCM5",
+        "bbox": [
+          38.99,
+          343.76,
+          775.15,
+          354.75
+        ],
+        "variant_group": "table_14_0_row_9"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          320.31,
+          513.57,
+          405.35,
+          537.07
+        ],
+        "variant_group": "table_14_0_row_9"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          320.31,
+          396.07,
+          405.35,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_9"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "CM5",
+        "bbox": [
+          320.31,
+          537.07,
+          405.35,
+          550.32
+        ],
+        "variant_group": "table_14_0_row_9"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          320.31,
+          369.07,
+          405.35,
+          382.57
+        ],
+        "variant_group": "table_14_0_row_9"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          320.31,
+          396.07,
+          405.35,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_9"
+      }
+    ],
+    "must_have.orderable_parts.74LVC1G125DCKRG4": [
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "74LVC1G125DCKRG4\nActive\nProduction\nSC70 (DCK) | 5\n3000 | LARGE T&R\nYes\nNIPDAU\nLevel-1-260C-UNLIM\n-40 to 125\nCM5",
+        "bbox": [
+          38.55,
+          357.26,
+          775.15,
+          368.25
+        ],
+        "variant_group": "table_14_0_row_10"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          405.35,
+          318.57,
+          462.04,
+          342.07
+        ],
+        "variant_group": "table_14_0_row_10"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          405.35,
+          201.07,
+          462.04,
+          224.57
+        ],
+        "variant_group": "table_14_0_row_10"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "CM5",
+        "bbox": [
+          405.35,
+          342.07,
+          462.04,
+          355.57
+        ],
+        "variant_group": "table_14_0_row_10"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          405.35,
+          154.07,
+          462.04,
+          177.57
+        ],
+        "variant_group": "table_14_0_row_10"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          405.35,
+          201.07,
+          462.04,
+          224.57
+        ],
+        "variant_group": "table_14_0_row_10"
+      }
+    ],
+    "must_have.orderable_parts.74LVC1G125DCKRG4.B": [
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "74LVC1G125DCKRG4.B\nActive\nProduction\nSC70 (DCK) | 5\n3000 | LARGE T&R\nYes\nNIPDAU\nLevel-1-260C-UNLIM\n-40 to 125\nCM5",
+        "bbox": [
+          34.77,
+          370.76,
+          775.15,
+          381.75
+        ],
+        "variant_group": "table_14_0_row_11"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          405.35,
+          513.57,
+          462.04,
+          537.07
+        ],
+        "variant_group": "table_14_0_row_11"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          405.35,
+          396.07,
+          462.04,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_11"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "CM5",
+        "bbox": [
+          405.35,
+          537.07,
+          462.04,
+          550.32
+        ],
+        "variant_group": "table_14_0_row_11"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          405.35,
+          369.07,
+          462.04,
+          382.57
+        ],
+        "variant_group": "table_14_0_row_11"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          405.35,
+          396.07,
+          462.04,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_11"
+      }
+    ],
+    "must_have.orderable_parts.74LVC1G125DCKTE4": [
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "74LVC1G125DCKTE4\nActive\nProduction\nSC70 (DCK) | 5\n250 | SMALL T&R\nYes\nNIPDAU\nLevel-1-260C-UNLIM\n-40 to 125\nCM5",
+        "bbox": [
+          39.44,
+          384.26,
+          775.15,
+          395.25
+        ],
+        "variant_group": "table_14_0_row_12"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          462.04,
+          318.57,
+          547.08,
+          342.07
+        ],
+        "variant_group": "table_14_0_row_12"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          462.04,
+          201.07,
+          547.08,
+          224.57
+        ],
+        "variant_group": "table_14_0_row_12"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "CM5",
+        "bbox": [
+          462.04,
+          342.07,
+          547.08,
+          355.57
+        ],
+        "variant_group": "table_14_0_row_12"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          462.04,
+          154.07,
+          547.08,
+          177.57
+        ],
+        "variant_group": "table_14_0_row_12"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          462.04,
+          201.07,
+          547.08,
+          224.57
+        ],
+        "variant_group": "table_14_0_row_12"
+      }
+    ],
+    "must_have.orderable_parts.74LVC1G125DCKTG4": [
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "74LVC1G125DCKTG4\nActive\nProduction\nSC70 (DCK) | 5\n250 | SMALL T&R\nYes\nNIPDAU\nLevel-1-260C-UNLIM\n-40 to 125\nCM5",
+        "bbox": [
+          38.99,
+          397.76,
+          775.15,
+          408.75
+        ],
+        "variant_group": "table_14_0_row_13"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          462.04,
+          513.57,
+          547.08,
+          537.07
+        ],
+        "variant_group": "table_14_0_row_13"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          462.04,
+          396.07,
+          547.08,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_13"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "CM5",
+        "bbox": [
+          462.04,
+          537.07,
+          547.08,
+          550.32
+        ],
+        "variant_group": "table_14_0_row_13"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          462.04,
+          369.07,
+          547.08,
+          382.57
+        ],
+        "variant_group": "table_14_0_row_13"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          462.04,
+          396.07,
+          547.08,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_13"
+      }
+    ],
+    "must_have.orderable_parts.74LVC1G125DCKTG4.B": [
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "74LVC1G125DCKTG4.B\nActive\nProduction\nSC70 (DCK) | 5\n250 | SMALL T&R\nYes\nNIPDAU\nLevel-1-260C-UNLIM\n-40 to 125\nCM5",
+        "bbox": [
+          35.21,
+          411.26,
+          775.15,
+          422.25
+        ],
+        "variant_group": "table_14_0_row_14"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          547.08,
+          318.57,
+          632.12,
+          342.07
+        ],
+        "variant_group": "table_14_0_row_14"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          547.08,
+          201.07,
+          632.12,
+          224.57
+        ],
+        "variant_group": "table_14_0_row_14"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "CM5",
+        "bbox": [
+          547.08,
+          342.07,
+          632.12,
+          355.57
+        ],
+        "variant_group": "table_14_0_row_14"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          547.08,
+          154.07,
+          632.12,
+          177.57
+        ],
+        "variant_group": "table_14_0_row_14"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          547.08,
+          201.07,
+          632.12,
+          224.57
+        ],
+        "variant_group": "table_14_0_row_14"
+      }
+    ],
+    "must_have.orderable_parts.SN74LVC1G125": [
+      {
+        "page_number": 1,
+        "parser_rule": "table_column_match+mfr_prefix_match",
+        "source_text": "SN74LVC1G125",
+        "bbox": [
+          482.9,
+          55.04,
+          557.89,
+          65.04
+        ],
+        "variant_group": "table_1_0_row_1"
+      },
+      {
+        "page_number": 1,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-23 (5)",
+        "bbox": [
+          405.08,
+          307.05,
+          477.79,
+          320.25
+        ],
+        "variant_group": "table_1_0_row_1"
+      }
+    ],
+    "must_have.orderable_parts.SN74LVC1G125DBVR": [
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          547.08,
+          396.07,
+          632.12,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_15"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match+mfr_prefix_match",
+        "source_text": "SN74LVC1G125DBVR\nActive\nProduction\nSOT-23 (DBV) | 5\n3000 | LARGE T&R\nYes\nNIPDAU | SN\nLevel-1-260C-UNLIM\n-40 to 125\n(C255, C25F, C25J,\n     C25K, C25R, C\n     25T)",
+        "bbox": [
+          38.55,
+          424.76,
+          802.28,
+          455.75
+        ],
+        "variant_group": "table_14_0_row_15"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          547.08,
+          513.57,
+          632.12,
+          537.07
+        ],
+        "variant_group": "table_14_0_row_15"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          547.08,
+          396.07,
+          632.12,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_15"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "(C255, C25F, C25J,\nC25K, C25R, C\n25T)",
+        "bbox": [
+          547.08,
+          537.07,
+          632.12,
+          550.32
+        ],
+        "variant_group": "table_14_0_row_15"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          547.08,
+          369.07,
+          632.12,
+          382.57
+        ],
+        "variant_group": "table_14_0_row_15"
+      }
+    ],
+    "must_have.orderable_parts.SN74LVC1G125DBVR.B": [
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match+mfr_prefix_match",
+        "source_text": "SN74LVC1G125DBVR.B\nActive\nProduction\nSOT-23 (DBV) | 5\n3000 | LARGE T&R\nYes\nNIPDAU\nLevel-1-260C-UNLIM\n-40 to 125\n(C255, C25F, C25J,\n     C25K, C25R, C\n     25T)",
+        "bbox": [
+          34.77,
+          458.26,
+          802.28,
+          489.25
+        ],
+        "variant_group": "table_14_0_row_16"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          632.12,
+          201.07,
+          717.16,
+          224.57
+        ],
+        "variant_group": "table_14_0_row_16"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          632.12,
+          318.57,
+          717.16,
+          342.07
+        ],
+        "variant_group": "table_14_0_row_16"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          632.12,
+          201.07,
+          717.16,
+          224.57
+        ],
+        "variant_group": "table_14_0_row_16"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "(C255, C25F, C25J,\nC25K, C25R, C\n25T)",
+        "bbox": [
+          632.12,
+          342.07,
+          717.16,
+          355.57
+        ],
+        "variant_group": "table_14_0_row_16"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          632.12,
+          154.07,
+          717.16,
+          177.57
+        ],
+        "variant_group": "table_14_0_row_16"
+      }
+    ],
+    "must_have.orderable_parts.SN74LVC1G125DBVT": [
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          632.12,
+          396.07,
+          717.16,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_17"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match+mfr_prefix_match",
+        "source_text": "SN74LVC1G125DBVT\nActive\nProduction\nSOT-23 (DBV) | 5\n250 | SMALL T&R\nYes\nNIPDAU | SN\nLevel-1-260C-UNLIM\n-40 to 125\n(C255, C25F, C25K,\n     C25R)",
+        "bbox": [
+          38.99,
+          491.76,
+          802.94,
+          512.75
+        ],
+        "variant_group": "table_14_0_row_17"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          632.12,
+          513.57,
+          717.16,
+          537.07
+        ],
+        "variant_group": "table_14_0_row_17"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          632.12,
+          396.07,
+          717.16,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_17"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "(C255, C25F, C25K,\nC25R)",
+        "bbox": [
+          632.12,
+          537.07,
+          717.16,
+          550.32
+        ],
+        "variant_group": "table_14_0_row_17"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          632.12,
+          369.07,
+          717.16,
+          382.57
+        ],
+        "variant_group": "table_14_0_row_17"
+      }
+    ],
+    "must_have.orderable_parts.SN74LVC1G125DBVT.B": [
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match+mfr_prefix_match",
+        "source_text": "SN74LVC1G125DBVT.B\nActive\nProduction\nSOT-23 (DBV) | 5\n250 | SMALL T&R\nYes\nNIPDAU\nLevel-1-260C-UNLIM\n-40 to 125\n(C255, C25F, C25K,\n     C25R)",
+        "bbox": [
+          35.21,
+          515.26,
+          802.94,
+          536.25
+        ],
+        "variant_group": "table_14_0_row_18"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          717.16,
+          201.07,
+          816.32,
+          224.57
+        ],
+        "variant_group": "table_14_0_row_18"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          717.16,
+          318.57,
+          816.32,
+          342.07
+        ],
+        "variant_group": "table_14_0_row_18"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SOT-23 (DBV) | 5",
+        "bbox": [
+          717.16,
+          201.07,
+          816.32,
+          224.57
+        ],
+        "variant_group": "table_14_0_row_18"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "(C255, C25F, C25K,\nC25R)",
+        "bbox": [
+          717.16,
+          342.07,
+          816.32,
+          355.57
+        ],
+        "variant_group": "table_14_0_row_18"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          717.16,
+          154.07,
+          816.32,
+          177.57
+        ],
+        "variant_group": "table_14_0_row_18"
+      }
+    ],
+    "must_have.orderable_parts.SN74LVC1G125DCK3": [
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match+mfr_prefix_match",
+        "source_text": "SN74LVC1G125DCK3\nActive\nProduction\nSC70 (DCK) | 5\n3000 | LARGE T&R\nYes\nSNBI\nLevel-1-260C-UNLIM\n-40 to 85\n(CMF, CMZ)",
+        "bbox": [
+          38.99,
+          538.76,
+          788.92,
+          549.75
+        ],
+        "variant_group": "table_14_0_row_19"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 85",
+        "bbox": [
+          717.16,
+          513.57,
+          816.32,
+          537.07
+        ],
+        "variant_group": "table_14_0_row_19"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          717.16,
+          396.07,
+          816.32,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_19"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "(CMF, CMZ)",
+        "bbox": [
+          717.16,
+          537.07,
+          816.32,
+          550.32
+        ],
+        "variant_group": "table_14_0_row_19"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          717.16,
+          369.07,
+          816.32,
+          382.57
+        ],
+        "variant_group": "table_14_0_row_19"
+      },
+      {
+        "page_number": 14,
+        "parser_rule": "table_column_match",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          717.16,
+          396.07,
+          816.32,
+          409.57
+        ],
+        "variant_group": "table_14_0_row_19"
+      }
+    ],
+    "must_have.orderable_parts.SN74LVC1G125DCK3.B": [
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match+mfr_prefix_match",
+        "source_text": "SN74LVC1G125DCK3.B\nActive\nProduction\nSC70 (DCK) | 5\n3000 | LARGE T&R\nYes\nSNBI\nLevel-1-260C-UNLIM\n-40 to 85\n(CMF, CMZ)",
+        "bbox": [
+          35.21,
+          134.06,
+          788.92,
+          145.05
+        ],
+        "variant_group": "table_15_0_row_1"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 85",
+        "bbox": [
+          22.67,
+          401.86,
+          136.0,
+          415.36
+        ],
+        "variant_group": "table_15_0_row_1"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          22.67,
+          334.36,
+          136.0,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_1"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "(CMF, CMZ)",
+        "bbox": [
+          22.67,
+          415.36,
+          136.0,
+          428.7
+        ],
+        "variant_group": "table_15_0_row_1"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          22.67,
+          307.36,
+          136.0,
+          320.86
+        ],
+        "variant_group": "table_15_0_row_1"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          22.67,
+          334.36,
+          136.0,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_1"
+      }
+    ],
+    "must_have.orderable_parts.SN74LVC1G125DCKR": [
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match+mfr_prefix_match",
+        "source_text": "SN74LVC1G125DCKR\nActive\nProduction\nSC70 (DCK) | 5\n3000 | LARGE T&R\nYes\nNIPDAU | SN\nLevel-1-260C-UNLIM\n-40 to 125\n(CM5, CMF, CMJ, CM\n     K, CMR, CMT)",
+        "bbox": [
+          38.33,
+          147.56,
+          806.26,
+          168.55
+        ],
+        "variant_group": "table_15_0_row_2"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          136.0,
+          266.86,
+          178.58,
+          280.36
+        ],
+        "variant_group": "table_15_0_row_2"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          136.0,
+          169.36,
+          178.58,
+          192.86
+        ],
+        "variant_group": "table_15_0_row_2"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "(CM5, CMF, CMJ, CM\nK, CMR, CMT)",
+        "bbox": [
+          136.0,
+          280.36,
+          178.58,
+          293.86
+        ],
+        "variant_group": "table_15_0_row_2"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          136.0,
+          132.36,
+          178.58,
+          145.86
+        ],
+        "variant_group": "table_15_0_row_2"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          136.0,
+          169.36,
+          178.58,
+          192.86
+        ],
+        "variant_group": "table_15_0_row_2"
+      }
+    ],
+    "must_have.orderable_parts.SN74LVC1G125DCKR.B": [
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match+mfr_prefix_match",
+        "source_text": "SN74LVC1G125DCKR.B\nActive\nProduction\nSC70 (DCK) | 5\n3000 | LARGE T&R\nYes\nSN\nLevel-1-260C-UNLIM\n-40 to 125\n(CM5, CMF, CMJ, CM\n     K, CMR, CMT)",
+        "bbox": [
+          34.55,
+          171.06,
+          806.26,
+          192.05
+        ],
+        "variant_group": "table_15_0_row_3"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          136.0,
+          401.86,
+          178.58,
+          415.36
+        ],
+        "variant_group": "table_15_0_row_3"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          136.0,
+          334.36,
+          178.58,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_3"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "(CM5, CMF, CMJ, CM\nK, CMR, CMT)",
+        "bbox": [
+          136.0,
+          415.36,
+          178.58,
+          428.7
+        ],
+        "variant_group": "table_15_0_row_3"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          136.0,
+          307.36,
+          178.58,
+          320.86
+        ],
+        "variant_group": "table_15_0_row_3"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          136.0,
+          334.36,
+          178.58,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_3"
+      }
+    ],
+    "must_have.orderable_parts.SN74LVC1G125DCKT": [
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match+mfr_prefix_match",
+        "source_text": "SN74LVC1G125DCKTG4.B\nActive\nProduction\nSC70 (DCK) | 5\n250 | SMALL T&R\n-\nCall TI\nCall TI\n-40 to 125",
+        "bbox": [
+          29.66,
+          241.56,
+          692.65,
+          252.55
+        ],
+        "variant_group": "table_15_0_row_4"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          178.58,
+          266.86,
+          235.27,
+          280.36
+        ],
+        "variant_group": "table_15_0_row_4"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          178.58,
+          169.36,
+          235.27,
+          192.86
+        ],
+        "variant_group": "table_15_0_row_4"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "(CM5, CMF, CMJ, CM\nK, CMR, CMT)",
+        "bbox": [
+          178.58,
+          280.36,
+          235.27,
+          293.86
+        ],
+        "variant_group": "table_15_0_row_4"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          178.58,
+          132.36,
+          235.27,
+          145.86
+        ],
+        "variant_group": "table_15_0_row_4"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          178.58,
+          169.36,
+          235.27,
+          192.86
+        ],
+        "variant_group": "table_15_0_row_4"
+      }
+    ],
+    "must_have.orderable_parts.SN74LVC1G125DCKT.B": [
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match+mfr_prefix_match",
+        "source_text": "SN74LVC1G125DCKT.B\nActive\nProduction\nSC70 (DCK) | 5\n250 | SMALL T&R\nYes\nNIPDAU\nLevel-1-260C-UNLIM\n-40 to 125\n(CM5, CMF, CMJ, CM\n     K, CMR, CMT)",
+        "bbox": [
+          34.99,
+          218.06,
+          806.26,
+          239.05
+        ],
+        "variant_group": "table_15_0_row_5"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          178.58,
+          401.86,
+          235.27,
+          415.36
+        ],
+        "variant_group": "table_15_0_row_5"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          178.58,
+          334.36,
+          235.27,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_5"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "(CM5, CMF, CMJ, CM\nK, CMR, CMT)",
+        "bbox": [
+          178.58,
+          415.36,
+          235.27,
+          428.7
+        ],
+        "variant_group": "table_15_0_row_5"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          178.58,
+          307.36,
+          235.27,
+          320.86
+        ],
+        "variant_group": "table_15_0_row_5"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          178.58,
+          334.36,
+          235.27,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_5"
+      }
+    ],
+    "must_have.orderable_parts.SN74LVC1G125DCKTG4.B": [
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match+mfr_prefix_match",
+        "source_text": "SN74LVC1G125DCKTG4.B\nActive\nProduction\nSC70 (DCK) | 5\n250 | SMALL T&R\n-\nCall TI\nCall TI\n-40 to 125",
+        "bbox": [
+          29.66,
+          241.56,
+          692.65,
+          252.55
+        ],
+        "variant_group": "table_15_0_row_6"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          235.27,
+          266.86,
+          320.31,
+          280.36
+        ],
+        "variant_group": "table_15_0_row_6"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          235.27,
+          169.36,
+          320.31,
+          192.86
+        ],
+        "variant_group": "table_15_0_row_6"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          235.27,
+          132.36,
+          320.31,
+          145.86
+        ],
+        "variant_group": "table_15_0_row_6"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SC70 (DCK) | 5",
+        "bbox": [
+          235.27,
+          169.36,
+          320.31,
+          192.86
+        ],
+        "variant_group": "table_15_0_row_6"
+      }
+    ],
+    "must_have.orderable_parts.SN74LVC1G125DPWR": [
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match+mfr_prefix_match",
+        "source_text": "SN74LVC1G125DPWR\nActive\nProduction\nX2SON (DPW) | 5\n3000 | LARGE T&R\nYes\nNIPDAU\nLevel-1-260C-UNLIM\n-40 to 125\nR4",
+        "bbox": [
+          37.44,
+          255.06,
+          771.82,
+          266.05
+        ],
+        "variant_group": "table_15_0_row_7"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          235.27,
+          401.86,
+          320.31,
+          415.36
+        ],
+        "variant_group": "table_15_0_row_7"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "X2SON (DPW) | 5",
+        "bbox": [
+          235.27,
+          334.36,
+          320.31,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_7"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "R4",
+        "bbox": [
+          235.27,
+          415.36,
+          320.31,
+          428.7
+        ],
+        "variant_group": "table_15_0_row_7"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          235.27,
+          307.36,
+          320.31,
+          320.86
+        ],
+        "variant_group": "table_15_0_row_7"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "X2SON (DPW) | 5",
+        "bbox": [
+          235.27,
+          334.36,
+          320.31,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_7"
+      }
+    ],
+    "must_have.orderable_parts.SN74LVC1G125DPWR.B": [
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match+mfr_prefix_match",
+        "source_text": "SN74LVC1G125DPWR.B\nActive\nProduction\nX2SON (DPW) | 5\n3000 | LARGE T&R\nYes\nNIPDAU\nLevel-1-260C-UNLIM\n-40 to 125\nR4",
+        "bbox": [
+          33.66,
+          268.56,
+          771.82,
+          279.55
+        ],
+        "variant_group": "table_15_0_row_8"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          320.31,
+          266.86,
+          405.35,
+          280.36
+        ],
+        "variant_group": "table_15_0_row_8"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "X2SON (DPW) | 5",
+        "bbox": [
+          320.31,
+          169.36,
+          405.35,
+          192.86
+        ],
+        "variant_group": "table_15_0_row_8"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "R4",
+        "bbox": [
+          320.31,
+          280.36,
+          405.35,
+          293.86
+        ],
+        "variant_group": "table_15_0_row_8"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          320.31,
+          132.36,
+          405.35,
+          145.86
+        ],
+        "variant_group": "table_15_0_row_8"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "X2SON (DPW) | 5",
+        "bbox": [
+          320.31,
+          169.36,
+          405.35,
+          192.86
+        ],
+        "variant_group": "table_15_0_row_8"
+      }
+    ],
+    "must_have.orderable_parts.SN74LVC1G125DRLR": [
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-5X3 (DRL) | 5",
+        "bbox": [
+          320.31,
+          334.36,
+          405.35,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_9"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match+mfr_prefix_match",
+        "source_text": "SN74LVC1G125DRLR\nActive\nProduction\nSOT-5X3 (DRL) | 5\n4000 | LARGE T&R\nYes\nNIPDAUAG\nLevel-1-260C-UNLIM\n-40 to 125\n(CM7, CMR)",
+        "bbox": [
+          38.77,
+          282.06,
+          789.15,
+          293.05
+        ],
+        "variant_group": "table_15_0_row_9"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          320.31,
+          401.86,
+          405.35,
+          415.36
+        ],
+        "variant_group": "table_15_0_row_9"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SOT-5X3 (DRL) | 5",
+        "bbox": [
+          320.31,
+          334.36,
+          405.35,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_9"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "(CM7, CMR)",
+        "bbox": [
+          320.31,
+          415.36,
+          405.35,
+          428.7
+        ],
+        "variant_group": "table_15_0_row_9"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          320.31,
+          307.36,
+          405.35,
+          320.86
+        ],
+        "variant_group": "table_15_0_row_9"
+      }
+    ],
+    "must_have.orderable_parts.SN74LVC1G125DRLR.B": [
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match+mfr_prefix_match",
+        "source_text": "SN74LVC1G125DRLR.B\nActive\nProduction\nSOT-5X3 (DRL) | 5\n4000 | LARGE T&R\nYes\nNIPDAUAG\nLevel-1-260C-UNLIM\n-40 to 125\n(CM7, CMR)",
+        "bbox": [
+          34.99,
+          295.56,
+          789.15,
+          306.55
+        ],
+        "variant_group": "table_15_0_row_10"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SOT-5X3 (DRL) | 5",
+        "bbox": [
+          405.35,
+          169.36,
+          462.04,
+          192.86
+        ],
+        "variant_group": "table_15_0_row_10"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          405.35,
+          266.86,
+          462.04,
+          280.36
+        ],
+        "variant_group": "table_15_0_row_10"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SOT-5X3 (DRL) | 5",
+        "bbox": [
+          405.35,
+          169.36,
+          462.04,
+          192.86
+        ],
+        "variant_group": "table_15_0_row_10"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "(CM7, CMR)",
+        "bbox": [
+          405.35,
+          280.36,
+          462.04,
+          293.86
+        ],
+        "variant_group": "table_15_0_row_10"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          405.35,
+          132.36,
+          462.04,
+          145.86
+        ],
+        "variant_group": "table_15_0_row_10"
+      }
+    ],
+    "must_have.orderable_parts.SN74LVC1G125DRYR": [
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match+mfr_prefix_match",
+        "source_text": "SN74LVC1G125DRYRG4.B\nActive\nProduction\nSON (DRY) | 6\n5000 | LARGE T&R\nYes\nNIPDAU\nLevel-1-260C-UNLIM\n-40 to 125\nCM",
+        "bbox": [
+          29.21,
+          336.06,
+          772.93,
+          347.05
+        ],
+        "variant_group": "table_15_0_row_11"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          405.35,
+          401.86,
+          462.04,
+          415.36
+        ],
+        "variant_group": "table_15_0_row_11"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SON (DRY) | 6",
+        "bbox": [
+          405.35,
+          334.36,
+          462.04,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_11"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "(CM, DM)",
+        "bbox": [
+          405.35,
+          415.36,
+          462.04,
+          428.7
+        ],
+        "variant_group": "table_15_0_row_11"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          405.35,
+          307.36,
+          462.04,
+          320.86
+        ],
+        "variant_group": "table_15_0_row_11"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SON (DRY) | 6",
+        "bbox": [
+          405.35,
+          334.36,
+          462.04,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_11"
+      }
+    ],
+    "must_have.orderable_parts.SN74LVC1G125DRYR.B": [
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match+mfr_prefix_match",
+        "source_text": "SN74LVC1G125DRYR.B\nActive\nProduction\nSON (DRY) | 6\n5000 | LARGE T&R\nYes\nCall TI\nLevel-1-260C-UNLIM\n-40 to 125\n(CM, DM)",
+        "bbox": [
+          34.55,
+          322.56,
+          784.04,
+          333.55
+        ],
+        "variant_group": "table_15_0_row_12"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          462.04,
+          266.86,
+          547.08,
+          280.36
+        ],
+        "variant_group": "table_15_0_row_12"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SON (DRY) | 6",
+        "bbox": [
+          462.04,
+          169.36,
+          547.08,
+          192.86
+        ],
+        "variant_group": "table_15_0_row_12"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "(CM, DM)",
+        "bbox": [
+          462.04,
+          280.36,
+          547.08,
+          293.86
+        ],
+        "variant_group": "table_15_0_row_12"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          462.04,
+          132.36,
+          547.08,
+          145.86
+        ],
+        "variant_group": "table_15_0_row_12"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SON (DRY) | 6",
+        "bbox": [
+          462.04,
+          169.36,
+          547.08,
+          192.86
+        ],
+        "variant_group": "table_15_0_row_12"
+      }
+    ],
+    "must_have.orderable_parts.SN74LVC1G125DRYRG4.B": [
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match+mfr_prefix_match",
+        "source_text": "SN74LVC1G125DRYRG4.B\nActive\nProduction\nSON (DRY) | 6\n5000 | LARGE T&R\nYes\nNIPDAU\nLevel-1-260C-UNLIM\n-40 to 125\nCM",
+        "bbox": [
+          29.21,
+          336.06,
+          772.93,
+          347.05
+        ],
+        "variant_group": "table_15_0_row_13"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          462.04,
+          401.86,
+          547.08,
+          415.36
+        ],
+        "variant_group": "table_15_0_row_13"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SON (DRY) | 6",
+        "bbox": [
+          462.04,
+          334.36,
+          547.08,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_13"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "CM",
+        "bbox": [
+          462.04,
+          415.36,
+          547.08,
+          428.7
+        ],
+        "variant_group": "table_15_0_row_13"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          462.04,
+          307.36,
+          547.08,
+          320.86
+        ],
+        "variant_group": "table_15_0_row_13"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SON (DRY) | 6",
+        "bbox": [
+          462.04,
+          334.36,
+          547.08,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_13"
+      }
+    ],
+    "must_have.orderable_parts.SN74LVC1G125DSFR": [
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match+mfr_prefix_match",
+        "source_text": "SN74LVC1G125DSFR\nActive\nProduction\nSON (DSF) | 6\n5000 | LARGE T&R\nYes\nNIPDAU\nLevel-1-260C-UNLIM\n-40 to 125\nCM",
+        "bbox": [
+          38.77,
+          349.56,
+          772.93,
+          360.55
+        ],
+        "variant_group": "table_15_0_row_14"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          547.08,
+          266.86,
+          632.12,
+          280.36
+        ],
+        "variant_group": "table_15_0_row_14"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SON (DSF) | 6",
+        "bbox": [
+          547.08,
+          169.36,
+          632.12,
+          192.86
+        ],
+        "variant_group": "table_15_0_row_14"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "CM",
+        "bbox": [
+          547.08,
+          280.36,
+          632.12,
+          293.86
+        ],
+        "variant_group": "table_15_0_row_14"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          547.08,
+          132.36,
+          632.12,
+          145.86
+        ],
+        "variant_group": "table_15_0_row_14"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SON (DSF) | 6",
+        "bbox": [
+          547.08,
+          169.36,
+          632.12,
+          192.86
+        ],
+        "variant_group": "table_15_0_row_14"
+      }
+    ],
+    "must_have.orderable_parts.SN74LVC1G125DSFR.B": [
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match+mfr_prefix_match",
+        "source_text": "SN74LVC1G125DSFR.B\nActive\nProduction\nSON (DSF) | 6\n5000 | LARGE T&R\nYes\nNIPDAU\nLevel-1-260C-UNLIM\n-40 to 125\nCM",
+        "bbox": [
+          34.99,
+          363.06,
+          772.93,
+          374.05
+        ],
+        "variant_group": "table_15_0_row_15"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          547.08,
+          401.86,
+          632.12,
+          415.36
+        ],
+        "variant_group": "table_15_0_row_15"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SON (DSF) | 6",
+        "bbox": [
+          547.08,
+          334.36,
+          632.12,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_15"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "CM",
+        "bbox": [
+          547.08,
+          415.36,
+          632.12,
+          428.7
+        ],
+        "variant_group": "table_15_0_row_15"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          547.08,
+          307.36,
+          632.12,
+          320.86
+        ],
+        "variant_group": "table_15_0_row_15"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SON (DSF) | 6",
+        "bbox": [
+          547.08,
+          334.36,
+          632.12,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_15"
+      }
+    ],
+    "must_have.orderable_parts.SN74LVC1G125DSFRG4": [
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match+mfr_prefix_match",
+        "source_text": "SN74LVC1G125DSFRG4\nActive\nProduction\nSON (DSF) | 6\n5000 | LARGE T&R\nYes\nNIPDAU\nLevel-1-260C-UNLIM\n-40 to 125\nCM",
+        "bbox": [
+          33.44,
+          376.56,
+          772.93,
+          387.55
+        ],
+        "variant_group": "table_15_0_row_16"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          632.12,
+          266.86,
+          717.16,
+          280.36
+        ],
+        "variant_group": "table_15_0_row_16"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SON (DSF) | 6",
+        "bbox": [
+          632.12,
+          169.36,
+          717.16,
+          192.86
+        ],
+        "variant_group": "table_15_0_row_16"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "CM",
+        "bbox": [
+          632.12,
+          280.36,
+          717.16,
+          293.86
+        ],
+        "variant_group": "table_15_0_row_16"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          632.12,
+          132.36,
+          717.16,
+          145.86
+        ],
+        "variant_group": "table_15_0_row_16"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SON (DSF) | 6",
+        "bbox": [
+          632.12,
+          169.36,
+          717.16,
+          192.86
+        ],
+        "variant_group": "table_15_0_row_16"
+      }
+    ],
+    "must_have.orderable_parts.SN74LVC1G125DSFRG4.B": [
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match+mfr_prefix_match",
+        "source_text": "SN74LVC1G125DSFRG4.B\nActive\nProduction\nSON (DSF) | 6\n5000 | LARGE T&R\nYes\nNIPDAU\nLevel-1-260C-UNLIM\n-40 to 125\nCM",
+        "bbox": [
+          29.66,
+          390.06,
+          772.93,
+          401.05
+        ],
+        "variant_group": "table_15_0_row_17"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          632.12,
+          401.86,
+          717.16,
+          415.36
+        ],
+        "variant_group": "table_15_0_row_17"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "SON (DSF) | 6",
+        "bbox": [
+          632.12,
+          334.36,
+          717.16,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_17"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "CM",
+        "bbox": [
+          632.12,
+          415.36,
+          717.16,
+          428.7
+        ],
+        "variant_group": "table_15_0_row_17"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          632.12,
+          307.36,
+          717.16,
+          320.86
+        ],
+        "variant_group": "table_15_0_row_17"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "SON (DSF) | 6",
+        "bbox": [
+          632.12,
+          334.36,
+          717.16,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_17"
+      }
+    ],
+    "must_have.orderable_parts.SN74LVC1G125YZPR": [
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "DSBGA (YZP) | 5",
+        "bbox": [
+          717.16,
+          169.36,
+          816.32,
+          192.86
+        ],
+        "variant_group": "table_15_0_row_18"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match+mfr_prefix_match",
+        "source_text": "SN74LVC1G125YZPR\nActive\nProduction\nDSBGA (YZP) | 5\n3000 | LARGE T&R\nYes\nSNAGCU\nLevel-1-260C-UNLIM\n-40 to 125\n(CM7, CMN)",
+        "bbox": [
+          38.99,
+          403.56,
+          789.15,
+          414.55
+        ],
+        "variant_group": "table_15_0_row_18"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          717.16,
+          266.86,
+          816.32,
+          280.36
+        ],
+        "variant_group": "table_15_0_row_18"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "DSBGA (YZP) | 5",
+        "bbox": [
+          717.16,
+          169.36,
+          816.32,
+          192.86
+        ],
+        "variant_group": "table_15_0_row_18"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "(CM7, CMN)",
+        "bbox": [
+          717.16,
+          280.36,
+          816.32,
+          293.86
+        ],
+        "variant_group": "table_15_0_row_18"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          717.16,
+          132.36,
+          816.32,
+          145.86
+        ],
+        "variant_group": "table_15_0_row_18"
+      }
+    ],
+    "must_have.orderable_parts.SN74LVC1G125YZPR.B": [
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match+mfr_prefix_match",
+        "source_text": "SN74LVC1G125YZPR.B\nActive\nProduction\nDSBGA (YZP) | 5\n3000 | LARGE T&R\nYes\nSNAGCU\nLevel-1-260C-UNLIM\n-40 to 125\n(CM7, CMN)\n \n(1) Status:  For more details on status, see our product life cycle.",
+        "bbox": [
+          22.68,
+          417.06,
+          789.15,
+          463.93
+        ],
+        "variant_group": "table_15_0_row_19"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "DSBGA (YZP) | 5",
+        "bbox": [
+          717.16,
+          334.36,
+          816.32,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_19"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "-40 to 125",
+        "bbox": [
+          717.16,
+          401.86,
+          816.32,
+          415.36
+        ],
+        "variant_group": "table_15_0_row_19"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_package_pin_split",
+        "source_text": "DSBGA (YZP) | 5",
+        "bbox": [
+          717.16,
+          334.36,
+          816.32,
+          347.86
+        ],
+        "variant_group": "table_15_0_row_19"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "(CM7, CMN)",
+        "bbox": [
+          717.16,
+          415.36,
+          816.32,
+          428.7
+        ],
+        "variant_group": "table_15_0_row_19"
+      },
+      {
+        "page_number": 15,
+        "parser_rule": "table_column_match",
+        "source_text": "Active",
+        "bbox": [
+          717.16,
+          307.36,
+          816.32,
+          320.86
+        ],
+        "variant_group": "table_15_0_row_19"
+      }
+    ]
+  }
+}

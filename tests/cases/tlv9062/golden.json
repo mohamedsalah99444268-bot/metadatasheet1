@@ -1,0 +1,15 @@
+{
+  "document": {
+    "source_file": "input.pdf",
+    "manufacturer": "Texas Instruments",
+    "base_part": "TLV9062",
+    "document_title": "TLV906xS 10MHz, RRIO, CMOS Operational Amplifiers for Cost-Sensitive Systems"
+  },
+  "must_have": {
+    "manufacturer": "Texas Instruments",
+    "base_part": "TLV9062",
+    "qualified_variants": [],
+    "orderable_parts": []
+  },
+  "nice_to_have": {}
+}

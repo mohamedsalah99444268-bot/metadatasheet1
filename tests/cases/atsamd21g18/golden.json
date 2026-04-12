@@ -1,0 +1,15 @@
+{
+  "document": {
+    "source_file": "input.pdf",
+    "manufacturer": "Microchip Technology",
+    "base_part": "ATSAMD21G18A",
+    "document_title": "SAM D21/DA1 Family Low-Power, 32-bit Cortex-M0+ MCU with Advanced Analog and PWM"
+  },
+  "must_have": {
+    "manufacturer": "Microchip Technology",
+    "base_part": "ATSAMD21G18A",
+    "qualified_variants": [],
+    "orderable_parts": []
+  },
+  "nice_to_have": {}
+}

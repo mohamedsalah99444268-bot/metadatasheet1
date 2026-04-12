@@ -1,0 +1,15 @@
+{
+  "document": {
+    "source_file": "input.pdf",
+    "manufacturer": "Texas Instruments",
+    "base_part": "SN74LVC1T45",
+    "document_title": "SN74LVC1T45 Single-Bit Dual-Supply Bus Transceiver With Configurable Voltage Translation and 3-State Outputs"
+  },
+  "must_have": {
+    "manufacturer": "Texas Instruments",
+    "base_part": "SN74LVC1T45",
+    "qualified_variants": [],
+    "orderable_parts": []
+  },
+  "nice_to_have": {}
+}

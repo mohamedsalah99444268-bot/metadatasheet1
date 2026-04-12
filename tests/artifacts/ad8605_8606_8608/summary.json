@@ -1,0 +1,33 @@
+{
+  "case": "ad8605_8606_8608",
+  "metadata": {
+    "name": "ad8605_8606_8608",
+    "vendor": "",
+    "component_type": "",
+    "required_fields": [
+      "must_have.manufacturer",
+      "must_have.base_part",
+      "must_have.orderable_parts"
+    ],
+    "optional_fields": [
+      "document.document_title",
+      "must_have.rohs",
+      "must_have.operating_temperature_range"
+    ],
+    "allowed_adapters": [
+      "generic"
+    ],
+    "notes": "Fill in corpus metadata for this case."
+  },
+  "score": {
+    "schema_valid": false,
+    "schema_score": 87.5,
+    "golden_score": 100.0,
+    "must_have_score": 100.0,
+    "nice_to_have_score": 100.0,
+    "missing_count": 0,
+    "incorrect_count": 0,
+    "extra_count": 9,
+    "weakest_fields": []
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "document": {
+    "source_file": "input.pdf"
+  },
+  "must_have": {
+    "manufacturer": null,
+    "base_part": null,
+    "orderable_parts": []
+  },
+  "nice_to_have": {}
+}

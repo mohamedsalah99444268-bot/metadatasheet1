@@ -1,0 +1,40 @@
+{
+  "case": "sn74lvc1g125",
+  "metadata": {
+    "name": "sn74lvc1g125",
+    "vendor": "Texas Instruments",
+    "component_type": "single bus buffer gate",
+    "required_fields": [
+      "must_have.manufacturer",
+      "must_have.base_part",
+      "must_have.orderable_parts",
+      "must_have.rohs",
+      "must_have.operating_temperature_range"
+    ],
+    "optional_fields": [
+      "document.document_title",
+      "must_have.qualified_variants",
+      "nice_to_have.package_names",
+      "nice_to_have.package_codes"
+    ],
+    "allowed_adapters": [
+      "generic"
+    ],
+    "notes": "Seed corpus case migrated from the original single-datasheet fixture."
+  },
+  "score": {
+    "schema_valid": false,
+    "schema_score": 87.5,
+    "golden_score": 52.0,
+    "must_have_score": 40.0,
+    "nice_to_have_score": 100.0,
+    "missing_count": 6,
+    "incorrect_count": 260,
+    "extra_count": 48,
+    "weakest_fields": [
+      "must_have.base_part",
+      "must_have.orderable_parts",
+      "must_have.qualified_variants"
+    ]
+  }
+}

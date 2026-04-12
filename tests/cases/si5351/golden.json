@@ -1,0 +1,15 @@
+{
+  "document": {
+    "source_file": "input.pdf",
+    "manufacturer": "Skyworks Solutions",
+    "base_part": "Si5351A/B/C-B",
+    "document_title": "Si5351A/B/C-B I2C-Programmable Any-Frequency CMOS Clock Generator + VCXO"
+  },
+  "must_have": {
+    "manufacturer": "Skyworks Solutions",
+    "base_part": "Si5351A/B/C-B",
+    "qualified_variants": [],
+    "orderable_parts": []
+  },
+  "nice_to_have": {}
+}
