@@ -29,6 +29,10 @@ TEMP_EXTRACT = re.compile(r'([+\-–]?\d+)\s*°?\s*C?\s*to\s*([+\-–]?\d+)\s*°
 PACKAGE_AND_PIN_RE = re.compile(r"^(.*?)\s*\|\s*(\d+)\s*$")
 
 
+def _normalize_text(text: str) -> str:
+    return " ".join(text.upper().split())
+
+
 def _classify_temp(low: int, high: int) -> str:
     if low >= 0 and high <= 70:
         return "Commercial"
@@ -79,7 +83,14 @@ class TableParser(BaseParser):
                         bbox = table.cell_bboxes[row_idx][col_idx]
 
                     bx0, by0, bx1, by1 = bbox if bbox else (table.x0, table.y0, table.x1, table.y1)
+                    source_text = cell_text
                     header = table.headers[col_idx] if col_idx < len(table.headers) else ""
+
+                    if field_type == "part_number":
+                        block_match = self._find_part_number_block(blocks, table.page_number, value)
+                        if block_match is not None:
+                            bx0, by0, bx1, by1 = block_match.x0, block_match.y0, block_match.x1, block_match.y1
+                            source_text = block_match.text
 
                     row_results.append(ParsedFieldResult(
                         field_type=field_type,
@@ -87,7 +98,7 @@ class TableParser(BaseParser):
                         confidence=confidence,
                         parser_rule="table_column_match",
                         page_number=table.page_number,
-                        source_text=cell_text,
+                        source_text=source_text,
                         x0=bx0, y0=by0, x1=bx1, y1=by1,
                         section_name="Ordering Information",
                         variant_group=variant_id,
@@ -114,6 +125,25 @@ class TableParser(BaseParser):
                     results.extend(row_results)
 
         return results
+
+    def _find_part_number_block(
+        self,
+        blocks: list[BlockInput],
+        page_number: int,
+        part_number: str,
+    ) -> BlockInput | None:
+        needle = _normalize_text(part_number)
+        matches = [
+            block for block in blocks
+            if block.page_number == page_number and needle in _normalize_text(block.text)
+        ]
+        if not matches:
+            return None
+
+        # Prefer the tightest matching row-like block so the viewer jumps to the
+        # specific variant row rather than the whole detected table region.
+        matches.sort(key=lambda block: ((block.x1 - block.x0) * (block.y1 - block.y0), len(block.text)))
+        return matches[0]
 
     def _match_columns(self, headers: list[str]) -> dict[int, str]:
         """Map column indices to field types based on header text."""

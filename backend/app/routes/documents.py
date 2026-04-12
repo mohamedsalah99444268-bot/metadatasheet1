@@ -14,6 +14,7 @@ from ..schemas import (
     ExtractedTableOut, UploadResponse,
 )
 from ..extraction.extractor import extract_pdf
+from ..extraction.table_quality import filter_credible_tables
 from ..parsers.base import BlockInput, TableInput
 from ..parsers.orchestrator import run_all_parsers
 
@@ -51,7 +52,7 @@ def _build_table_rows(table: ExtractedTable) -> tuple[list[list[str]], list[list
 
 def _refresh_parsed_fields(db: Session, doc_id: int, blocks: list[BlockInput], tables: list[TableInput]) -> None:
     db.query(ParsedField).filter(ParsedField.document_id == doc_id).delete()
-    parsed_results = run_all_parsers(blocks, tables)
+    parsed_results = run_all_parsers(blocks, filter_credible_tables(tables))
     for pf in parsed_results:
         db.add(ParsedField(
             document_id=doc_id,
@@ -294,6 +295,7 @@ def get_parsed_fields(doc_id: int, db: Session = Depends(get_db)):
 def get_tables(
     doc_id: int,
     page: int | None = None,
+    include_all: bool = False,
     db: Session = Depends(get_db),
 ):
     doc = db.query(Document).filter(Document.id == doc_id).first()
@@ -302,4 +304,5 @@ def get_tables(
     q = db.query(ExtractedTable).filter(ExtractedTable.document_id == doc_id)
     if page is not None:
         q = q.filter(ExtractedTable.page_number == page)
-    return q.order_by(ExtractedTable.page_number, ExtractedTable.table_index).all()
+    tables = q.order_by(ExtractedTable.page_number, ExtractedTable.table_index).all()
+    return tables if include_all else filter_credible_tables(tables)

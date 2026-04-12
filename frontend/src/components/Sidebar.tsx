@@ -12,26 +12,15 @@ type Tab = "summary" | "tables" | "blocks";
 
 // Document-level fields (not part of a variant)
 const DOC_FIELDS: { label: string; type: string }[] = [
-  { label: "Manufacturer", type: "manufacturer" },
-  { label: "Title / Description", type: "title" },
-  { label: "Ordering Info", type: "ordering_section" },
-  { label: "RoHS", type: "rohs" },
-  { label: "Lead-Free", type: "lead_free" },
+  { label: "manufacturer", type: "manufacturer" },
+  { label: "title", type: "title" },
+  { label: "ordering", type: "ordering_section" },
+  { label: "rohs", type: "rohs" },
+  { label: "lead-free", type: "lead_free" },
 ];
 
 // Fields that describe a part variant
 const VARIANT_FIELD_TYPES = new Set(["part_number", "package_name", "package_code", "temperature_grade", "description", "pin_count", "status"]);
-
-// Human-readable labels for variant fields
-const VARIANT_LABELS: Record<string, string> = {
-  part_number: "Part Number",
-  package_name: "Package",
-  package_code: "Package Code",
-  temperature_grade: "Temperature",
-  description: "Description",
-  pin_count: "Pins",
-  status: "Status",
-};
 
 function confidenceBadge(c: number) {
   const cls = c >= 0.8 ? "confidence-high" : c >= 0.5 ? "confidence-medium" : "confidence-low";
@@ -56,13 +45,52 @@ function groupVariants(fields: ParsedField[]) {
   return { variants, loose };
 }
 
+interface VariantSummary {
+  groupId: string;
+  entries: ParsedField[];
+  fieldsByType: Record<string, ParsedField>;
+  partNumber: ParsedField | null;
+  avgConfidence: number;
+}
+
+function summarizeVariant(groupId: string, groupFields: ParsedField[]): VariantSummary {
+  const fieldsByType: Record<string, ParsedField> = {};
+  for (const field of groupFields) {
+    const current = fieldsByType[field.field_type];
+    if (!current || field.confidence > current.confidence) {
+      fieldsByType[field.field_type] = field;
+    }
+  }
+
+  return {
+    groupId,
+    entries: groupFields,
+    fieldsByType,
+    partNumber: fieldsByType.part_number ?? null,
+    avgConfidence: groupFields.reduce((sum, field) => sum + field.confidence, 0) / groupFields.length,
+  };
+}
+
+function sortVariants(variants: VariantSummary[]) {
+  return [...variants].sort((a, b) => {
+    const aPart = a.partNumber?.value ?? "";
+    const bPart = b.partNumber?.value ?? "";
+    return aPart.localeCompare(bPart);
+  });
+}
+
+function variantGridStyle(columnCount: number) {
+  return {
+    gridTemplateColumns: `minmax(180px, 1.9fr) repeat(${columnCount}, minmax(0, 1fr)) 56px`,
+  };
+}
+
 export default function Sidebar({ documentId, onHighlight, onNavigate }: Props) {
   const [tab, setTab] = useState<Tab>("summary");
   const [blocks, setBlocks] = useState<TextBlock[]>([]);
   const [fields, setFields] = useState<ParsedField[]>([]);
   const [tables, setTables] = useState<ExtractedTable[]>([]);
   const [selectedId, setSelectedId] = useState<number | null>(null);
-  const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const [blockPage, setBlockPage] = useState<number | null>(null);
   const [selectedTableId, setSelectedTableId] = useState<number | null>(null);
   const [hoveredCell, setHoveredCell] = useState<string | null>(null);
@@ -98,9 +126,6 @@ export default function Sidebar({ documentId, onHighlight, onNavigate }: Props) 
         {tab === "summary" && (
           <SummaryView
             fields={fields}
-            selectedId={selectedId}
-            expandedSection={expandedSection}
-            onToggleSection={(s) => setExpandedSection(expandedSection === s ? null : s)}
             onFieldClick={handleFieldClick}
           />
         )}
@@ -172,16 +197,45 @@ function PageFilterButton({ page, current, onClick }: { page: number | null; cur
 
 /* ---- Summary: doc-level facts + part variant cards ---- */
 
+type EssentialFieldKey = "manufacturer" | "mfgPartNumber" | "package" | "temp" | "title" | "rohs";
+
+interface EssentialSelection {
+  manufacturer: string;
+  mfgPartNumber: string;
+  package: string;
+  temp: string;
+  title: string;
+  rohs: string;
+}
+
+interface PartChoice {
+  groupId: string;
+  manufacturer: string;
+  mfgPartNumber: string;
+  package: string;
+  temp: string;
+  title: string;
+  rohs: string;
+  confidence: number;
+  evidenceField: ParsedField | null;
+}
+
 interface SummaryViewProps {
   fields: ParsedField[];
-  selectedId: number | null;
-  expandedSection: string | null;
-  onToggleSection: (section: string) => void;
   onFieldClick: (f: ParsedField) => void;
 }
 
-function SummaryView({ fields, selectedId, expandedSection, onToggleSection, onFieldClick }: SummaryViewProps) {
-  const { variants, loose } = useMemo(() => groupVariants(fields), [fields]);
+const ESSENTIAL_FIELD_META: { key: EssentialFieldKey; label: string }[] = [
+  { key: "manufacturer", label: "Manufacturer" },
+  { key: "mfgPartNumber", label: "Mfg Part Number" },
+  { key: "package", label: "Package" },
+  { key: "temp", label: "Temp" },
+  { key: "title", label: "Title / Description" },
+  { key: "rohs", label: "RoHS" },
+];
+
+function SummaryView({ fields, onFieldClick }: SummaryViewProps) {
+  const { variants } = useMemo(() => groupVariants(fields), [fields]);
   const docFields = useMemo(() => {
     const byType: Record<string, ParsedField> = {};
     for (const f of fields) {
@@ -194,122 +248,183 @@ function SummaryView({ fields, selectedId, expandedSection, onToggleSection, onF
     return byType;
   }, [fields]);
 
+  const partChoices = useMemo(() => {
+    const manufacturer = docFields.manufacturer?.value ?? "";
+    const title = docFields.title?.value ?? "";
+    const rohs = docFields.rohs?.value ?? "";
+
+    return sortVariants([...variants.entries()].map(([groupId, groupFields]) => summarizeVariant(groupId, groupFields)))
+      .map<PartChoice>((variant) => ({
+        groupId: variant.groupId,
+        manufacturer,
+        mfgPartNumber: variant.partNumber?.value ?? "",
+        package: variant.fieldsByType.package_name?.value ?? "",
+        temp: variant.fieldsByType.temperature_grade?.value ?? "",
+        title,
+        rohs,
+        confidence: variant.avgConfidence,
+        evidenceField: variant.partNumber,
+      }))
+      .filter((choice) => Boolean(choice.mfgPartNumber));
+  }, [docFields, variants]);
+
+  const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [packageFilter, setPackageFilter] = useState("all");
+  const [tempFilter, setTempFilter] = useState("all");
+  const [rohsOnly, setRohsOnly] = useState(false);
+  const [topConfidenceOnly, setTopConfidenceOnly] = useState(false);
+  const [manualSelection, setManualSelection] = useState<EssentialSelection>({
+    manufacturer: "",
+    mfgPartNumber: "",
+    package: "",
+    temp: "",
+    title: "",
+    rohs: "",
+  });
+
+  const selectedChoice = useMemo(
+    () => partChoices.find((choice) => choice.groupId === selectedGroupId) ?? partChoices[0] ?? null,
+    [partChoices, selectedGroupId]
+  );
+
+  const computedSelection = useMemo<EssentialSelection>(() => ({
+    manufacturer: selectedChoice?.manufacturer ?? docFields.manufacturer?.value ?? "",
+    mfgPartNumber: selectedChoice?.mfgPartNumber ?? "",
+    package: selectedChoice?.package ?? "",
+    temp: selectedChoice?.temp ?? "",
+    title: selectedChoice?.title ?? docFields.title?.value ?? "",
+    rohs: selectedChoice?.rohs ?? docFields.rohs?.value ?? "",
+  }), [docFields, selectedChoice]);
+
+  useEffect(() => {
+    if (!selectedGroupId && partChoices[0]) {
+      setSelectedGroupId(partChoices[0].groupId);
+    }
+  }, [partChoices, selectedGroupId]);
+
+  useEffect(() => {
+    setManualSelection(computedSelection);
+  }, [computedSelection]);
+
+  const packageOptions = useMemo(
+    () => [...new Set(partChoices.map((choice) => choice.package).filter(Boolean))].sort(),
+    [partChoices]
+  );
+  const tempOptions = useMemo(
+    () => [...new Set(partChoices.map((choice) => choice.temp).filter(Boolean))].sort(),
+    [partChoices]
+  );
+
+  const filteredChoices = useMemo(() => {
+    let choices = partChoices.filter((choice) => {
+      if (search && !choice.mfgPartNumber.toLowerCase().includes(search.toLowerCase())) return false;
+      if (packageFilter !== "all" && choice.package !== packageFilter) return false;
+      if (tempFilter !== "all" && choice.temp !== tempFilter) return false;
+      if (rohsOnly && choice.rohs && !choice.rohs.toLowerCase().includes("rohs")) return false;
+      return true;
+    });
+
+    if (topConfidenceOnly && choices.length > 0) {
+      const threshold = Math.max(...choices.map((choice) => choice.confidence)) - 0.08;
+      choices = choices.filter((choice) => choice.confidence >= threshold);
+    }
+
+    return choices;
+  }, [packageFilter, partChoices, rohsOnly, search, tempFilter, topConfidenceOnly]);
+
   if (fields.length === 0) {
     return <div className="loading">No fields extracted.</div>;
   }
 
   return (
-    <div style={{ padding: "4px 0" }}>
-      {/* Document-level facts */}
+    <div className="summary-panel">
       <div className="field-group">
-        <div className="field-group-title">Document</div>
-        {DOC_FIELDS.map(({ label, type }) => {
-          const f = docFields[type];
-          if (!f) return null;
-          return (
-            <div key={type} className={`field-row ${selectedId === f.id ? "selected" : ""}`} onClick={() => onFieldClick(f)}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                <div style={{ fontSize: 11, color: "#888", marginBottom: 2 }}>{label}</div>
-                {confidenceBadge(f.confidence)}
-              </div>
-              <div className="field-value">{f.value}</div>
-              <div className="field-meta"><span>p.{f.page_number}</span></div>
+        <div className="field-group-title">Selection Card</div>
+        <div className="selection-card">
+          <div className="selection-card-header">
+            <div>
+              <div className="selection-card-title">Editable Final Pick</div>
+              <div className="selection-card-subtitle">Use extracted values as a starting point, then override anything manually.</div>
             </div>
-          );
-        })}
+            <button className="selection-reset-btn" onClick={() => setManualSelection(computedSelection)}>Reset</button>
+          </div>
+          <div className="selection-grid">
+            {ESSENTIAL_FIELD_META.map(({ key, label }) => (
+              <label key={key} className="selection-field">
+                <span>{label}</span>
+                <input
+                  value={manualSelection[key]}
+                  onChange={(event) => setManualSelection((current) => ({ ...current, [key]: event.target.value }))}
+                />
+              </label>
+            ))}
+          </div>
+        </div>
       </div>
 
-      {/* Part variants from tables */}
-      {variants.size > 0 && (
-        <div className="field-group">
-          <div className="field-group-title">Part Variants ({variants.size})</div>
-          {[...variants.entries()].map(([groupId, groupFields]) => {
-            const pn = groupFields.find((f) => f.field_type === "part_number");
-            const pkg = groupFields.find((f) => f.field_type === "package_name");
-            const temp = groupFields.find((f) => f.field_type === "temperature_grade");
-            const isExpanded = expandedSection === groupId;
-            const avgConf = groupFields.reduce((s, f) => s + f.confidence, 0) / groupFields.length;
-
-            return (
-              <div key={groupId} style={{ marginBottom: 4 }}>
-                {/* Compact variant card */}
-                <div
-                  className={`field-row ${selectedId && groupFields.some((f) => f.id === selectedId) ? "selected" : ""}`}
-                  onClick={() => { if (pn) onFieldClick(pn); }}
-                  style={{ cursor: "pointer" }}
-                >
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                    <div className="field-value">{pn?.value || "Unknown"}</div>
-                    {confidenceBadge(avgConf)}
-                  </div>
-                  <div className="field-meta" style={{ gap: 6 }}>
-                    {pkg && <span>{pkg.value}</span>}
-                    {temp && <span>{temp.value}</span>}
-                    <span>p.{pn?.page_number || groupFields[0].page_number}</span>
-                    <button
-                      onClick={(e) => { e.stopPropagation(); onToggleSection(groupId); }}
-                      style={{ background: "none", border: "none", color: "#2563eb", cursor: "pointer", fontSize: 11, padding: 0 }}
-                    >
-                      {isExpanded ? "less" : "details"}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Expanded: show all fields for this variant */}
-                {isExpanded && (
-                  <div style={{ marginLeft: 16, borderLeft: "2px solid #e0e0e0", paddingLeft: 8 }}>
-                    {groupFields.map((f) => (
-                      <div
-                        key={f.id}
-                        className={`field-row ${selectedId === f.id ? "selected" : ""}`}
-                        onClick={() => onFieldClick(f)}
-                        style={{ padding: "4px 8px" }}
-                      >
-                        <div style={{ fontSize: 11, color: "#888" }}>{VARIANT_LABELS[f.field_type] || f.field_type}</div>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                          <span style={{ fontSize: 12 }}>{f.value}</span>
-                          {confidenceBadge(f.confidence)}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            );
-          })}
+      <div className="field-group">
+        <div className="field-group-title">Select Part Number</div>
+        <div className="variant-selection-hint">Filter to a short list, then click exactly one manufacturer part number to inspect its evidence block.</div>
+        <div className="variant-filter-bar">
+          <input
+            className="variant-search"
+            placeholder="Search part number"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+          />
+          <select value={packageFilter} onChange={(event) => setPackageFilter(event.target.value)}>
+            <option value="all">All packages</option>
+            {packageOptions.map((option) => <option key={option} value={option}>{option}</option>)}
+          </select>
+          <select value={tempFilter} onChange={(event) => setTempFilter(event.target.value)}>
+            <option value="all">All temps</option>
+            {tempOptions.map((option) => <option key={option} value={option}>{option}</option>)}
+          </select>
+          <label className="variant-toggle">
+            <input type="checkbox" checked={rohsOnly} onChange={(event) => setRohsOnly(event.target.checked)} />
+            <span>RoHS only</span>
+          </label>
+          <label className="variant-toggle">
+            <input type="checkbox" checked={topConfidenceOnly} onChange={(event) => setTopConfidenceOnly(event.target.checked)} />
+            <span>Top confidence</span>
+          </label>
         </div>
-      )}
 
-      {/* Loose (non-table-linked) part info */}
-      {loose.length > 0 && (
-        <div className="field-group">
-          <div className="field-group-title">
-            Other Extracted Values ({loose.length})
-            <button
-              onClick={() => onToggleSection("__loose__")}
-              style={{ background: "none", border: "none", color: "#2563eb", cursor: "pointer", fontSize: 11, padding: 0, marginLeft: 8 }}
-            >
-              {expandedSection === "__loose__" ? "hide" : "show"}
-            </button>
+        <div className="variant-grid-header" style={variantGridStyle(3)}>
+          <span className="variant-grid-col variant-grid-col-part">mfg part number</span>
+          <span className="variant-grid-col">package</span>
+          <span className="variant-grid-col">temp</span>
+          <span className="variant-grid-col">rohs</span>
+          <span className="variant-grid-col variant-grid-col-score">score</span>
+        </div>
+
+        {filteredChoices.map((choice) => (
+          <div
+            key={choice.groupId}
+            className={`variant-grid-row ${choice.groupId === selectedChoice?.groupId ? "selected" : ""}`}
+            style={variantGridStyle(3)}
+            onClick={() => {
+              setSelectedGroupId(choice.groupId);
+              if (choice.evidenceField) {
+                onFieldClick(choice.evidenceField);
+              }
+            }}
+            title={choice.mfgPartNumber}
+          >
+            <span className="variant-grid-col variant-grid-col-part">{choice.mfgPartNumber}</span>
+            <span className="variant-grid-col">{choice.package || "—"}</span>
+            <span className="variant-grid-col">{choice.temp || "—"}</span>
+            <span className="variant-grid-col">{choice.rohs || "—"}</span>
+            <span className="variant-grid-col variant-grid-col-score">{Math.round(choice.confidence * 100)}%</span>
           </div>
-          {expandedSection === "__loose__" && loose
-            .sort((a, b) => b.confidence - a.confidence)
-            .map((f) => (
-              <div key={f.id} className={`field-row ${selectedId === f.id ? "selected" : ""}`} onClick={() => onFieldClick(f)}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                  <div style={{ fontSize: 11, color: "#888" }}>{VARIANT_LABELS[f.field_type] || f.field_type}</div>
-                  {confidenceBadge(f.confidence)}
-                </div>
-                <div className="field-value" style={{ fontSize: 12 }}>{f.value}</div>
-                <div className="field-meta"><span>p.{f.page_number}</span></div>
-              </div>
-            ))}
-        </div>
-      )}
+        ))}
+
+        {filteredChoices.length === 0 && <div className="loading">No part numbers match the current filters.</div>}
+      </div>
     </div>
   );
 }
-
 
 /* ---- Table rendering ---- */
 
