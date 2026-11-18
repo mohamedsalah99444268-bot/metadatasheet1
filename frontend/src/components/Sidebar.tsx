@@ -12,20 +12,15 @@ type Tab = "summary" | "tables" | "blocks";
 
 // Document-level fields (not part of a variant)
 const DOC_FIELDS: { label: string; type: string }[] = [
-  { label: "manufacturer", type: "manufacturer" },
-  { label: "title", type: "title" },
-  { label: "ordering", type: "ordering_section" },
-  { label: "rohs", type: "rohs" },
-  { label: "lead-free", type: "lead_free" },
+  { label: "fabricant", type: "manufacturer" },
+  { label: "titre", type: "title" },
+  { label: "commande", type: "ordering_section" },
+  { label: "RoHS", type: "rohs" },
+  { label: "sans plomb", type: "lead_free" },
 ];
 
 // Fields that describe a part variant
 const VARIANT_FIELD_TYPES = new Set(["part_number", "package_name", "package_code", "temperature_grade", "description", "pin_count", "status"]);
-
-function confidenceBadge(c: number) {
-  const cls = c >= 0.8 ? "confidence-high" : c >= 0.5 ? "confidence-medium" : "confidence-low";
-  return <span className={`confidence-badge ${cls}`}>{Math.round(c * 100)}%</span>;
-}
 
 /** Group fields by variant_group. Fields without a variant_group are "loose". */
 function groupVariants(fields: ParsedField[]) {
@@ -90,7 +85,6 @@ export default function Sidebar({ documentId, onHighlight, onNavigate }: Props) 
   const [blocks, setBlocks] = useState<TextBlock[]>([]);
   const [fields, setFields] = useState<ParsedField[]>([]);
   const [tables, setTables] = useState<ExtractedTable[]>([]);
-  const [selectedId, setSelectedId] = useState<number | null>(null);
   const [blockPage, setBlockPage] = useState<number | null>(null);
   const [selectedTableId, setSelectedTableId] = useState<number | null>(null);
   const [hoveredCell, setHoveredCell] = useState<string | null>(null);
@@ -105,7 +99,6 @@ export default function Sidebar({ documentId, onHighlight, onNavigate }: Props) 
   const filteredBlocks = blockPage != null ? blocks.filter((b) => b.page_number === blockPage) : blocks;
 
   function handleFieldClick(f: ParsedField) {
-    setSelectedId(f.id);
     onNavigate(f.page_number);
     if (f.x0 != null && f.y0 != null && f.x1 != null && f.y1 != null) {
       onHighlight({ page: f.page_number, x0: f.x0, y0: f.y0, x1: f.x1, y1: f.y1 });
@@ -115,12 +108,12 @@ export default function Sidebar({ documentId, onHighlight, onNavigate }: Props) 
   return (
     <div className="sidebar">
       <div className="sidebar-header">
-        <h2>Extracted Data</h2>
+        <h2>Données extraites</h2>
       </div>
       <div className="sidebar-tabs">
-        <button className={tab === "summary" ? "active" : ""} onClick={() => setTab("summary")}>Summary</button>
-        <button className={tab === "tables" ? "active" : ""} onClick={() => setTab("tables")}>Tables ({tables.length})</button>
-        <button className={tab === "blocks" ? "active" : ""} onClick={() => setTab("blocks")}>Blocks ({blocks.length})</button>
+        <button className={tab === "summary" ? "active" : ""} onClick={() => setTab("summary")}>Résumé</button>
+        <button className={tab === "tables" ? "active" : ""} onClick={() => setTab("tables")}>Tableaux ({tables.length})</button>
+        <button className={tab === "blocks" ? "active" : ""} onClick={() => setTab("blocks")}>Blocs ({blocks.length})</button>
       </div>
       <div className="sidebar-content">
         {tab === "summary" && (
@@ -130,7 +123,7 @@ export default function Sidebar({ documentId, onHighlight, onNavigate }: Props) 
           />
         )}
         {tab === "tables" && (
-          tables.length === 0 ? <div className="loading">No tables detected.</div> : (
+          tables.length === 0 ? <div className="loading">Aucun tableau détecté.</div> : (
             tables.map((t) => (
               <TableView
                 key={t.id}
@@ -183,13 +176,9 @@ function PageFilterButton({ page, current, onClick }: { page: number | null; cur
   return (
     <button
       onClick={() => onClick(page)}
-      style={{
-        fontSize: 11, padding: "2px 8px", border: "1px solid #ddd",
-        borderRadius: 4, background: active ? "#2563eb" : "#fff",
-        color: active ? "#fff" : "#333", cursor: "pointer",
-      }}
+      className={`page-filter-btn ${active ? "active" : ""}`}
     >
-      {page == null ? "All" : `p.${page}`}
+      {page == null ? "Toutes" : `p.${page}`}
     </button>
   );
 }
@@ -226,11 +215,11 @@ interface SummaryViewProps {
 }
 
 const ESSENTIAL_FIELD_META: { key: EssentialFieldKey; label: string }[] = [
-  { key: "manufacturer", label: "Manufacturer" },
-  { key: "mfgPartNumber", label: "Mfg Part Number" },
-  { key: "package", label: "Package" },
-  { key: "temp", label: "Temp" },
-  { key: "title", label: "Title / Description" },
+  { key: "manufacturer", label: "Fabricant" },
+  { key: "mfgPartNumber", label: "Référence fabricant" },
+  { key: "package", label: "Boîtier" },
+  { key: "temp", label: "Temp." },
+  { key: "title", label: "Titre / Description" },
   { key: "rohs", label: "RoHS" },
 ];
 
@@ -334,20 +323,20 @@ function SummaryView({ fields, onFieldClick }: SummaryViewProps) {
   }, [packageFilter, partChoices, rohsOnly, search, tempFilter, topConfidenceOnly]);
 
   if (fields.length === 0) {
-    return <div className="loading">No fields extracted.</div>;
+    return <div className="loading">Aucun champ extrait.</div>;
   }
 
   return (
     <div className="summary-panel">
       <div className="field-group">
-        <div className="field-group-title">Selection Card</div>
+        <div className="field-group-title">Fiche de sélection</div>
         <div className="selection-card">
           <div className="selection-card-header">
             <div>
-              <div className="selection-card-title">Editable Final Pick</div>
-              <div className="selection-card-subtitle">Use extracted values as a starting point, then override anything manually.</div>
+              <div className="selection-card-title">Sélection finale modifiable</div>
+              <div className="selection-card-subtitle">Utilisez les valeurs extraites comme point de départ, puis modifiez librement.</div>
             </div>
-            <button className="selection-reset-btn" onClick={() => setManualSelection(computedSelection)}>Reset</button>
+            <button className="selection-reset-btn" onClick={() => setManualSelection(computedSelection)}>Réinitialiser</button>
           </div>
           <div className="selection-grid">
             {ESSENTIAL_FIELD_META.map(({ key, label }) => (
@@ -364,38 +353,38 @@ function SummaryView({ fields, onFieldClick }: SummaryViewProps) {
       </div>
 
       <div className="field-group">
-        <div className="field-group-title">Select Part Number</div>
-        <div className="variant-selection-hint">Filter to a short list, then click exactly one manufacturer part number to inspect its evidence block.</div>
+        <div className="field-group-title">Sélectionner une référence</div>
+        <div className="variant-selection-hint">Filtrez pour obtenir une courte liste, puis cliquez sur une référence fabricant pour inspecter ses preuves.</div>
         <div className="variant-filter-bar">
           <input
             className="variant-search"
-            placeholder="Search part number"
+            placeholder="Rechercher une référence"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
           />
           <select value={packageFilter} onChange={(event) => setPackageFilter(event.target.value)}>
-            <option value="all">All packages</option>
+            <option value="all">Tous les boîtiers</option>
             {packageOptions.map((option) => <option key={option} value={option}>{option}</option>)}
           </select>
           <select value={tempFilter} onChange={(event) => setTempFilter(event.target.value)}>
-            <option value="all">All temps</option>
+            <option value="all">Toutes les températures</option>
             {tempOptions.map((option) => <option key={option} value={option}>{option}</option>)}
           </select>
           <label className="variant-toggle">
             <input type="checkbox" checked={rohsOnly} onChange={(event) => setRohsOnly(event.target.checked)} />
-            <span>RoHS only</span>
+            <span>RoHS uniquement</span>
           </label>
           <label className="variant-toggle">
             <input type="checkbox" checked={topConfidenceOnly} onChange={(event) => setTopConfidenceOnly(event.target.checked)} />
-            <span>Top confidence</span>
+            <span>Confiance maximale</span>
           </label>
         </div>
 
         <div className="variant-grid-header" style={variantGridStyle(3)}>
-          <span className="variant-grid-col variant-grid-col-part">mfg part number</span>
-          <span className="variant-grid-col">package</span>
-          <span className="variant-grid-col">temp</span>
-          <span className="variant-grid-col">rohs</span>
+          <span className="variant-grid-col variant-grid-col-part">référence fabricant</span>
+          <span className="variant-grid-col">boîtier</span>
+          <span className="variant-grid-col">temp.</span>
+          <span className="variant-grid-col">RoHS</span>
           <span className="variant-grid-col variant-grid-col-score">score</span>
         </div>
 
@@ -420,7 +409,7 @@ function SummaryView({ fields, onFieldClick }: SummaryViewProps) {
           </div>
         ))}
 
-        {filteredChoices.length === 0 && <div className="loading">No part numbers match the current filters.</div>}
+        {filteredChoices.length === 0 && <div className="loading">Aucune référence ne correspond aux filtres actuels.</div>}
       </div>
     </div>
   );
@@ -453,21 +442,13 @@ function TableView({ table, isSelected, hoveredCell, onTableClick, onCellHover, 
   }, [table]);
 
   return (
-    <div style={{
-      marginBottom: 16,
-      border: isSelected ? "2px solid #2563eb" : "1px solid #e0e0e0",
-      borderRadius: 8,
-      overflow: "hidden",
-    }}>
-      <div onClick={onTableClick} style={{
-        padding: "8px 12px", background: "#f8f9fa", borderBottom: "1px solid #e0e0e0",
-        cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 13,
-      }}>
-        <span style={{ fontWeight: 500 }}>Table {table.table_index + 1}</span>
-        <span style={{ color: "#888", fontSize: 12 }}>p.{table.page_number} &middot; {table.row_count}&times;{table.col_count}</span>
+    <div className={`table-block ${isSelected ? "selected" : ""}`}>
+      <div onClick={onTableClick} className="table-block-head">
+        <span style={{ fontWeight: 500 }}>Tableau {table.table_index + 1}</span>
+        <span>p.{table.page_number} &middot; {table.row_count}&times;{table.col_count}</span>
       </div>
-      <div style={{ overflowX: "auto" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+      <div className="table-block-body">
+        <table className="data-table compact">
           <tbody>
             {grid.map((row, rIdx) => (
               <tr key={rIdx}>
@@ -477,17 +458,10 @@ function TableView({ table, isSelected, hoveredCell, onTableClick, onCellHover, 
                   const isHovered = hoveredCell === cellKey;
                   return (
                     <td key={cIdx}
+                      className={`table-block-cell ${isHeader ? "header" : ""} ${isHovered ? "hovered" : ""}`}
                       onMouseEnter={() => onCellHover(rIdx, cIdx)}
                       onMouseLeave={onCellLeave}
                       onClick={(e) => { e.stopPropagation(); onCellClick(rIdx, cIdx); }}
-                      style={{
-                        padding: "4px 8px", borderBottom: "1px solid #eee",
-                        borderRight: cIdx < row.length - 1 ? "1px solid #eee" : undefined,
-                        fontWeight: isHeader ? 600 : 400,
-                        background: isHovered ? "#eef4ff" : isHeader ? "#f0f4f8" : undefined,
-                        cursor: "pointer", whiteSpace: "nowrap", maxWidth: 200,
-                        overflow: "hidden", textOverflow: "ellipsis",
-                      }}
                       title={cellText || ""}
                     >{cellText || ""}</td>
                   );

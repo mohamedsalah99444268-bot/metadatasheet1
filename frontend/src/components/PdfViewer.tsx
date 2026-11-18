@@ -2,9 +2,9 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import * as pdfjsLib from "pdfjs-dist";
 import type { PDFDocumentProxy, PDFPageProxy } from "pdfjs-dist";
 import type { Highlight, PageInfo } from "../types";
-import { pdfUrl } from "../api";
+import { authorizationHeader, pdfUrl } from "../api";
+import { ErrorState } from "./ui";
 
-// Configure PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.mjs",
   import.meta.url
@@ -15,6 +15,8 @@ interface Props {
   pages: PageInfo[];
   highlight: Highlight | null;
   targetPage: number | null;
+  focusToken?: number;
+  title?: string;
   onPageChange?: (page: number) => void;
 }
 
@@ -25,27 +27,37 @@ interface RenderedPage {
   pdfPage: PDFPageProxy;
 }
 
-export default function PdfViewer({ documentId, pages, highlight, targetPage, onPageChange }: Props) {
+export default function PdfViewer({ documentId, pages, highlight, targetPage, focusToken = 0, title, onPageChange }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [pdfDoc, setPdfDoc] = useState<PDFDocumentProxy | null>(null);
   const [renderedPages, setRenderedPages] = useState<RenderedPage[]>([]);
+  const [pdfError, setPdfError] = useState<string | null>(null);
   const [scale, setScale] = useState(1.2);
   const [currentPage, setCurrentPage] = useState(1);
   const pageRefs = useRef<Map<number, HTMLDivElement>>(new Map());
 
-  // Load PDF document
   useEffect(() => {
     let cancelled = false;
     const url = pdfUrl(documentId);
+    const authorization = authorizationHeader();
+    setPdfDoc(null);
+    setRenderedPages([]);
+    setPdfError(null);
 
-    pdfjsLib.getDocument(url).promise.then((doc) => {
-      if (!cancelled) setPdfDoc(doc);
-    });
+    pdfjsLib.getDocument({ url, httpHeaders: authorization ? { Authorization: authorization } : undefined }).promise
+      .then((doc) => {
+        if (!cancelled) setPdfDoc(doc);
+      })
+      .catch((error: unknown) => {
+        if (!cancelled) {
+          const detail = error instanceof Error ? error.message : String(error);
+          setPdfError(`Le PDF source n’a pas pu être chargé. ${detail}`);
+        }
+      });
 
     return () => { cancelled = true; };
   }, [documentId]);
 
-  // Render all pages when doc or scale changes
   useEffect(() => {
     if (!pdfDoc) return;
     let cancelled = false;
@@ -71,19 +83,19 @@ export default function PdfViewer({ documentId, pages, highlight, targetPage, on
       if (!cancelled) setRenderedPages(results);
     }
 
-    renderAll();
+    renderAll().catch((error: unknown) => {
+      if (!cancelled) {
+        const detail = error instanceof Error ? error.message : String(error);
+        setPdfError(`Le rendu du PDF a échoué. ${detail}`);
+      }
+    });
     return () => { cancelled = true; };
   }, [pdfDoc, scale]);
 
-  // Mount canvases into DOM
   useEffect(() => {
     for (const rp of renderedPages) {
       const wrapper = pageRefs.current.get(rp.pageNum);
       if (wrapper) {
-        // Clear existing canvas
-        while (wrapper.firstChild && wrapper.firstChild !== wrapper.lastChild) {
-          // keep overlay divs, remove canvas
-        }
         const existing = wrapper.querySelector("canvas");
         if (existing) existing.remove();
         wrapper.insertBefore(rp.canvas, wrapper.firstChild);
@@ -91,16 +103,14 @@ export default function PdfViewer({ documentId, pages, highlight, targetPage, on
     }
   }, [renderedPages]);
 
-  // Scroll to target page
   useEffect(() => {
     if (targetPage == null) return;
     const wrapper = pageRefs.current.get(targetPage);
     if (wrapper) {
       wrapper.scrollIntoView({ behavior: "smooth", block: "start" });
     }
-  }, [targetPage, renderedPages]);
+  }, [targetPage, focusToken, renderedPages]);
 
-  // Track current page from scroll position
   const handleScroll = useCallback(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -117,7 +127,6 @@ export default function PdfViewer({ documentId, pages, highlight, targetPage, on
 
   const totalPages = pdfDoc?.numPages ?? 0;
 
-  // Compute highlight overlay position for a given page
   function getHighlightStyle(pageNum: number): React.CSSProperties | null {
     if (!highlight || highlight.page !== pageNum) return null;
     const rp = renderedPages.find((r) => r.pageNum === pageNum);
@@ -125,9 +134,6 @@ export default function PdfViewer({ documentId, pages, highlight, targetPage, on
     const pageInfo = pages.find((p) => p.page_number === pageNum);
     if (!pageInfo) return null;
 
-    // PyMuPDF coordinates: origin top-left, in PDF points
-    // PDF.js viewport: also origin top-left after rendering, scaled by `scale`
-    // So we just scale the coordinates
     const scaleX = rp.viewport.width / pageInfo.width;
     const scaleY = rp.viewport.height / pageInfo.height;
 
@@ -142,9 +148,9 @@ export default function PdfViewer({ documentId, pages, highlight, targetPage, on
   return (
     <div className="pdf-pane">
       <div className="pdf-toolbar">
-        <span className="filename">Document #{documentId}</span>
+        <span className="filename">{title || `Document #${documentId}`}</span>
         <button onClick={() => setScale((s) => Math.max(0.5, s - 0.2))}>-</button>
-        <span>{Math.round(scale * 100)}%</span>
+        <span>{Math.round(scale * 100)} %</span>
         <button onClick={() => setScale((s) => Math.min(3, s + 0.2))}>+</button>
         <span style={{ marginLeft: 12 }}>
           Page {currentPage} / {totalPages}
@@ -162,12 +168,12 @@ export default function PdfViewer({ documentId, pages, highlight, targetPage, on
               }}
               style={{ width: rp.viewport.width, height: rp.viewport.height }}
             >
-              {/* canvas inserted via effect */}
               {hlStyle && <div className="highlight-overlay" style={hlStyle} />}
             </div>
           );
         })}
-        {renderedPages.length === 0 && <div className="loading">Loading PDF...</div>}
+        {pdfError && <ErrorState message={pdfError} />}
+        {!pdfError && renderedPages.length === 0 && <div className="loading">Chargement du PDF…</div>}
       </div>
     </div>
   );

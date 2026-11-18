@@ -1,99 +1,96 @@
-import { useState, useCallback, useEffect } from "react";
+import { Navigate, Outlet, Route, Routes } from "react-router-dom";
+import AppShell from "./components/AppShell";
+import { LoadingState, ToastHost } from "./components/ui";
+import { AppProvider, useApp } from "./state/AppContext";
+import { AuthProvider, useAuth } from "./state/AuthContext";
+import DashboardPage from "./pages/DashboardPage";
 import UploadArea from "./components/UploadArea";
-import PdfViewer from "./components/PdfViewer";
-import Sidebar from "./components/Sidebar";
-import type { Highlight, PageInfo } from "./types";
-import { getPages } from "./api";
+import ComponentsPage from "./pages/ComponentsPage";
+import ComponentDetailPage from "./pages/ComponentDetailPage";
+import WorkspacePage from "./pages/WorkspacePage";
+import ValidationPage from "./pages/ValidationPage";
+import ReportsPage from "./pages/ReportsPage";
+import SettingsPage from "./pages/SettingsPage";
+import BatchProcessingPage from "./pages/BatchProcessingPage";
+import ResearchPage from "./pages/ResearchPage";
+import AgentMonitoringPage from "./pages/AgentMonitoringPage";
+import TechnicalSpecsPage from "./pages/TechnicalSpecsPage";
+import ComparisonPage from "./pages/ComparisonPage";
+import HistoryPage from "./pages/HistoryPage";
+import RagPage from "./pages/RagPage";
+import UserManagementPage from "./pages/UserManagementPage";
+import LoginPage from "./pages/LoginPage";
 
-const DEFAULT_SIDEBAR_WIDTH = 400;
-const MIN_SIDEBAR_WIDTH = 320;
-const MAX_SIDEBAR_WIDTH = 820;
+function CurrentView() {
+  const { view } = useApp();
+  switch (view) {
+    case "dashboard": return <DashboardPage />;
+    case "batch": return <BatchProcessingPage />;
+    case "agents": return <AgentMonitoringPage />;
+    case "history": return <HistoryPage />;
+    case "import": return <UploadArea />;
+    case "research": return <ResearchPage />;
+    case "components": return <ComponentsPage />;
+    case "detail": return <ComponentDetailPage />;
+    case "workspace": return <WorkspacePage />;
+    case "specs": return <TechnicalSpecsPage />;
+    case "comparison": return <ComparisonPage />;
+    case "validation": return <ValidationPage />;
+    case "reports": return <ReportsPage />;
+    case "rag": return <RagPage />;
+    case "users": return <UserManagementPage />;
+    case "settings": return <SettingsPage />;
+  }
+}
+
+function Application() {
+  const { toasts, dismissToast } = useApp();
+  return (
+    <AppShell>
+      <CurrentView />
+      <ToastHost toasts={toasts} onDismiss={dismissToast} />
+    </AppShell>
+  );
+}
+
+function ProtectedLayout() {
+  const { status, user, loading } = useAuth();
+  if (loading) return <LoadingState label="Chargement de l’application…" />;
+  if (status?.enabled && !user) return <Navigate to="/login" replace />;
+  return (
+    <AppProvider>
+      <Outlet />
+    </AppProvider>
+  );
+}
 
 export default function App() {
-  const [documentId, setDocumentId] = useState<number | null>(null);
-  const [pages, setPages] = useState<PageInfo[]>([]);
-  const [highlight, setHighlight] = useState<Highlight | null>(null);
-  const [targetPage, setTargetPage] = useState<number | null>(null);
-  const [sidebarWidth, setSidebarWidth] = useState(DEFAULT_SIDEBAR_WIDTH);
-  const [resizingSidebar, setResizingSidebar] = useState(false);
-
-  useEffect(() => {
-    if (documentId == null) return;
-    getPages(documentId).then(setPages).catch(() => {});
-  }, [documentId]);
-
-  useEffect(() => {
-    if (!resizingSidebar) return;
-
-    function handlePointerMove(event: PointerEvent) {
-      const nextWidth = window.innerWidth - event.clientX;
-      setSidebarWidth(Math.max(MIN_SIDEBAR_WIDTH, Math.min(MAX_SIDEBAR_WIDTH, nextWidth)));
-    }
-
-    function handlePointerUp() {
-      setResizingSidebar(false);
-    }
-
-    window.addEventListener("pointermove", handlePointerMove);
-    window.addEventListener("pointerup", handlePointerUp);
-    document.body.style.cursor = "col-resize";
-    document.body.style.userSelect = "none";
-
-    return () => {
-      window.removeEventListener("pointermove", handlePointerMove);
-      window.removeEventListener("pointerup", handlePointerUp);
-      document.body.style.cursor = "";
-      document.body.style.userSelect = "";
-    };
-  }, [resizingSidebar]);
-
-  const handleNavigate = useCallback((page: number) => {
-    setTargetPage(page);
-  }, []);
-
-  const handleBack = useCallback(() => {
-    setDocumentId(null);
-    setPages([]);
-    setHighlight(null);
-    setTargetPage(null);
-  }, []);
-
-  if (documentId == null) {
-    return <UploadArea onDocumentSelected={setDocumentId} />;
-  }
-
   return (
-    <div className="app-layout">
-      <PdfViewer
-        documentId={documentId}
-        pages={pages}
-        highlight={highlight}
-        targetPage={targetPage}
-      />
-      <div
-        className={`sidebar-resizer ${resizingSidebar ? "active" : ""}`}
-        onPointerDown={(event) => {
-          event.preventDefault();
-          setResizingSidebar(true);
-        }}
-        role="separator"
-        aria-orientation="vertical"
-        aria-label="Resize sidebar"
-      />
-      <div className="sidebar-shell" style={{ width: sidebarWidth }}>
-        <Sidebar
-          documentId={documentId}
-          onHighlight={setHighlight}
-          onNavigate={handleNavigate}
-        />
-      </div>
-      <button
-        className="back-btn"
-        onClick={handleBack}
-        style={{ position: "fixed", top: 8, left: 8, zIndex: 100, color: "#fff" }}
-      >
-        &larr; Back
-      </button>
-    </div>
+    <AuthProvider>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route element={<ProtectedLayout />}>
+          <Route path="/" element={<Application />} />
+          <Route path="/dashboard" element={<Application />} />
+          <Route path="/batch" element={<Application />} />
+          <Route path="/agents" element={<Application />} />
+          <Route path="/history" element={<Application />} />
+          <Route path="/import" element={<Application />} />
+          <Route path="/research" element={<Application />} />
+          <Route path="/components" element={<Application />} />
+          <Route path="/components/:componentId" element={<Application />} />
+          <Route path="/workspace" element={<Application />} />
+          <Route path="/workspace/:documentId" element={<Application />} />
+          <Route path="/specs" element={<Application />} />
+          <Route path="/comparison" element={<Application />} />
+          <Route path="/validation" element={<Application />} />
+          <Route path="/reports" element={<Application />} />
+          <Route path="/rag" element={<Application />} />
+          <Route path="/users" element={<Application />} />
+          <Route path="/settings" element={<Application />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </AuthProvider>
   );
 }
