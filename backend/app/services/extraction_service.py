@@ -223,10 +223,13 @@ def apply_identity_rules(
         )
         orderables = [s for s in ordered if _norm(s.value).startswith(base) and _norm(s.value) != base]
     elif ordered:
-        primary = ordered[0]
+        # Reference absent from the text (e.g. "STM32F103C8T6" for a datasheet naming
+        # "STM32F103C8"): prefer the longest candidate the reference starts with.
+        prefixes = [s for s in ordered if reference and _norm(reference).startswith(_norm(s.value))]
+        primary = max(prefixes, key=lambda s: len(_norm(s.value))) if prefixes else ordered[0]
         result.append(primary)
-        stem = _norm(primary.value)[:4]
-        orderables = [s for s in ordered[1:] if stem and _norm(s.value).startswith(stem) and _norm(s.value) != _norm(primary.value)]
+        stem = _norm(primary.value)
+        orderables = [s for s in ordered if _norm(s.value).startswith(stem) and _norm(s.value) != stem]
     else:
         orderables = []
     seen_orderable: set[str] = set()

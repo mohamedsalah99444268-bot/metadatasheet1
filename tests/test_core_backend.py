@@ -293,6 +293,19 @@ class TestEndpoints(DbCase):
         pdf = self.client.get(f"/api/components/{a}/report", params={"format": "pdf"})
         assert pdf.status_code == 200 and pdf.content.startswith(b"%PDF")
 
+    def test_reanalyze_uses_original_user_reference(self):
+        a, _, doc_id = self._seed()
+        with self.Session() as db:
+            db.add(AnalysisJob(job_id="orig", thread_id="orig", input_source="datasheet", status="completed",
+                               manufacturer="Texas Instruments", component_reference="LM358", document_id=doc_id))
+            db.get(Component, a).part_number = "UFQFPN48"  # identity corrupted by an earlier extraction
+            db.commit()
+        with patch("backend.app.worker.enqueue_job"):
+            job_id = self.client.post(f"/api/components/{a}/reanalyze").json()["job_id"]
+        with self.Session() as db:
+            job = db.query(AnalysisJob).filter_by(job_id=job_id).one()
+            assert job.component_reference == "LM358" and job.input_source == "reanalysis"
+
     def test_specs_review_flow(self):
         a, _, _ = self._seed()
         specs = self.client.get("/api/specs", params={"component_id": a, "category": "electrical"}).json()
@@ -372,3 +385,28 @@ def test_compare_never_interchangeable_without_review():
     assert compare(comps, [accepted, accepted])["interchangeable"] is True
     hot = [{**s, "min_value": 10, "max_value": 20} if s["parameter"] == "supply_voltage" else s for s in accepted]
     assert compare(comps, [accepted, hot])["interchangeable"] is False
+
+
+def test_comparison_prefers_plausible_operating_temperature_and_current_aliases():
+    from backend.app.agents.comparison_agent import best_specs
+
+    specs = [
+        {"id": 1, "parameter": "temperature_range", "min_value": 0.0, "max_value": 3.0, "unit": "°C",
+         "condition_type": "recommended_operating", "validation_status": "pending", "confidence": 0.9},
+        {"id": 2, "parameter": "operating_temperature", "min_value": -40.0, "max_value": 85.0, "unit": "°C",
+         "condition_type": "recommended_operating", "validation_status": "pending", "confidence": 0.8},
+    ]
+    chosen = best_specs(specs)
+    assert "temperature_range" not in chosen  # garbled "0 to 3 C" dropped
+    assert chosen["operating_temperature"]["min_value"] == -40.0
+
+
+def test_comparison_current_prefers_supply_current_and_temperature_needs_both_ends():
+    from backend.app.agents.comparison_agent import CURRENT_PARAMS, best_specs
+
+    assert CURRENT_PARAMS[0] == "supply_current"
+    chosen = best_specs([
+        {"id": 1, "parameter": "operating_temperature", "min_value": None, "max_value": 85.0, "unit": "°C",
+         "condition_type": "recommended_operating", "validation_status": "pending", "confidence": 0.9},
+    ])
+    assert "operating_temperature" not in chosen

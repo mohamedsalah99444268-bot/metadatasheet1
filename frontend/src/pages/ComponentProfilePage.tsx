@@ -43,15 +43,14 @@ function SpecTable({ specs, onPage, actions }: {
                 <div className="cond-label">{t(`cond.${cond}`)}</div>
                 <div className="table-wrap">
                   <table className="table table-dense spec-table">
-                    <thead><tr><th>{t("spec.parameter")}</th><th>{t("spec.value")}</th>{hasCond && <th>{t("spec.condition")}</th>}<th className="num">{t("spec.page")}</th><th className="num">{t("spec.conf")}</th><th>{t("common.status")}</th><th className="w-actions sticky-actions" aria-label={t("common.actions")} /></tr></thead>
+                    <thead><tr><th>{t("spec.parameter")}</th><th>{t("spec.value")}</th>{hasCond && <th>{t("spec.condition")}</th>}<th className="num">{t("spec.page")}</th><th>{t("common.status")}</th><th className="w-actions sticky-actions" aria-label={t("common.actions")} /></tr></thead>
                     <tbody>
                       {rows.map((s) => (
                         <tr key={s.id}>
-                          <td><span className="cell-title">{s.label ?? s.parameter}</span><span className="muted small mono">{s.parameter}</span></td>
+                          <td className="param-col"><span className="cell-title">{s.label ?? s.parameter}</span><span className="muted small mono block">{s.parameter}</span></td>
                           <td className="value-col"><div className="mono value-clamp" title={fmtRange(s, locale)}>{fmtRange(s, locale)}</div></td>
-                          {hasCond && <td className="muted small">{s.test_condition ?? "—"}</td>}
-                          <td className="num">{s.page_number ? <button type="button" className="page-link" onClick={() => onPage(s.page_number!)}>p.{s.page_number}</button> : "—"}</td>
-                          <td className="num">{s.confidence != null ? `${Math.round(s.confidence * 100)}%` : "—"}</td>
+                          {hasCond && <td className="cond-col"><div className="muted small value-clamp" title={s.test_condition ?? ""}>{s.test_condition ?? "—"}</div></td>}
+                          <td className="num">{s.page_number ? <button type="button" className="page-link" onClick={() => onPage(s.page_number!)}>p.{s.page_number}</button> : "—"}{s.confidence != null && <span className="muted small block tnum" title={t("spec.conf")}>{Math.round(s.confidence * 100)}%</span>}</td>
                           <td><StatusBadge status={s.validation_status} /></td>
                           <td className="w-actions sticky-actions">
                             <div className="row-actions">

@@ -4,7 +4,7 @@ import { AlertTriangle, CheckCircle2, CircleHelp, Plus, Search, X, XCircle } fro
 import { compareComponents, getComponent, listComponents, type CompareResult, type CompareValue, type ComponentSummary, type Verdict } from "../api";
 import { Badge, Button, Card, EmptyState, ErrorState, IconButton, Loading, PageHeader, StatusBadge, ThumbIcon } from "../components/ui";
 import { useToast } from "../components/feedback";
-import { fmtSig } from "../lib/format";
+import { fmtRange } from "../lib/format";
 import { useI18n } from "../lib/i18n";
 import { canCompare, COMPARE_MAX, COMPARE_MIN, parseIds, toggleSelection } from "../lib/selection";
 import { errorMessage, useQuery } from "../lib/useQuery";
@@ -19,10 +19,7 @@ function VerdictIcon({ status }: { status: Verdict["status"] }) {
 
 function cellValue(v: CompareValue | null, unit: string | null, locale: string): string {
   if (!v) return "—";
-  const parts = [v.min_value, v.typ_value, v.max_value].some((x) => x != null)
-    ? [v.min_value != null ? `≥${fmtSig(v.min_value, locale)}` : null, v.typ_value != null ? `${fmtSig(v.typ_value, locale)}` : null, v.max_value != null ? `≤${fmtSig(v.max_value, locale)}` : null].filter(Boolean).join("  ")
-    : v.value_text ?? "—";
-  return unit && parts !== "—" ? `${parts} ${unit}` : parts;
+  return fmtRange({ ...v, unit }, locale);
 }
 
 function Picker({ ids, onChange }: { ids: number[]; onChange: (ids: number[]) => void }) {

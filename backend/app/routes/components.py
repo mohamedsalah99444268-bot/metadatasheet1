@@ -6,7 +6,7 @@ from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 
 from ..database import get_db
-from ..models import Component, ComponentSpec, Document
+from ..models import AnalysisJob, Component, ComponentSpec, Document
 from ..services import component_service, job_service, report_service, spec_service
 from ..services.auth_service import optional_current_user
 
@@ -102,11 +102,26 @@ def reanalyze(component_id: int, db: Session = Depends(get_db)):
     component = _get(db, component_id)
     if component.document_id is None or db.get(Document, component.document_id) is None:
         raise HTTPException(status_code=409, detail="Aucun PDF source disponible pour relancer l’analyse")
+    # Re-run with the identity the user originally submitted for this PDF, not the stored
+    # part number: an earlier (worse) extraction may have saved a package name or document
+    # number there, and re-using it would lock the wrong identity in.
+    original = (
+        db.query(AnalysisJob)
+        .filter(
+            AnalysisJob.document_id == component.document_id,
+            AnalysisJob.input_source != "reanalysis",
+            AnalysisJob.component_reference.isnot(None),
+        )
+        .order_by(AnalysisJob.created_at.asc())
+        .first()
+    )
+    reference = (original.component_reference if original else None) or component.part_number
+    manufacturer = (original.manufacturer if original and original.manufacturer else None) or component.manufacturer
     job = job_service.create_job(
         db,
         input_source="reanalysis",
-        manufacturer=component.manufacturer,
-        component_reference=component.part_number,
+        manufacturer=manufacturer,
+        component_reference=reference,
         document_id=component.document_id,
     )
     db.commit()

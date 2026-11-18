@@ -104,7 +104,7 @@ function Charts({ data, t, locale }: { data: StatsOverview; t: TFn; locale: stri
         ) : <EmptyState compact title={t("dash.noComponents")} />}
       </Card>
 
-      <Card title={t("dash.agentPerf")} subtitle={t("dash.agentPerfSub")} className="span-7">
+      <Card title={t("dash.agentPerf")} subtitle={t("dash.agentPerfSub")} className="span-6">
         {agents.length ? (
           <div className="chart-h260">
             <ResponsiveContainer width="100%" height="100%">
@@ -121,7 +121,7 @@ function Charts({ data, t, locale }: { data: StatsOverview; t: TFn; locale: stri
         ) : <EmptyState compact title={t("dash.noRuns")} />}
       </Card>
 
-      <Card title={t("dash.agentTable")} className="span-5" flush>
+      <Card title={t("dash.agentTable")} className="span-6" flush>
         {agents.length ? (
           <div className="table-wrap">
             <table className="table">

@@ -129,9 +129,9 @@ export default function ValidationPage() {
                 {items.map((s) => (
                   <tr key={s.id} className="row-click" onClick={() => setOpenId(s.id)}>
                     <td><span className="pn">{s.part_number}</span><span className="muted small block">{s.manufacturer}</span></td>
-                    <td><span className="cell-title">{s.label ?? s.parameter}</span><span className="muted small mono block">{s.parameter}</span></td>
+                    <td className="param-col"><span className="cell-title">{s.label ?? s.parameter}</span><span className="muted small mono block">{s.parameter}</span></td>
                     <td className="value-col"><div className="mono value-clamp" title={fmtRange(s, locale)}>{fmtRange(s, locale)}</div></td>
-                    <td className="small">{t(`cond.${s.condition_type as "general"}`)}</td>
+                    <td className="small cond-col">{t(`cond.${s.condition_type as "general"}`)}</td>
                     <td className="num">{s.page_number ?? "—"}</td>
                     <td className="num">{s.confidence != null ? `${Math.round(s.confidence * 100)}%` : "—"}</td>
                     <td><StatusBadge status={s.validation_status} /></td>

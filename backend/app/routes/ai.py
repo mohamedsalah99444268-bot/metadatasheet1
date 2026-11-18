@@ -12,6 +12,7 @@ from ..models import AppSetting
 from ..config import load_settings
 from ..ai.ollama_client import MODEL_SETTING_KEY, OllamaHealth, OllamaService, get_ollama_service
 from ..ai.structured_output import AIServiceError
+from ..services.auth_service import require_admin
 
 logger = logging.getLogger(__name__)
 
@@ -63,7 +64,7 @@ def list_models(service: OllamaService = Depends(get_ollama_service)):
     return {"current": current, "default": DEFAULT_OLLAMA_MODEL, "available": available, "ollama_reachable": reachable}
 
 
-@router.put("/model")
+@router.put("/model", dependencies=[Depends(require_admin)])
 def set_model(body: ModelChoice, db: Session = Depends(get_db), service: OllamaService = Depends(get_ollama_service)):
     name = body.model.strip()
     if not name:

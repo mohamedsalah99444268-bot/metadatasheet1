@@ -64,6 +64,19 @@ EXPECTED_PARAMETERS: dict[str, list[str]] = {
     ],
     "memory": ["manufacturer", "part_number", "package", "supply_voltage", "frequency", "temperature_range", "memory_size"],
 }
+# An expected parameter counts as present when the extractor produced it under any of
+# these canonical keys (the electrical table parser emits precise names such as
+# clock_frequency / flash_size / supply_current).
+PARAMETER_ALIASES: dict[str, tuple[str, ...]] = {
+    "operating_voltage": ("operating_voltage", "supply_voltage"),
+    "frequency": ("frequency", "clock_frequency"),
+    "current": ("current", "supply_current", "quiescent_current", "output_current"),
+    "flash_memory": ("flash_memory", "flash_size"),
+    "ram": ("ram", "sram_size"),
+    "memory_size": ("memory_size", "flash_size", "sram_size", "eeprom_size"),
+    "temperature_range": ("temperature_range", "operating_temperature"),
+    "input_voltage": ("input_voltage", "supply_voltage"),
+}
 CORE_PARAMETERS = ("supply_voltage", "operating_voltage", "current", "temperature_range", "package", "pin_count")
 
 
@@ -373,7 +386,11 @@ def missing_parameters(component: Component, specs: list[ComponentSpec]) -> list
     if component.pin_count is not None:
         present.add("pin_count")
     present.update({"manufacturer", "part_number"} if component.manufacturer != "Unknown" else {"part_number"})
-    return [param for param in expected_parameters(component.category) if param not in present]
+    return [
+        param
+        for param in expected_parameters(component.category)
+        if not any(alias in present for alias in PARAMETER_ALIASES.get(param, (param,)))
+    ]
 
 
 def component_jobs(db: Session, component: Component) -> list[AnalysisJob]:

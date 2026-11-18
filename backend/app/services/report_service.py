@@ -6,6 +6,12 @@ from typing import Any
 
 import pandas as pd
 from pydantic import BaseModel
+from .spreadsheet_safety import neutralize_frame
+
+
+def _safe_df(*args, **kwargs) -> pd.DataFrame:
+    """DataFrame for CSV/XLSX export with formula-injection-prone text neutralised."""
+    return neutralize_frame(pd.DataFrame(*args, **kwargs))
 
 
 def report_to_dict(report: Any) -> dict:
@@ -96,7 +102,7 @@ def report_to_json_bytes(report: Any) -> bytes:
 
 
 def report_to_csv_bytes(report: Any) -> bytes:
-    frame = pd.DataFrame(
+    frame = _safe_df(
         _specification_rows(report),
         columns=[
             "field_name", "value", "unit", "condition", "value_kind", "page_number",
@@ -119,8 +125,8 @@ def report_to_excel_bytes(report: Any) -> bytes:
     missing_rows = [row for row in validation_rows if row["status"] in {"missing", "needs_review"}]
     buffer = io.BytesIO()
     with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
-        pd.DataFrame([summary]).to_excel(writer, sheet_name="Summary", index=False)
-        pd.DataFrame(
+        _safe_df([summary]).to_excel(writer, sheet_name="Summary", index=False)
+        _safe_df(
             _specification_rows(report),
             columns=[
                 "field_name", "value", "unit", "condition", "value_kind", "page_number",
@@ -128,13 +134,13 @@ def report_to_excel_bytes(report: Any) -> bytes:
                 "parser_rule",
             ],
         ).to_excel(writer, sheet_name="Specifications", index=False)
-        pd.DataFrame(validation_rows, columns=["field_name", "status", "reason"]).to_excel(
+        _safe_df(validation_rows, columns=["field_name", "status", "reason"]).to_excel(
             writer, sheet_name="Validation", index=False
         )
-        pd.DataFrame(missing_rows, columns=["field_name", "status", "reason"]).to_excel(
+        _safe_df(missing_rows, columns=["field_name", "status", "reason"]).to_excel(
             writer, sheet_name="Missing Fields", index=False
         )
-        pd.DataFrame({"warning": data.get("warnings") or []}).to_excel(writer, sheet_name="Warnings", index=False)
+        _safe_df({"warning": data.get("warnings") or []}).to_excel(writer, sheet_name="Warnings", index=False)
     return buffer.getvalue()
 
 
@@ -212,11 +218,11 @@ def _sorted_specs(specs: list[dict]) -> list[dict]:
 
 
 def _component_csv(data: dict) -> bytes:
-    frame = pd.DataFrame(_sorted_specs(data["specs"]), columns=SPEC_COLUMNS)
+    frame = _safe_df(_sorted_specs(data["specs"]), columns=SPEC_COLUMNS)
     component = data["component"]
     for key in ("part_number", "manufacturer"):
         frame.insert(0, key, component.get(key))
-    return frame.to_csv(index=False).encode("utf-8-sig")
+    return neutralize_frame(frame).to_csv(index=False).encode("utf-8-sig")
 
 
 def _component_excel(data: dict) -> bytes:
@@ -237,10 +243,10 @@ def _component_excel(data: dict) -> bytes:
         for run in data["agent_runs"]
     ]
     sheets = {
-        "Identity": pd.DataFrame(identity, columns=["field", "value"]),
-        "Specifications": pd.DataFrame(_sorted_specs(data["specs"]), columns=SPEC_COLUMNS),
-        "Validation": pd.DataFrame(validation, columns=["status", "count"]),
-        "Agents": pd.DataFrame(agents, columns=["agent", "status", "duration_ms", "message"]),
+        "Identity": _safe_df(identity, columns=["field", "value"]),
+        "Specifications": _safe_df(_sorted_specs(data["specs"]), columns=SPEC_COLUMNS),
+        "Validation": _safe_df(validation, columns=["status", "count"]),
+        "Agents": _safe_df(agents, columns=["agent", "status", "duration_ms", "message"]),
     }
     buffer = io.BytesIO()
     header_fill = PatternFill("solid", fgColor="1F2A44")

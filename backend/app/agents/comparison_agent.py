@@ -12,8 +12,13 @@ from typing import Any
 IDENTITY_SKIP = {"manufacturer", "part_number", "description"}
 CORE_PARAMETERS = ("supply_voltage", "current", "temperature_range", "package", "pin_count")
 VOLTAGE_PARAMS = ("supply_voltage", "operating_voltage", "input_voltage")
-CURRENT_PARAMS = ("current",)
-TEMPERATURE_PARAMS = ("temperature_range",)
+# Supply/quiescent current is what "current compatibility" means for a part; the generic
+# "current" key can be an output or short-circuit rating, so it is the last resort.
+CURRENT_PARAMS = ("supply_current", "quiescent_current", "current")
+# operating_temperature comes from the electrical-table parser and is preferred over the
+# legacy identity-parser temperature_range, which can hold garbled ranges ("0 to 3 C").
+TEMPERATURE_PARAMS = ("operating_temperature", "temperature_range")
+MIN_TEMPERATURE_SPAN_C = 10.0
 REVIEWED_OK = {"accepted", "edited"}
 CONDITION_PREFERENCE = {"recommended_operating": 0, "electrical_characteristics": 1, "general": 2, "absolute_maximum": 3}
 REL_TOLERANCE = 0.01
@@ -28,10 +33,25 @@ def _rank(spec: dict) -> tuple:
     )
 
 
+def _implausible(spec: dict) -> bool:
+    """Degenerate ranges that cannot be a real rating (e.g. "0 to 0 C", "0 to 3 C")."""
+    low, high = spec.get("min_value"), spec.get("max_value")
+    is_temperature = "temperature" in (spec.get("parameter") or "")
+    if low is None or high is None:
+        # a temperature *range* needs both ends; a lone "85 °C" is not a range
+        return is_temperature and (spec.get("condition_type") != "absolute_maximum")
+    if high < low:
+        return True
+    if (spec.get("unit") or "").endswith("C") and is_temperature:
+        return high - low < MIN_TEMPERATURE_SPAN_C
+    return False
+
+
 def best_specs(specs: list[dict]) -> dict[str, dict]:
-    """Best non-rejected spec per parameter."""
+    """Best non-rejected, plausible spec per parameter."""
     chosen: dict[str, dict] = {}
-    for spec in sorted((s for s in specs if s.get("validation_status") != "rejected"), key=_rank):
+    usable = (s for s in specs if s.get("validation_status") != "rejected" and not _implausible(s))
+    for spec in sorted(usable, key=_rank):
         chosen.setdefault(spec["parameter"], spec)
     return chosen
 

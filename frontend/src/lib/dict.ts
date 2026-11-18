@@ -29,7 +29,7 @@ export const fr = {
   "status.compatible": "Compatible", "status.incompatible": "Incompatible", "status.insufficient_evidence": "Preuves insuffisantes",
   "status.answered": "Répondu", "status.ok": "Opérationnel", "status.available": "Disponible", "status.unavailable": "Indisponible",
   "status.active": "Actif", "status.error": "Erreur", "status.in_progress": "En cours", "status.partial": "Partiel",
-  "status.downloaded": "Téléchargé", "status.valid": "Valide", "status.invalid": "Invalide", "status.duplicate": "Doublon", "status.unknown": "Inconnu",
+  "status.downloaded": "Téléchargé", "status.valid": "Valide", "status.invalid": "Invalide", "status.duplicate": "Doublon", "status.unknown": "Inconnu", "status.updated": "Mis à jour", "status.created": "Créé", "status.deleted": "Supprimé",
 
   "cat.electrical": "Électrique", "cat.thermal": "Thermique", "cat.mechanical": "Mécanique", "cat.timing": "Temporisation",
   "cat.interface": "Interface", "cat.memory": "Mémoire", "cat.identity": "Identité", "cat.other": "Autre",
@@ -201,7 +201,7 @@ export const en: Record<DictKey, string> = {
   "status.compatible": "Compatible", "status.incompatible": "Incompatible", "status.insufficient_evidence": "Insufficient evidence",
   "status.answered": "Answered", "status.ok": "Operational", "status.available": "Available", "status.unavailable": "Unavailable",
   "status.active": "Active", "status.error": "Error", "status.in_progress": "In progress", "status.partial": "Partial",
-  "status.downloaded": "Downloaded", "status.valid": "Valid", "status.invalid": "Invalid", "status.duplicate": "Duplicate", "status.unknown": "Unknown",
+  "status.downloaded": "Downloaded", "status.valid": "Valid", "status.invalid": "Invalid", "status.duplicate": "Duplicate", "status.unknown": "Unknown", "status.updated": "Updated", "status.created": "Created", "status.deleted": "Deleted",
 
   "cat.electrical": "Electrical", "cat.thermal": "Thermal", "cat.mechanical": "Mechanical", "cat.timing": "Timing",
   "cat.interface": "Interface", "cat.memory": "Memory", "cat.identity": "Identity", "cat.other": "Other",

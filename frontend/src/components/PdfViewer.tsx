@@ -43,6 +43,8 @@ export default function PdfViewer({ documentId, pages, highlight, targetPage, fo
         const vp = first.getViewport({ scale: 1 });
         if (cancelled) return;
         setBaseSize({ w: vp.width, h: vp.height });
+        const avail = (containerRef.current?.clientWidth ?? 0) - 32;
+        if (avail > 0) setScale(Math.max(0.5, Math.min(1.4, Math.floor((avail / vp.width) * 10) / 10)));
         setPdfDoc(doc);
       })
       .catch((e: unknown) => { if (!cancelled) setError(e instanceof Error ? e.message : String(e)); });

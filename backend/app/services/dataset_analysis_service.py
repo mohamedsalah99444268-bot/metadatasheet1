@@ -23,6 +23,7 @@ import pandas as pd
 from sqlalchemy.orm import Session
 
 from ..models import DatasetImport, DatasetRow
+from .spreadsheet_safety import neutralize_frame
 from .upload_limits import XLS_MAGIC, XLSX_MAGIC, max_dataset_bytes
 
 DATASET_DIR = Path(os.environ.get("DATASET_DIR") or Path(__file__).resolve().parents[2] / "datasets")
@@ -105,20 +106,42 @@ def _sniff_delimiter(text: str) -> str:
         return best if counts[best] else ","
 
 
+MAX_XLSX_UNCOMPRESSED_BYTES = int(os.environ.get("DATASET_MAX_XLSX_UNCOMPRESSED_BYTES", str(300 * 1024 * 1024)))
+MAX_XLSX_COMPRESSION_RATIO = 100
+
+
+def _check_xlsx_expansion(data: bytes) -> None:
+    """Reject zip bombs before openpyxl inflates the workbook in memory."""
+    import zipfile
+
+    try:
+        with zipfile.ZipFile(io.BytesIO(data)) as archive:
+            infos = archive.infolist()
+    except zipfile.BadZipFile as exc:
+        raise DatasetAnalysisError("The file is not a valid XLSX workbook") from exc
+    total = sum(info.file_size for info in infos)
+    compressed = sum(info.compress_size for info in infos) or 1
+    if total > MAX_XLSX_UNCOMPRESSED_BYTES or total / compressed > MAX_XLSX_COMPRESSION_RATIO:
+        raise DatasetAnalysisError("The XLSX workbook expands to an unsafe size", 413)
+
+
 def read_frame(data: bytes, extension: str) -> pd.DataFrame:
     extension = extension.lower()
     try:
         if extension == ".csv":
             text = _decode(data)
-            frame = pd.read_csv(io.StringIO(text), sep=_sniff_delimiter(text), skipinitialspace=False)
+            frame = pd.read_csv(
+                io.StringIO(text), sep=_sniff_delimiter(text), skipinitialspace=False, nrows=MAX_ROWS + 1
+            )
         elif extension == ".xlsx":
             if not data.startswith(XLSX_MAGIC):
                 raise DatasetAnalysisError("The file is not a valid XLSX workbook")
-            frame = pd.read_excel(io.BytesIO(data), engine="openpyxl")
+            _check_xlsx_expansion(data)
+            frame = pd.read_excel(io.BytesIO(data), engine="openpyxl", nrows=MAX_ROWS + 1)
         elif extension == ".xls":
             if not data.startswith(XLS_MAGIC):
                 raise DatasetAnalysisError("The file is not a valid XLS workbook")
-            frame = pd.read_excel(io.BytesIO(data), engine="xlrd")
+            frame = pd.read_excel(io.BytesIO(data), engine="xlrd", nrows=MAX_ROWS + 1)
         else:
             raise DatasetAnalysisError("Only CSV, XLSX and XLS files are accepted", 415)
     except DatasetAnalysisError:
@@ -554,7 +577,7 @@ def clean_frame(frame: pd.DataFrame, options: dict[str, Any]) -> pd.DataFrame:
 
 
 def frame_to_csv(frame: pd.DataFrame) -> bytes:
-    return frame.to_csv(index=False).encode("utf-8")
+    return neutralize_frame(frame).to_csv(index=False).encode("utf-8")
 
 
 def frame_to_xlsx(frame: pd.DataFrame, sheet: str = "Data") -> bytes:
@@ -562,7 +585,7 @@ def frame_to_xlsx(frame: pd.DataFrame, sheet: str = "Data") -> bytes:
     from openpyxl.utils import get_column_letter
 
     buffer = io.BytesIO()
-    safe = frame.copy()
+    safe = neutralize_frame(frame)
     for name in safe.columns:
         if isinstance(safe[name].dtype, pd.DatetimeTZDtype):
             safe[name] = safe[name].dt.tz_localize(None)
