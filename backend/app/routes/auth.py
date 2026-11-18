@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from fastapi import APIRouter, Depends, Header, HTTPException, status
+from fastapi import APIRouter, Depends, Header, HTTPException, Request, status
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 from sqlalchemy.orm import Session
 
@@ -84,7 +84,14 @@ def bootstrap(payload: BootstrapRequest, db: Session = Depends(get_db)):
 
 
 @router.post("/login", response_model=LoginResponse)
-def login(payload: LoginRequest, db: Session = Depends(get_db)):
+def login(payload: LoginRequest, request: Request, db: Session = Depends(get_db)):
+    client_ip = request.client.host if request.client else "unknown"
+    if not auth_service.login_rate_limiter.allow(client_ip):
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Too many login attempts. Try again in a minute.",
+            headers={"Retry-After": "60"},
+        )
     user = auth_service.authenticate(db, payload.email, payload.password)
     if user is None:
         raise HTTPException(
@@ -94,7 +101,7 @@ def login(payload: LoginRequest, db: Session = Depends(get_db)):
         )
     token = auth_service.create_access_token(db, user.id)
     return LoginResponse(
-        access_token=token.token,
+        access_token=token.raw_token,
         expires_at=auth_service.as_utc(token.expires_at),
         user=user_response(user),
     )

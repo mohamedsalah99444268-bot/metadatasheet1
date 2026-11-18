@@ -9,7 +9,8 @@ from dotenv import load_dotenv
 
 load_dotenv(dotenv_path=Path(__file__).resolve().parents[1] / ".env")
 
-REQUIRED_OLLAMA_MODEL = "qwen2.5:1.5b"
+DEFAULT_OLLAMA_MODEL = "qwen2.5:1.5b"
+REQUIRED_OLLAMA_MODEL = DEFAULT_OLLAMA_MODEL  # backward-compatible alias (no longer enforced)
 DEFAULT_OLLAMA_BASE_URL = "http://localhost:11434"
 DEFAULT_RAG_EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 DEFAULT_RAG_CHUNK_SIZE = 900
@@ -144,8 +145,6 @@ def load_settings() -> Settings:
     validation_error: str | None = None
     if not _is_local_url(base_url):
         validation_error = "OLLAMA_BASE_URL must point to a local Ollama runtime."
-    elif model != REQUIRED_OLLAMA_MODEL:
-        validation_error = f"OLLAMA_MODEL must be {REQUIRED_OLLAMA_MODEL}."
     if vector_backend == "pgvector" and not (database_url or "").startswith("postgresql"):
         validation_error = "VECTOR_BACKEND=pgvector requires a PostgreSQL DATABASE_URL."
 

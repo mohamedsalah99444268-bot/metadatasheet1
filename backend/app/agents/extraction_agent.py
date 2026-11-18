@@ -30,7 +30,12 @@ def run_extraction_agent(state: AgentState, db=None) -> AgentState:
     owns_session = db is None
     session = db or SessionLocal()
     try:
-        outcome = extract_specifications(session, state["document_id"])
+        outcome = extract_specifications(
+            session,
+            state["document_id"],
+            manufacturer=state.get("manufacturer"),
+            reference=state.get("component_reference") or state.get("part_number"),
+        )
     finally:
         if owns_session:
             session.close()
@@ -45,8 +50,6 @@ def run_extraction_agent(state: AgentState, db=None) -> AgentState:
             "extraction_ok": outcome.success,
             "ollama_available": outcome.ollama_available,
             "specifications": specifications,
-            "technical_specs": specifications,
-            "evidence": specifications,
             "warnings": warnings,
             "status": "running" if outcome.success else "failed",
             "current_agent": "extraction",

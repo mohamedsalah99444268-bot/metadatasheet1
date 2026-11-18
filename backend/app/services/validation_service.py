@@ -39,7 +39,8 @@ UNIT_TOKENS = {
     "temperature_range": {"c", "celsius", "degc"},
 }
 
-CARDINAL_FIELDS = {"manufacturer", "part_number", "package", "pin_count"}
+# Packages are a list (one datasheet covers several), so they are not singletons.
+CARDINAL_FIELDS = {"manufacturer", "part_number", "pin_count"}
 REQUIRED_FIELDS = ("manufacturer", "part_number", "package")
 
 

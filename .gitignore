@@ -16,3 +16,9 @@ frontend/dist/
 .vscode/
 .idea/
 tests/artifacts/
+
+# Runtime data
+backend/datasets/
+backend/uploads/
+backend/metadatasheet.db-*
+backend/.env

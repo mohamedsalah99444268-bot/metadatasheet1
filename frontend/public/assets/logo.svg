@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 32" fill="none">
+  <image href="logo-mark.svg" width="32" height="32"/>
+  <text x="42" y="22" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="650" fill="#F3F5F7">SmartDatasheet</text>
+  <text x="178" y="22" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="650" fill="#22D3EE">AI</text>
+</svg>

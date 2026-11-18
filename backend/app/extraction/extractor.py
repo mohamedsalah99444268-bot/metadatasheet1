@@ -6,8 +6,36 @@ Coordinates are in PDF points (1 point = 1/72 inch), origin at top-left.
 This matches PDF.js default coordinate system.
 """
 
+import re
+import threading
+
 import fitz  # PyMuPDF
 from dataclasses import dataclass, field
+
+# PyMuPDF's table finder keeps module-level state (pymupdf.table.TEXTPAGE), so two
+# threads running find_tables() at once corrupt each other ("not a textpage of
+# this page"). The API thread and the background worker both extract PDFs, so
+# extraction is serialised process-wide.
+_PYMUPDF_LOCK = threading.RLock()
+
+# find_tables() costs ~50 ms per page; a 650-page MCU manual would spend >30 s on
+# it. Above this page count, tables are only detected on the first pages and on
+# pages whose text hints at a structured table (ordering / package / spec table).
+FULL_TABLE_SCAN_MAX_PAGES = 150
+ALWAYS_SCAN_FIRST_PAGES = 12
+TABLE_PAGE_HINT_RE = re.compile(
+    r"ordering|order\s+(code|information)|orderable|part\s+number|device\s+information|"
+    r"package\s+(information|options?|type)|absolute\s+maximum|recommended\s+operating|"
+    r"electrical\s+characteristics|\b(dc|ac)\s+characteristics|thermal\s+information|esd\s+ratings|"
+    r"\bmin\.?\s+(typ\.?\s+)?max\.?\b",
+    re.IGNORECASE,
+)
+
+
+def _should_scan_tables(page_idx: int, page_count: int, page_text: str) -> bool:
+    if page_count <= FULL_TABLE_SCAN_MAX_PAGES or page_idx < ALWAYS_SCAN_FIRST_PAGES:
+        return True
+    return bool(TABLE_PAGE_HINT_RE.search(page_text))
 
 
 @dataclass
@@ -61,6 +89,11 @@ class ExtractionResult:
 
 
 def extract_pdf(pdf_path: str) -> ExtractionResult:
+    with _PYMUPDF_LOCK:
+        return _extract_pdf_unlocked(pdf_path)
+
+
+def _extract_pdf_unlocked(pdf_path: str) -> ExtractionResult:
     """Extract text blocks and tables with positions from a PDF file.
 
     Text blocks use get_text("blocks") for paragraph-level chunks.
@@ -86,6 +119,7 @@ def extract_pdf(pdf_path: str) -> ExtractionResult:
         # block format: (x0, y0, x1, y1, text, block_no, block_type)
         # block_type 0 = text, 1 = image
         raw_blocks = page.get_text("blocks")
+        page_text = "\n".join(str(block[4]) for block in raw_blocks if block[6] == 0)
         for block in raw_blocks:
             x0, y0, x1, y1, text, block_no, block_type = block
             if block_type != 0:  # skip image blocks
@@ -103,6 +137,8 @@ def extract_pdf(pdf_path: str) -> ExtractionResult:
             ))
 
         # --- Tables ---
+        if not _should_scan_tables(page_idx, len(doc), page_text):
+            continue
         tab_finder = page.find_tables()
         for tab_idx, tab in enumerate(tab_finder.tables):
             header_names = tab.header.names if tab.header else []

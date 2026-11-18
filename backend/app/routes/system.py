@@ -51,6 +51,5 @@ def get_config(db: Session = Depends(get_db)):
         "rag": {
             "embedding_model": settings.rag_embedding_model,
             "index_version": settings.rag_index_version,
-            "persist_dir": settings.chroma_persist_dir,
         },
     }

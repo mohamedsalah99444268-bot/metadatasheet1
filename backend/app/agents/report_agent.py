@@ -19,6 +19,10 @@ def run_report_agent(state: AgentState) -> AgentState:
         status=status,
     )
     updated["report"] = report
+    # backward-compatible aliases
+    updated["technical_specs"] = report.specifications
+    updated["evidence"] = report.specifications
+    updated["validation_result"] = report.validation_results
     updated["quality_stats"] = build_quality_stats(report)
     updated["status"] = status
     updated["current_agent"] = "report"

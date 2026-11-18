@@ -10,14 +10,18 @@ AgentName = Literal[
     "download",
     "extraction",
     "ollama_unavailable",
+    "classification",
     "validation",
     "conflict_review",
     "missing_information",
+    "indexing",
     "report",
     "failure",
 ]
 
-RunStatus = Literal["queued", "running", "needs_review", "conflict", "completed", "failed"]
+RunStatus = Literal["queued", "running", "needs_review", "conflict", "completed", "failed", "cancelled"]
+SpecCategory = Literal["electrical", "thermal", "mechanical", "timing", "interface", "memory", "identity", "other"]
+ConditionType = Literal["absolute_maximum", "recommended_operating", "electrical_characteristics", "general"]
 ValidationStatus = Literal["validated", "needs_review", "missing", "conflict"]
 ExtractionMethod = Literal["deterministic", "ollama", "manual"]
 ValueKind = Literal["single", "minimum", "typical", "maximum"]
@@ -43,6 +47,19 @@ class SpecificationEvidence(BaseModel):
     parser_rule: str | None = None
     condition: str | None = None
     value_kind: ValueKind = "single"
+    section: str | None = None
+    category: SpecCategory | None = None
+    condition_type: ConditionType | None = None
+    # Explicit SI-normalised limits from table extraction (min/typ/max columns).
+    # When any is set, consumers use them instead of re-parsing `value`.
+    min_value: float | None = None
+    typ_value: float | None = None
+    max_value: float | None = None
+    label: str | None = None
+
+    @property
+    def has_explicit_values(self) -> bool:
+        return any(v is not None for v in (self.min_value, self.typ_value, self.max_value))
 
 
 class ValidationResult(BaseModel):
@@ -87,10 +104,14 @@ class AgentState(TypedDict, total=False):
     current_agent: AgentName
     status: RunStatus
     specifications: list[SpecificationEvidence]
+    validation_results: list[ValidationResult]
+    # Deprecated aliases of `specifications` / `validation_results`, kept for
+    # backward compatibility; only mirrored by the report node.
     technical_specs: list[SpecificationEvidence]
     evidence: list[SpecificationEvidence]
-    validation_results: list[ValidationResult]
     validation_result: list[ValidationResult]
+    classification_ok: bool
+    index_status: str | None
     warnings: list[str]
     errors: list[str]
     events: list[AgentEvent]

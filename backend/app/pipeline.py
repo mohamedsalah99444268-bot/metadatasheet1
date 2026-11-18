@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -21,6 +21,7 @@ class PipelineArtifacts:
     blocks: list[BlockInput]
     tables: list[TableInput]
     parsed_fields: list[ParsedFieldResult]
+    electrical_rows: list = field(default_factory=list)
 
 
 def build_table_input_from_rows(
@@ -54,7 +55,12 @@ def build_table_input_from_rows(
     )
 
 
-def build_pipeline_artifacts(pdf_path: str | Path) -> PipelineArtifacts:
+def build_pipeline_artifacts(
+    pdf_path: str | Path,
+    *,
+    reference: str | None = None,
+    electrical: bool = True,
+) -> PipelineArtifacts:
     """Run extraction plus parsing and return all intermediate artifacts."""
 
     from .extraction.extractor import extract_pdf
@@ -112,10 +118,16 @@ def build_pipeline_artifacts(pdf_path: str | Path) -> PipelineArtifacts:
         )
 
     parsed_fields = run_all_parsers(blocks, filter_credible_tables(tables))
+    electrical_rows = []
+    if electrical:
+        from .parsers.electrical import extract_electrical_rows
+
+        electrical_rows = extract_electrical_rows(pdf_path, blocks, reference=reference)
     return PipelineArtifacts(
         source_file=pdf_path.name,
         extraction=extraction,
         blocks=blocks,
         tables=tables,
         parsed_fields=parsed_fields,
+        electrical_rows=electrical_rows,
     )

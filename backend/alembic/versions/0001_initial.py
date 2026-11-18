@@ -7,6 +7,15 @@ from sqlalchemy import inspect
 from backend.app.database import Base
 import backend.app.models
 
+# Tables that existed when revisions 0001/0002 were written. Later tables are
+# created by their own explicit revisions (0003+), never implicitly here.
+LEGACY_TABLES = (
+    "documents", "pages", "text_blocks", "extracted_tables", "table_cells", "parsed_fields",
+    "field_reviews", "dataset_imports", "dataset_rows", "analysis_jobs", "datasheet_downloads",
+    "document_indexes", "rag_chunks", "chat_sessions", "chat_messages", "users", "auth_tokens",
+    "rag_embeddings",
+)
+
 revision = "0001_initial"
 down_revision = None
 branch_labels = None
@@ -18,7 +27,8 @@ def upgrade() -> None:
     if bind.dialect.name == "postgresql":
         op.execute("CREATE EXTENSION IF NOT EXISTS vector")
 
-    Base.metadata.create_all(bind=bind)
+    tables = [Base.metadata.tables[name] for name in LEGACY_TABLES if name in Base.metadata.tables]
+    Base.metadata.create_all(bind=bind, tables=tables, checkfirst=True)
 
     inspector = inspect(bind)
     if "analysis_jobs" in inspector.get_table_names():

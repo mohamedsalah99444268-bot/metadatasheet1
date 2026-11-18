@@ -12,6 +12,7 @@ from sqlalchemy import (
     String,
     Text,
     UniqueConstraint,
+    func,
 )
 from sqlalchemy.orm import relationship
 
@@ -351,3 +352,101 @@ class RagEmbedding(Base):
     embedding_model = Column(String(512), nullable=False)
     index_version = Column(String(64), nullable=False)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+
+def _utcnow():
+    return datetime.now(timezone.utc)
+
+
+class Component(Base):
+    __tablename__ = "components"
+    id = Column(Integer, primary_key=True, index=True)
+    manufacturer = Column(String(255), nullable=False, default="Unknown", index=True)
+    part_number = Column(String(255), nullable=False, index=True)
+    category = Column(String(64), nullable=True, index=True)
+    package = Column(String(255), nullable=True)
+    pin_count = Column(Integer, nullable=True)
+    description = Column(Text, nullable=True)
+    document_id = Column(Integer, ForeignKey("documents.id", ondelete="SET NULL"), nullable=True, index=True)
+    created_at = Column(DateTime, default=_utcnow)
+    updated_at = Column(DateTime, default=_utcnow, onupdate=_utcnow, index=True)
+
+    document = relationship("Document")
+    specs = relationship("ComponentSpec", back_populates="component", cascade="all, delete-orphan")
+
+
+Index(
+    "uq_components_manufacturer_part",
+    func.lower(Component.manufacturer),
+    func.lower(Component.part_number),
+    unique=True,
+)
+
+
+class ComponentSpec(Base):
+    __tablename__ = "component_specs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    component_id = Column(Integer, ForeignKey("components.id", ondelete="CASCADE"), nullable=False, index=True)
+    document_id = Column(Integer, ForeignKey("documents.id", ondelete="SET NULL"), nullable=True, index=True)
+    job_id = Column(String(64), nullable=True, index=True)
+    parameter = Column(String(128), nullable=False, index=True)
+    label = Column(String(255), nullable=True)
+    category = Column(String(32), nullable=False, default="other", index=True)
+    condition_type = Column(String(32), nullable=False, default="general", index=True)
+    value_text = Column(Text, nullable=False, default="")
+    unit = Column(String(32), nullable=True)
+    min_value = Column(Float, nullable=True)
+    typ_value = Column(Float, nullable=True)
+    max_value = Column(Float, nullable=True)
+    test_condition = Column(Text, nullable=True)
+    page_number = Column(Integer, nullable=True)
+    source_text = Column(Text, nullable=True)
+    confidence = Column(Float, nullable=False, default=0.0)
+    extraction_method = Column(String(32), nullable=False, default="deterministic")
+    validation_status = Column(String(32), nullable=False, default="pending", index=True)
+    reviewer_comment = Column(Text, nullable=True)
+    reviewed_by = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    reviewed_at = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=_utcnow)
+
+    component = relationship("Component", back_populates="specs")
+    logs = relationship("SpecReviewLog", back_populates="spec", cascade="all, delete-orphan")
+
+
+class AgentRun(Base):
+    __tablename__ = "agent_runs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    job_id = Column(String(64), nullable=False, index=True)
+    agent = Column(String(64), nullable=False, index=True)
+    status = Column(String(32), nullable=False)
+    message = Column(Text, nullable=True)
+    attempt = Column(Integer, nullable=False, default=1)
+    started_at = Column(DateTime, nullable=True)
+    finished_at = Column(DateTime, nullable=True)
+    duration_ms = Column(Integer, nullable=True)
+
+
+class SpecReviewLog(Base):
+    __tablename__ = "spec_review_log"
+
+    id = Column(Integer, primary_key=True, index=True)
+    spec_id = Column(Integer, ForeignKey("component_specs.id", ondelete="CASCADE"), nullable=False, index=True)
+    action = Column(String(16), nullable=False)
+    old_value = Column(JSON, nullable=True)
+    new_value = Column(JSON, nullable=True)
+    comment = Column(Text, nullable=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    created_at = Column(DateTime, default=_utcnow, index=True)
+
+    spec = relationship("ComponentSpec", back_populates="logs")
+    user = relationship("User")
+
+
+class AppSetting(Base):
+    __tablename__ = "app_settings"
+
+    key = Column(String(128), primary_key=True)
+    value = Column(Text, nullable=True)
+    updated_at = Column(DateTime, default=_utcnow, onupdate=_utcnow)

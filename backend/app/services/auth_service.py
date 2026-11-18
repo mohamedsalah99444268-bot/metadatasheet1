@@ -111,10 +111,17 @@ def authenticate(db: Session, email: str, password: str) -> User | None:
     return user
 
 
+def hash_token(token_value: str) -> str:
+    """Tokens are stored as sha256 hex digests; the raw value only lives client-side."""
+    return hashlib.sha256((token_value or "").encode("utf-8")).hexdigest()
+
+
 def create_access_token(db: Session, user_id: int) -> AuthToken:
+    """Create a token row (hashed) and return it with ``raw_token`` set to the plain value."""
     now = datetime.now(timezone.utc)
+    raw = secrets.token_urlsafe(TOKEN_BYTES)
     token = AuthToken(
-        token=secrets.token_urlsafe(TOKEN_BYTES),
+        token=hash_token(raw),
         user_id=user_id,
         created_at=now,
         expires_at=now + timedelta(seconds=settings.auth_token_ttl_seconds),
@@ -122,11 +129,49 @@ def create_access_token(db: Session, user_id: int) -> AuthToken:
     db.add(token)
     db.commit()
     db.refresh(token)
+    token.raw_token = raw  # transient attribute, never persisted
     return token
 
 
+def find_token(db: Session, token_value: str) -> AuthToken | None:
+    # Only hashed lookups: legacy plaintext rows simply stop matching (users re-login).
+    return db.query(AuthToken).filter(AuthToken.token == hash_token(token_value)).first()
+
+
+class LoginRateLimiter:
+    """In-memory sliding window limiter (per client key)."""
+
+    def __init__(self, limit: int = 10, window_seconds: float = 60.0):
+        import threading
+
+        self.limit = limit
+        self.window = window_seconds
+        self._hits: dict[str, list[float]] = {}
+        self._lock = threading.Lock()
+
+    def allow(self, key: str, now: float | None = None) -> bool:
+        import time
+
+        current = time.monotonic() if now is None else now
+        with self._lock:
+            hits = [t for t in self._hits.get(key, []) if current - t < self.window]
+            if len(hits) >= self.limit:
+                self._hits[key] = hits
+                return False
+            hits.append(current)
+            self._hits[key] = hits
+            return True
+
+    def reset(self) -> None:
+        with self._lock:
+            self._hits.clear()
+
+
+login_rate_limiter = LoginRateLimiter()
+
+
 def revoke_token(db: Session, token_value: str) -> bool:
-    record = db.query(AuthToken).filter(AuthToken.token == token_value).first()
+    record = find_token(db, token_value)
     if record is None or record.revoked_at is not None:
         return False
     record.revoked_at = datetime.now(timezone.utc)
@@ -188,7 +233,7 @@ def get_current_user(
             detail=UNAUTHORIZED_MESSAGE,
             headers={"WWW-Authenticate": "Bearer"},
         )
-    record = db.query(AuthToken).filter(AuthToken.token == token_value).first()
+    record = find_token(db, token_value)
     if (
         record is None
         or record.revoked_at is not None

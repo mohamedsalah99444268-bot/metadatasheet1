@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+import logging
+import time
 import uuid
 from contextlib import contextmanager
+from datetime import datetime, timezone
 from contextvars import ContextVar
 from typing import Iterator, Literal
 from urllib.parse import urlparse
@@ -11,14 +14,34 @@ from langgraph.checkpoint.serde.jsonplus import JsonPlusSerializer
 from langgraph.graph import END, START, StateGraph
 from sqlalchemy.orm import Session
 
-from ..models import Document
+from ..models import AgentRun, AnalysisJob, Document
 from ..services import datasheet_service
+from .classification_agent import run_classification_agent
 from .extraction_agent import run_extraction_agent
 from .report_agent import run_report_agent
 from .state import AgentEvent, AgentState, AnalysisReport
 from .validation_agent import run_validation_agent
 
+logger = logging.getLogger(__name__)
+
+try:  # langgraph >= 0.2
+    from langgraph.types import RetryPolicy
+except ImportError:  # pragma: no cover
+    RetryPolicy = None  # type: ignore[assignment]
+
 _workflow_db: ContextVar[Session | None] = ContextVar("workflow_db", default=None)
+_attempts: ContextVar[dict | None] = ContextVar("workflow_attempts", default=None)
+
+# Nodes on the nominal path (used to compute job progress from agent_runs).
+EXPECTED_NODES = ("research", "download", "extraction", "classification", "validation", "indexing", "report")
+RETRY_MAX_ATTEMPTS = 2
+TRANSIENT_ERRORS: tuple[type[BaseException], ...] = (OSError, TimeoutError, ConnectionError)
+try:
+    import httpx
+
+    TRANSIENT_ERRORS = TRANSIENT_ERRORS + (httpx.TransportError,)
+except ImportError:  # pragma: no cover
+    pass
 
 
 @contextmanager
@@ -87,6 +110,61 @@ def _apply_download_result(state: AgentState, db: Session, result: datasheet_ser
     updated["download_record_id"] = result.download_id
     updated["download_error"] = None
     return updated
+
+
+def _utcnow() -> datetime:
+    return datetime.now(timezone.utc)
+
+
+def _safe_commit(db: Session) -> None:
+    try:
+        db.commit()
+    except Exception:
+        logger.warning("Could not persist agent run", exc_info=True)
+        db.rollback()
+
+
+def _instrument(agent: str, fn):
+    """Wrap a node: per-attempt timing persisted as an agent_runs row."""
+
+    def wrapper(state: AgentState) -> AgentState:
+        db = _workflow_db.get()
+        job_id = str(state.get("job_id") or "")
+        counters = _attempts.get()
+        if counters is None:
+            counters = {}
+        attempt = counters.get(agent, 0) + 1
+        counters[agent] = attempt
+        started = _utcnow()
+        clock = time.perf_counter()
+        row = None
+        if db is not None and job_id:
+            row = AgentRun(job_id=job_id, agent=agent, status="started", attempt=attempt, started_at=started)
+            db.add(row)
+            _safe_commit(db)
+        try:
+            result = fn(state)
+        except Exception as exc:
+            if row is not None:
+                retryable = isinstance(exc, TRANSIENT_ERRORS) and attempt < RETRY_MAX_ATTEMPTS
+                row.status = "retried" if retryable else "failed"
+                row.message = (str(exc) or exc.__class__.__name__)[:2000]
+                row.finished_at = _utcnow()
+                row.duration_ms = int((time.perf_counter() - clock) * 1000)
+                _safe_commit(db)
+            raise
+        if row is not None:
+            events = [e for e in (result or {}).get("events", []) if getattr(e, "agent", None) == agent]
+            last = events[-1] if events else None
+            row.status = last.status if last is not None and last.status != "started" else "completed"
+            row.message = (last.message if last is not None else None)
+            row.finished_at = _utcnow()
+            row.duration_ms = int((time.perf_counter() - clock) * 1000)
+            _safe_commit(db)
+        return result
+
+    wrapper.__name__ = f"{agent}_node"
+    return wrapper
 
 
 def research_node(state: AgentState) -> AgentState:
@@ -211,8 +289,36 @@ def ollama_unavailable_node(state: AgentState) -> AgentState:
     )
 
 
+def classification_node(state: AgentState) -> AgentState:
+    return run_classification_agent(state)
+
+
 def validation_node(state: AgentState) -> AgentState:
     return run_validation_agent(state)
+
+
+def indexing_node(state: AgentState) -> AgentState:
+    """Index the analysed PDF for RAG. Never changes the analysis status."""
+    updated = dict(state)
+    updated["current_agent"] = "indexing"
+    db = _workflow_db.get()
+    document_id = state.get("document_id")
+    if db is None or document_id is None or db.get(Document, document_id) is None:
+        updated["index_status"] = "skipped"
+        return _with_event(updated, "indexing", "skipped", "No stored document available for RAG indexing.")
+    from ..services import rag_index_service
+
+    result = rag_index_service.index_document(db, document_id)
+    if result.get("ok"):
+        updated["index_status"] = "indexed"
+        status = "completed"
+        message = result.get("message") or f"Indexed {result.get('chunks', 0)} chunk(s)."
+    else:
+        updated["index_status"] = "failed"
+        status = "failed"
+        message = result.get("message") or "RAG indexing failed."
+        updated = _with_warning(updated, f"RAG indexing: {message}")
+    return _with_event(updated, "indexing", status, message)
 
 
 def conflict_node(state: AgentState) -> AgentState:
@@ -250,66 +356,62 @@ def route_after_download(state: AgentState) -> Literal["extraction", "failure"]:
     return "extraction" if state.get("download_ok") else "failure"
 
 
-def route_after_extraction(state: AgentState) -> Literal["ollama_unavailable", "validation", "failure"]:
+def route_after_extraction(state: AgentState) -> Literal["ollama_unavailable", "classification", "failure"]:
     if not state.get("extraction_ok"):
         return "failure"
     if not state.get("ollama_available"):
         return "ollama_unavailable"
-    return "validation"
+    return "classification"
 
 
-def route_after_validation(state: AgentState) -> Literal["conflict", "missing_information", "report"]:
+def route_after_validation(state: AgentState) -> Literal["conflict", "missing_information", "indexing"]:
     if state.get("validation_conflicts"):
         return "conflict"
     if state.get("missing_information"):
         return "missing_information"
-    return "report"
+    return "indexing"
+
+
+def _retry_kwargs() -> dict:
+    if RetryPolicy is None:
+        return {}
+    return {"retry_policy": RetryPolicy(max_attempts=RETRY_MAX_ATTEMPTS, retry_on=TRANSIENT_ERRORS)}
 
 
 def build_workflow_graph():
     builder = StateGraph(AgentState)
-    builder.add_node("research", research_node)
-    builder.add_node("download", download_node)
-    builder.add_node("extraction", extraction_node)
-    builder.add_node("ollama_unavailable", ollama_unavailable_node)
-    builder.add_node("validation", validation_node)
-    builder.add_node("conflict_review", conflict_node)
-    builder.add_node("missing_information", missing_information_node)
-    builder.add_node("report", report_node)
-    builder.add_node("failure", failure_node)
+    retry = _retry_kwargs()
+    # Module-level lookups keep the node functions patchable in tests.
+    builder.add_node("research", _instrument("research", lambda s: research_node(s)), **retry)
+    builder.add_node("download", _instrument("download", lambda s: download_node(s)), **retry)
+    builder.add_node("extraction", _instrument("extraction", lambda s: run_extraction_agent(s)), **retry)
+    builder.add_node("ollama_unavailable", _instrument("ollama_unavailable", lambda s: ollama_unavailable_node(s)))
+    builder.add_node("classification", _instrument("classification", lambda s: run_classification_agent(s)))
+    builder.add_node("validation", _instrument("validation", lambda s: run_validation_agent(s)))
+    builder.add_node("conflict_review", _instrument("conflict_review", lambda s: conflict_node(s)))
+    builder.add_node("missing_information", _instrument("missing_information", lambda s: missing_information_node(s)))
+    builder.add_node("indexing", _instrument("indexing", lambda s: indexing_node(s)), **retry)
+    builder.add_node("report", _instrument("report", lambda s: run_report_agent(s)))
+    builder.add_node("failure", _instrument("failure", lambda s: failure_node(s)))
 
     builder.add_edge(START, "research")
-    builder.add_conditional_edges(
-        "research",
-        route_after_research,
-        {"download": "download", "failure": "failure"},
-    )
-    builder.add_conditional_edges(
-        "download",
-        route_after_download,
-        {"extraction": "extraction", "failure": "failure"},
-    )
+    builder.add_conditional_edges("research", route_after_research, {"download": "download", "failure": "failure"})
+    builder.add_conditional_edges("download", route_after_download, {"extraction": "extraction", "failure": "failure"})
     builder.add_conditional_edges(
         "extraction",
         route_after_extraction,
-        {
-            "ollama_unavailable": "ollama_unavailable",
-            "validation": "validation",
-            "failure": "failure",
-        },
+        {"ollama_unavailable": "ollama_unavailable", "classification": "classification", "failure": "failure"},
     )
-    builder.add_edge("ollama_unavailable", "validation")
+    builder.add_edge("ollama_unavailable", "classification")
+    builder.add_edge("classification", "validation")
     builder.add_conditional_edges(
         "validation",
         route_after_validation,
-        {
-            "conflict": "conflict_review",
-            "missing_information": "missing_information",
-            "report": "report",
-        },
+        {"conflict": "conflict_review", "missing_information": "missing_information", "indexing": "indexing"},
     )
-    builder.add_edge("conflict_review", "report")
-    builder.add_edge("missing_information", "report")
+    builder.add_edge("conflict_review", "indexing")
+    builder.add_edge("missing_information", "indexing")
+    builder.add_edge("indexing", "report")
     builder.add_edge("report", END)
     builder.add_edge("failure", END)
 
@@ -372,10 +474,7 @@ def run_workflow(
         "validation_conflicts": False,
         "status": "queued",
         "specifications": [],
-        "technical_specs": [],
-        "evidence": [],
         "validation_results": [],
-        "validation_result": [],
         "quality_stats": {},
         "warnings": [],
         "errors": [],
@@ -390,13 +489,67 @@ def run_workflow(
     if not state.get("datasheet_url") and state.get("verified_datasheet_url"):
         state["datasheet_url"] = state["verified_datasheet_url"]
 
-    with workflow_db(db):
-        return get_graph().invoke(
-            state,
-            config={"configurable": {"thread_id": resolved_thread_id}},
-        )
+    token = _attempts.set({})
+    try:
+        with workflow_db(db):
+            return get_graph().invoke(
+                state,
+                config={"configurable": {"thread_id": resolved_thread_id}},
+            )
+    finally:
+        _attempts.reset(token)
 
 
-def get_job_state(thread_id: str) -> dict | None:
+def runs_to_events(runs: list[AgentRun]) -> list[dict]:
+    return [
+        {
+            "agent": run.agent,
+            "status": run.status,
+            "message": run.message or "",
+            "timestamp": (run.finished_at or run.started_at).isoformat() if (run.finished_at or run.started_at) else None,
+        }
+        for run in runs
+    ]
+
+
+def get_job_state_from_db(db: Session, thread_id: str) -> dict | None:
+    job = db.query(AnalysisJob).filter(AnalysisJob.thread_id == thread_id).first()
+    if job is None:
+        return None
+    runs = db.query(AgentRun).filter(AgentRun.job_id == job.job_id).order_by(AgentRun.id).all()
+    events = list(job.events or []) or runs_to_events(runs)
+    return {
+        "job_id": job.job_id,
+        "thread_id": job.thread_id,
+        "status": job.status,
+        "current_agent": runs[-1].agent if runs else None,
+        "events": events,
+        "report": job.report,
+    }
+
+
+def get_job_state(thread_id: str, db: Session | None = None) -> dict | None:
+    """Job status comes from the database (survives restarts); the in-process
+    checkpointer is only a fallback for DB-less runs (tests, scripts)."""
+    owns = db is None
+    if owns:
+        from ..database import SessionLocal
+
+        try:
+            db = SessionLocal()
+        except Exception:
+            db = None
+    try:
+        if db is not None:
+            try:
+                state = get_job_state_from_db(db, thread_id)
+            except Exception:
+                logger.debug("DB job state lookup failed", exc_info=True)
+                state = None
+            if state is not None:
+                return state
+    finally:
+        if owns and db is not None:
+            db.close()
     snapshot = get_graph().get_state({"configurable": {"thread_id": thread_id}})
     return dict(snapshot.values) if snapshot and snapshot.values else None

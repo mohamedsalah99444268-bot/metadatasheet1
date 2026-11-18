@@ -42,11 +42,11 @@ class OllamaConfigTests(unittest.TestCase):
         self.assertIsNotNone(settings.validation_error)
         self.assertIn("local Ollama runtime", settings.validation_error)
 
-    def test_wrong_model_is_rejected(self):
+    def test_other_local_model_is_allowed(self):
         with patch.dict(os.environ, {"OLLAMA_MODEL": "llama3"}):
             settings = load_settings()
-        self.assertIsNotNone(settings.validation_error)
-        self.assertIn("qwen2.5:1.5b", settings.validation_error)
+        self.assertIsNone(settings.validation_error)
+        self.assertEqual(settings.ollama_model, "llama3")
 
 
 class OllamaServiceTests(unittest.TestCase):

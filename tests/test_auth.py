@@ -39,6 +39,7 @@ class AuthApiTests:
             auth_service, "settings", make_settings()
         )
         self.settings_patcher.start()
+        auth_service.login_rate_limiter.reset()
 
         self.app = FastAPI()
         self.app.include_router(auth_router)
@@ -143,7 +144,7 @@ class TestLogin(AuthApiTests):
 
         with self.session() as db:
             token = db.query(AuthToken).filter(
-                AuthToken.token == body["access_token"]
+                AuthToken.token == auth_service.hash_token(body["access_token"])
             ).one()
             assert token.user_id == body["user"]["id"]
 
@@ -167,7 +168,7 @@ class TestLogin(AuthApiTests):
         token_value = self.login("user@example.com").json()["access_token"]
 
         with self.session() as db:
-            token = db.query(AuthToken).filter(AuthToken.token == token_value).one()
+            token = db.query(AuthToken).filter(AuthToken.token == auth_service.hash_token(token_value)).one()
             token.expires_at = datetime.now(timezone.utc) - timedelta(seconds=1)
             db.commit()
 
@@ -186,7 +187,7 @@ class TestLogin(AuthApiTests):
         assert logout.status_code == 200
 
         with self.session() as db:
-            token = db.query(AuthToken).filter(AuthToken.token == token_value).one()
+            token = db.query(AuthToken).filter(AuthToken.token == auth_service.hash_token(token_value)).one()
             assert token.revoked_at is not None
 
         response = self.client.get(

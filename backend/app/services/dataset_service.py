@@ -89,10 +89,10 @@ def _map_columns(frame: pd.DataFrame) -> dict[str, str | None]:
 
 def _read_frame(data: bytes, extension: str) -> pd.DataFrame:
     if extension == ".csv":
-        try:
-            frame = pd.read_csv(io.BytesIO(data), dtype=str, keep_default_na=False)
-        except UnicodeDecodeError:
-            frame = pd.read_csv(io.BytesIO(data), dtype=str, keep_default_na=False, encoding="latin-1")
+        from .dataset_analysis_service import _decode, _sniff_delimiter
+
+        text = _decode(data)
+        frame = pd.read_csv(io.StringIO(text), dtype=str, keep_default_na=False, sep=_sniff_delimiter(text))
     else:
         engine = "openpyxl" if extension == ".xlsx" else "xlrd"
         frame = pd.read_excel(io.BytesIO(data), dtype=str, keep_default_na=False, engine=engine)
@@ -222,6 +222,12 @@ def create_dataset_import(db: Session, data: bytes, filename: str | None) -> tup
     )
     db.add(dataset)
     db.flush()
+    try:
+        from .dataset_analysis_service import store_legacy_copy
+
+        store_legacy_copy(dataset.id, dataset.sha256, data, filename)
+    except OSError:
+        pass
 
     final_counts = {"valid": 0, "duplicate": 0, "invalid": 0}
     for row in parsed.rows:

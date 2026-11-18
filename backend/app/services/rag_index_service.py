@@ -16,6 +16,12 @@ from .vector_store import VectorStoreError, get_vector_store
 logger = logging.getLogger(__name__)
 
 
+def _invalidate_lexical() -> None:
+    from . import lexical_search
+
+    lexical_search.invalidate()
+
+
 def _iso(value: Any) -> str | None:
     return value.isoformat() if value is not None else None
 
@@ -113,6 +119,7 @@ def index_document(
         record.error_message = None
         record.indexed_at = datetime.now(timezone.utc)
         db.commit()
+        _invalidate_lexical()
         return {
             "ok": True,
             "skipped": False,
@@ -139,6 +146,7 @@ def index_document(
             record.error_message = message[:1000]
             record.indexed_at = None
             db.commit()
+            _invalidate_lexical()
         except Exception:
             db.rollback()
         return {
@@ -205,6 +213,7 @@ def delete_document(db: Session, document_id: int, store: Any | None = None) -> 
     db.query(RagChunk).filter(RagChunk.document_id == document_id).delete(synchronize_session=False)
     db.query(DocumentIndex).filter(DocumentIndex.document_id == document_id).delete(synchronize_session=False)
     db.commit()
+    _invalidate_lexical()
     return {
         "document_id": document_id,
         "deleted_chunks": deleted_chunks,
@@ -235,7 +244,7 @@ def rag_health(
         "status": "unavailable",
         "runtime": "chroma",
         "embedding_model": config.rag_embedding_model,
-        "vector_store": config.chroma_persist_dir,
+        "vector_store": config.vector_backend,
         "indexed_documents": int(indexed_documents),
         "indexed_chunks": int(indexed_chunks),
         "message": "Le moteur RAG local n'est pas disponible.",
@@ -253,7 +262,7 @@ def rag_health(
         return payload
 
     payload["embedding_model"] = getattr(embedder, "model_name", config.rag_embedding_model)
-    payload["vector_store"] = getattr(store, "descriptor", config.chroma_persist_dir)
+    payload["vector_store"] = config.vector_backend
 
     installed = getattr(embedder, "is_installed", None)
     if callable(installed):

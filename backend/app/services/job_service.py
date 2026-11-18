@@ -1,12 +1,15 @@
 from __future__ import annotations
 
+import logging
 import uuid
 from typing import Any
 
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from ..models import AnalysisJob
+from ..models import AgentRun, AnalysisJob
+
+logger = logging.getLogger(__name__)
 
 
 def _json_value(value: Any) -> Any:
@@ -57,9 +60,27 @@ def update_job_from_state(db: Session, job_id: str, state: dict[str, Any]) -> An
     errors = state.get("errors") or []
     warnings = state.get("warnings") or []
     job.error_message = " ".join(str(item) for item in [*errors, *warnings]) or None
+    if job.report and job.status != "failed":
+        persist_components(db, job)
     db.commit()
     db.refresh(job)
     return job
+
+
+def persist_components(db: Session, job: AnalysisJob) -> None:
+    """Upsert Component/ComponentSpec rows from the job report (savepoint: never
+    breaks the job update)."""
+    from .component_service import persist_job
+
+    try:
+        with db.begin_nested():
+            persist_job(db, job)
+    except Exception:
+        logger.warning("Could not persist components for job %s", job.job_id, exc_info=True)
+
+
+def job_runs(db: Session, job_id: str) -> list[AgentRun]:
+    return db.query(AgentRun).filter(AgentRun.job_id == job_id).order_by(AgentRun.id).all()
 
 
 def mark_job_failed(db: Session, job_id: str, message: str) -> AnalysisJob | None:

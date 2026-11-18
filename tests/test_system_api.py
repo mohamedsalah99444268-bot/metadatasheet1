@@ -112,8 +112,8 @@ class TestSystemConfig(SystemApiTests):
         assert set(body["rag"]) == {
             "embedding_model",
             "index_version",
-            "persist_dir",
         }
+        assert "rag_chroma" not in str(body)  # filesystem paths are hidden
         assert body["vector_backend"] == "chroma"
         assert body["auth_enabled"] is False
         assert body["auth_bootstrapped"] is False

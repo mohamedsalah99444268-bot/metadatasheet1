@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { AuthProvider } from "../state/AuthContext";
+import { Providers } from "../App";
 import LoginPage from "../pages/LoginPage";
 
 const mocks = vi.hoisted(() => ({
@@ -25,12 +26,14 @@ vi.mock("../api", () => ({
 function renderLogin() {
   return render(
     <MemoryRouter initialEntries={["/login"]}>
+      <Providers>
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<div>Page protégée</div>} />
         </Routes>
       </AuthProvider>
+      </Providers>
     </MemoryRouter>,
   );
 }

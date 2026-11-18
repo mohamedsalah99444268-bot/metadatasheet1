@@ -1,243 +1,291 @@
-import type { ButtonHTMLAttributes, ReactNode } from "react";
-import type { ReviewStatus } from "../types";
-import { confidenceBand, formatConfidence, reviewStatusLabel } from "../lib/analysis";
+import { Link } from "react-router-dom";
+import { useEffect, useId, useRef, type ButtonHTMLAttributes, type ReactNode } from "react";
+import { AlertTriangle, ChevronLeft, ChevronRight, Loader2, RotateCw, X, type LucideIcon } from "lucide-react";
+import { useI18n } from "../lib/i18n";
+import type { DictKey } from "../lib/dict";
 
-export type IconName =
-  | "dashboard"
-  | "upload"
-  | "components"
-  | "workspace"
-  | "validation"
-  | "reports"
-  | "settings"
-  | "search"
-  | "grid"
-  | "list"
-  | "file"
-  | "check"
-  | "close"
-  | "edit"
-  | "alert"
-  | "refresh"
-  | "chevron"
-  | "activity"
-  | "menu"
-  | "shield"
-  | "arrow"
-  | "clock"
-  | "layers";
+type Variant = "primary" | "secondary" | "ghost" | "danger";
 
-export function Icon({ name, size = 18 }: { name: IconName; size?: number }) {
-  const common = {
-    width: size,
-    height: size,
-    viewBox: "0 0 24 24",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 1.8,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-    "aria-hidden": true,
-  };
-  const paths: Record<IconName, ReactNode> = {
-    dashboard: <><rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" /><rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" /></>,
-    upload: <><path d="M12 16V4" /><path d="m7 9 5-5 5 5" /><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" /></>,
-    components: <><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z" /><path d="m4 7.5 8 4.5 8-4.5" /><path d="M12 12v9" /></>,
-    workspace: <><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M9 4v16" /><path d="M13 9h4" /><path d="M13 13h4" /></>,
-    validation: <><path d="M12 3 4 6v5c0 5 3.4 9.4 8 10 4.6-.6 8-5 8-10V6l-8-3Z" /><path d="m9 12 2 2 4-4" /></>,
-    reports: <><path d="M4 20V10" /><path d="M10 20V4" /><path d="M16 20v-7" /><path d="M22 20H2" /></>,
-    settings: <><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4v-.2a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 13.5h-.2v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 6.5 7 3.7l.1.1a1.7 1.7 0 0 0 1.9.3A1.7 1.7 0 0 0 10 2.5V2h4v.2a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1 2.8 2.8-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z" /></>,
-    search: <><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></>,
-    grid: <><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></>,
-    list: <><path d="M8 6h13M8 12h13M8 18h13" /><path d="M3 6h.01M3 12h.01M3 18h.01" /></>,
-    file: <><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z" /><path d="M14 3v5h5" /></>,
-    check: <path d="m5 12 4 4L19 6" />,
-    close: <><path d="M18 6 6 18" /><path d="m6 6 12 12" /></>,
-    edit: <><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" /></>,
-    alert: <><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" /><path d="M12 9v4" /><path d="M12 17h.01" /></>,
-    refresh: <><path d="M21 12a9 9 0 1 1-3-6.7" /><path d="M21 4v5h-5" /></>,
-    chevron: <path d="m9 18 6-6-6-6" />,
-    activity: <path d="M3 12h4l3-8 4 16 3-8h4" />,
-    menu: <><path d="M4 7h16M4 12h16M4 17h16" /></>,
-    shield: <><path d="M12 3 4 6v5c0 5 3.4 9.4 8 10 4.6-.6 8-5 8-10V6l-8-3Z" /></>,
-    arrow: <><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></>,
-    clock: <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>,
-    layers: <><path d="m12 2 9 5-9 5-9-5 9-5Z" /><path d="m3 12 9 5 9-5" /><path d="m3 17 9 5 9-5" /></>,
-  };
-  return <svg {...common}>{paths[name]}</svg>;
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: Variant;
+  icon?: LucideIcon;
+  loading?: boolean;
+  size?: "sm" | "md";
 }
 
-export function Card({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <section className={`card ${className}`}>{children}</section>;
-}
-
-export function PageHeader({
-  eyebrow,
-  title,
-  description,
-  actions,
-}: {
-  eyebrow?: string;
-  title: string;
-  description?: string;
-  actions?: ReactNode;
-}) {
+export function Button({ variant = "secondary", icon: Icon, loading, size = "md", className = "", children, disabled, ...rest }: ButtonProps) {
   return (
-    <header className="page-header">
-      <div>
-        {eyebrow && <div className="eyebrow">{eyebrow}</div>}
-        <h1>{title}</h1>
-        {description && <p>{description}</p>}
-      </div>
-      {actions && <div className="page-actions">{actions}</div>}
-    </header>
-  );
-}
-
-export function StatCard({
-  label,
-  value,
-  detail,
-  icon,
-  tone = "blue",
-}: {
-  label: string;
-  value: string | number;
-  detail?: string;
-  icon: IconName;
-  tone?: "blue" | "cyan" | "green" | "amber" | "slate";
-}) {
-  return (
-    <Card className={`stat-card tone-${tone}`}>
-      <div className="stat-head">
-        <span className="stat-label">{label}</span>
-        <span className="stat-icon"><Icon name={icon} size={17} /></span>
-      </div>
-      <strong className="stat-value">{value}</strong>
-      {detail && <span className="stat-detail">{detail}</span>}
-    </Card>
-  );
-}
-
-export function Badge({ children, tone = "slate" }: { children: ReactNode; tone?: "blue" | "cyan" | "green" | "amber" | "red" | "slate" }) {
-  return <span className={`badge badge-${tone}`}>{children}</span>;
-}
-
-export function ConfidenceBadge({ value }: { value: number }) {
-  return <span className={`confidence-badge confidence-${confidenceBand(value)}`}>{formatConfidence(value)}</span>;
-}
-
-export function ReviewBadge({ status }: { status: ReviewStatus }) {
-  const map: Record<ReviewStatus, { tone: "slate" | "green" | "red" | "blue" }> = {
-    unreviewed: { tone: "slate" },
-    accepted: { tone: "green" },
-    rejected: { tone: "red" },
-    edited: { tone: "blue" },
-  };
-  return <Badge tone={map[status].tone}>{reviewStatusLabel(status)}</Badge>;
-}
-
-export function Button({
-  children,
-  variant = "secondary",
-  icon,
-  className = "",
-  ...props
-}: ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: "primary" | "secondary" | "ghost" | "danger";
-  icon?: IconName;
-}) {
-  return (
-    <button className={`btn btn-${variant} ${className}`} {...props}>
-      {icon && <Icon name={icon} size={15} />}
+    <button
+      type="button"
+      className={`btn btn-${variant} btn-${size} ${className}`}
+      disabled={disabled || loading}
+      aria-busy={loading || undefined}
+      {...rest}
+    >
+      {loading ? <Loader2 size={15} className="spin" aria-hidden /> : Icon ? <Icon size={15} aria-hidden /> : null}
       {children}
     </button>
   );
 }
 
-export function LoadingState({ label = "Chargement des données…" }: { label?: string }) {
-  return <div className="state-block" role="status"><span className="spinner" />{label}</div>;
+export function IconButton({ icon: Icon, label, className = "", ...rest }: ButtonHTMLAttributes<HTMLButtonElement> & { icon: LucideIcon; label: string }) {
+  return (
+    <button type="button" className={`icon-btn ${className}`} aria-label={label} title={label} {...rest}>
+      <Icon size={17} aria-hidden />
+    </button>
+  );
 }
 
-export function EmptyState({ title, description, action, icon = "layers" }: {
-  title: string;
-  description?: string;
-  action?: ReactNode;
-  icon?: IconName;
+export function Card({ title, subtitle, actions, children, className = "", flush }: {
+  title?: ReactNode; subtitle?: ReactNode; actions?: ReactNode; children?: ReactNode; className?: string; flush?: boolean;
 }) {
   return (
-    <div className="state-block empty-state">
-      <span className="empty-icon"><Icon name={icon} size={24} /></span>
+    <section className={`card ${flush ? "card-flush" : ""} ${className}`}>
+      {(title || actions) && (
+        <header className="card-head">
+          <div className="card-titles">
+            {title && <h2>{title}</h2>}
+            {subtitle && <p>{subtitle}</p>}
+          </div>
+          {actions && <div className="card-actions">{actions}</div>}
+        </header>
+      )}
+      {children}
+    </section>
+  );
+}
+
+export type Tone = "neutral" | "blue" | "cyan" | "green" | "amber" | "red" | "violet";
+
+export function Badge({ tone = "neutral", children, dot }: { tone?: Tone; children: ReactNode; dot?: boolean }) {
+  return <span className={`badge badge-${tone}`}>{dot && <span className="badge-dot" aria-hidden />}{children}</span>;
+}
+
+const STATUS_TONES: Record<string, Tone> = {
+  accepted: "green", completed: "green", compatible: "green", answered: "green", same: "green", ok: "green", available: "green",
+  edited: "cyan", running: "blue", started: "blue", in_progress: "blue", active: "blue",
+  pending: "neutral", queued: "neutral", skipped: "neutral", cancelled: "neutral", partial: "amber",
+  needs_review: "amber", retried: "amber", retrying: "amber", insufficient_evidence: "amber", missing: "amber", conflict: "violet",
+  rejected: "red", failed: "red", incompatible: "red", different: "red", error: "red", unavailable: "red",
+};
+
+export function statusTone(status: string | null | undefined): Tone {
+  return STATUS_TONES[(status ?? "").toLowerCase()] ?? "neutral";
+}
+
+export function StatusBadge({ status }: { status: string | null | undefined }) {
+  const { t } = useI18n();
+  const key = `status.${status ?? "unknown"}` as DictKey;
+  const label = t(key);
+  return <Badge tone={statusTone(status)} dot>{label === key ? (status ?? "—") : label}</Badge>;
+}
+
+export function PageHeader({ title, description, actions, meta }: { title: ReactNode; description?: ReactNode; actions?: ReactNode; meta?: ReactNode }) {
+  return (
+    <div className="page-header">
+      <div className="page-header-text">
+        <h1>{title}</h1>
+        {description && <p>{description}</p>}
+        {meta && <div className="page-meta">{meta}</div>}
+      </div>
+      {actions && <div className="page-actions">{actions}</div>}
+    </div>
+  );
+}
+
+export type Illustration = "empty-components" | "empty-search" | "empty-data" | "empty-jobs" | "empty-chat" | "empty-reports" | "error";
+
+export function Illus({ name, size = 120 }: { name: Illustration; size?: number }) {
+  const url = `url(/assets/illustrations/${name}.svg)`;
+  return <span className="illus" aria-hidden style={{ width: size, height: size * 0.75, maskImage: url, WebkitMaskImage: url }} />;
+}
+
+export function EmptyState({ title, description, action, illustration = "empty-data", compact }: {
+  title: ReactNode; description?: ReactNode; action?: ReactNode; illustration?: Illustration; compact?: boolean;
+}) {
+  return (
+    <div className={`state empty-state ${compact ? "compact" : ""}`}>
+      {!compact && <Illus name={illustration} />}
       <strong>{title}</strong>
       {description && <p>{description}</p>}
-      {action}
+      {action && <div className="state-action">{action}</div>}
     </div>
   );
 }
 
-export function ErrorState({ message, onRetry }: { message: string; onRetry?: () => void }) {
+export function ErrorState({ message, onRetry, compact }: { message: string; onRetry?: () => void; compact?: boolean }) {
+  const { t } = useI18n();
   return (
-    <div className="state-block error-state" role="alert">
-      <Icon name="alert" size={22} />
-      <strong>Impossible de charger les données</strong>
-      <p>{message}</p>
-      {onRetry && <Button onClick={onRetry} icon="refresh">Réessayer</Button>}
+    <div className={`state error-state ${compact ? "compact" : ""}`} role="alert">
+      {compact ? <AlertTriangle size={18} aria-hidden /> : <Illus name="error" />}
+      <strong>{t("common.errorTitle")}</strong>
+      <p className="mono-wrap">{message}</p>
+      {onRetry && <Button icon={RotateCw} size="sm" onClick={onRetry}>{t("common.retry")}</Button>}
     </div>
   );
 }
 
-export function Tabs<T extends string>({ options, value, onChange }: {
-  options: { value: T; label: string }[];
-  value: T;
-  onChange: (value: T) => void;
+export function Loading({ label, rows = 0 }: { label?: string; rows?: number }) {
+  const { t } = useI18n();
+  if (rows > 0) {
+    return (
+      <div className="skeleton-list" aria-busy="true" aria-label={label ?? t("common.loading")}>
+        {Array.from({ length: rows }, (_, i) => <div key={i} className="skeleton" />)}
+      </div>
+    );
+  }
+  return (
+    <div className="state loading-state" aria-busy="true">
+      <Loader2 size={20} className="spin" aria-hidden />
+      <span>{label ?? t("common.loading")}</span>
+    </div>
+  );
+}
+
+/** Wraps a query result: loading / error / empty / content. */
+export function QueryView<T>({ query, empty, children, rows = 4 }: {
+  query: { data: T | null; error: string | null; loading: boolean; reload: () => void };
+  empty?: (data: T) => ReactNode | null;
+  children: (data: T) => ReactNode;
+  rows?: number;
+}) {
+  if (query.error && query.data == null) return <ErrorState message={query.error} onRetry={query.reload} />;
+  if (query.data == null) return <Loading rows={rows} />;
+  const emptyNode = empty?.(query.data);
+  return <>{emptyNode ?? children(query.data)}</>;
+}
+
+export function Pagination({ page, pageSize, total, onPage }: { page: number; pageSize: number; total: number; onPage: (p: number) => void }) {
+  const { t, locale } = useI18n();
+  const pages = Math.max(1, Math.ceil(total / pageSize));
+  const from = total === 0 ? 0 : (page - 1) * pageSize + 1;
+  const to = Math.min(total, page * pageSize);
+  return (
+    <nav className="pagination" aria-label={t("common.pagination")}>
+      <span className="muted tnum">{t("common.range", { from: from.toLocaleString(locale), to: to.toLocaleString(locale), total: total.toLocaleString(locale) })}</span>
+      <div className="pagination-btns">
+        <IconButton icon={ChevronLeft} label={t("common.prev")} disabled={page <= 1} onClick={() => onPage(page - 1)} />
+        <span className="tnum">{page} / {pages}</span>
+        <IconButton icon={ChevronRight} label={t("common.next")} disabled={page >= pages} onClick={() => onPage(page + 1)} />
+      </div>
+    </nav>
+  );
+}
+
+export function Field({ label, children, hint, className = "" }: { label: ReactNode; children: ReactNode; hint?: ReactNode; className?: string }) {
+  return (
+    <label className={`field ${className}`}>
+      <span className="field-label">{label}</span>
+      {children}
+      {hint && <span className="field-hint">{hint}</span>}
+    </label>
+  );
+}
+
+export function Segmented<T extends string>({ value, options, onChange, label }: {
+  value: T; options: { value: T; label: ReactNode; icon?: LucideIcon }[]; onChange: (v: T) => void; label: string;
 }) {
   return (
-    <div className="tabs" role="tablist">
-      {options.map((option) => (
-        <button
-          key={option.value}
-          role="tab"
-          aria-selected={value === option.value}
-          className={value === option.value ? "active" : ""}
-          onClick={() => onChange(option.value)}
-        >
-          {option.label}
+    <div className="segmented" role="radiogroup" aria-label={label}>
+      {options.map((o) => (
+        <button key={o.value} type="button" role="radio" aria-checked={o.value === value} className={o.value === value ? "on" : ""} onClick={() => onChange(o.value)}>
+          {o.icon && <o.icon size={14} aria-hidden />}{o.label}
         </button>
       ))}
     </div>
   );
 }
 
-export function ChartBars({ values, labels }: { values: number[]; labels: string[] }) {
-  const max = Math.max(1, ...values);
+export function Tabs<T extends string>({ value, tabs, onChange }: { value: T; tabs: { value: T; label: ReactNode; count?: number }[]; onChange: (v: T) => void }) {
   return (
-    <div className="chart-bars">
-      {values.map((value, index) => (
-        <div className="chart-column" key={labels[index]}>
-          <div className="chart-track">
-            <div className="chart-fill" style={{ height: `${Math.max(value > 0 ? 4 : 0, (value / max) * 100)}%` }} />
-          </div>
-          <span className="chart-value">{value}</span>
-          <span className="chart-label">{labels[index]}</span>
-        </div>
+    <div className="tabs" role="tablist">
+      {tabs.map((tab) => (
+        <button key={tab.value} type="button" role="tab" aria-selected={tab.value === value} className={tab.value === value ? "on" : ""} onClick={() => onChange(tab.value)}>
+          {tab.label}{tab.count != null && <span className="tab-count tnum">{tab.count}</span>}
+        </button>
       ))}
     </div>
   );
 }
 
-export function ToastHost({ toasts, onDismiss }: {
-  toasts: { id: number; kind: "success" | "error" | "info"; message: string }[];
-  onDismiss: (id: number) => void;
+function useEscape(open: boolean, onClose: () => void) {
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [open, onClose]);
+}
+
+export function Modal({ open, onClose, title, children, footer, width = 520 }: {
+  open: boolean; onClose: () => void; title: ReactNode; children: ReactNode; footer?: ReactNode; width?: number;
 }) {
+  const { t } = useI18n();
+  const id = useId();
+  const ref = useRef<HTMLDivElement>(null);
+  useEscape(open, onClose);
+  useEffect(() => { if (open) ref.current?.focus(); }, [open]);
+  if (!open) return null;
   return (
-    <div className="toast-host" aria-live="polite">
-      {toasts.map((toast) => (
-        <div key={toast.id} className={`toast toast-${toast.kind}`} role={toast.kind === "error" ? "alert" : "status"}>
-          <Icon name={toast.kind === "success" ? "check" : toast.kind === "error" ? "alert" : "activity"} size={16} />
-          <span>{toast.message}</span>
-          <button aria-label="Fermer la notification" onClick={() => onDismiss(toast.id)}><Icon name="close" size={14} /></button>
-        </div>
-      ))}
+    <div className="overlay" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="modal" role="dialog" aria-modal="true" aria-labelledby={id} style={{ maxWidth: width }} tabIndex={-1} ref={ref}>
+        <header className="modal-head">
+          <h2 id={id}>{title}</h2>
+          <IconButton icon={X} label={t("common.close")} onClick={onClose} />
+        </header>
+        <div className="modal-body">{children}</div>
+        {footer && <footer className="modal-foot">{footer}</footer>}
+      </div>
     </div>
   );
+}
+
+export function Drawer({ open, onClose, title, children, actions }: { open: boolean; onClose: () => void; title: ReactNode; children: ReactNode; actions?: ReactNode }) {
+  const { t } = useI18n();
+  useEscape(open, onClose);
+  if (!open) return null;
+  return (
+    <div className="overlay overlay-drawer" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+      <aside className="drawer" role="dialog" aria-modal="true" aria-label={typeof title === "string" ? title : undefined}>
+        <header className="drawer-head">
+          <h2>{title}</h2>
+          <div className="row gap-8">{actions}<IconButton icon={X} label={t("common.close")} onClick={onClose} /></div>
+        </header>
+        <div className="drawer-body">{children}</div>
+      </aside>
+    </div>
+  );
+}
+
+export function Kpi({ label, value, icon: Icon, hint, tone = "neutral", to }: {
+  label: ReactNode; value: ReactNode; icon: LucideIcon; hint?: ReactNode; tone?: Tone; to?: string;
+}) {
+  const content = (
+    <>
+      <div className="kpi-top"><span className={`kpi-icon tone-${tone}`}><Icon size={16} aria-hidden /></span><span className="kpi-label">{label}</span></div>
+      <div className="kpi-value tnum">{value}</div>
+      {hint && <div className="kpi-hint">{hint}</div>}
+    </>
+  );
+  return to ? <Link className="kpi kpi-link" to={to}>{content}</Link> : <div className="kpi">{content}</div>;
+}
+
+export function ThumbIcon({ category, size = 40 }: { category: string | null | undefined; size?: number }) {
+  const name = thumbnailName(category);
+  const url = `url(/assets/thumbnails/${name}.svg)`;
+  return <span className={`thumb thumb-${name}`} aria-hidden style={{ width: size, height: size }}><span style={{ maskImage: url, WebkitMaskImage: url }} /></span>;
+}
+
+const THUMBS = ["microcontroller", "opamp", "regulator", "logic", "mosfet", "sensor", "memory"] as const;
+export function thumbnailName(category: string | null | undefined): string {
+  const c = (category ?? "").toLowerCase();
+  if (THUMBS.includes(c as (typeof THUMBS)[number])) return c;
+  if (/mcu|micro|controller|processor/.test(c)) return "microcontroller";
+  if (/op.?amp|amplifier|comparator|analog/.test(c)) return "opamp";
+  if (/regul|ldo|power|dc.?dc|pmic|voltage/.test(c)) return "regulator";
+  if (/logic|gate|buffer|flip|interface|driver/.test(c)) return "logic";
+  if (/mosfet|transistor|fet|igbt|diode/.test(c)) return "mosfet";
+  if (/sensor|rf|radio|wireless|antenna/.test(c)) return "sensor";
+  if (/memory|eeprom|flash|ram/.test(c)) return "memory";
+  return "generic";
 }

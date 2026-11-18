@@ -12,14 +12,16 @@ from pathlib import Path
 from sqlalchemy.orm import Session
 
 from ..extraction.table_quality import filter_credible_tables
-from ..models import Document, ExtractedTable, Page, ParsedField, TableCell, TextBlock
+from ..models import Document, ExtractedTable, FieldReview, Page, ParsedField, TableCell, TextBlock
 from ..parsers.base import BlockInput, TableInput
 from ..parsers.orchestrator import run_all_parsers
 from ..pipeline import PipelineArtifacts, build_pipeline_artifacts
 
 UPLOAD_DIR = Path(__file__).resolve().parents[2] / "uploads"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
-MAX_PDF_BYTES = 150 * 1024 * 1024
+from .upload_limits import max_pdf_bytes
+
+MAX_PDF_BYTES = max_pdf_bytes()
 
 logger = logging.getLogger(__name__)
 
@@ -55,8 +57,9 @@ def _validate_pdf(data: bytes, filename: str | None) -> None:
         raise DocumentIngestError("Only PDF files are accepted")
     if not data:
         raise DocumentIngestError("The selected file is empty")
-    if len(data) > MAX_PDF_BYTES:
-        raise DocumentIngestError("File exceeds the 150 MB local processing limit")
+    limit = max_pdf_bytes()
+    if len(data) > limit:
+        raise DocumentIngestError(f"File exceeds the {limit // (1024 * 1024)} MB local processing limit")
     if data[:1024].find(b"%PDF-") == -1:
         raise DocumentIngestError("The file is not a valid PDF")
 
@@ -115,10 +118,31 @@ def _stored_table_inputs(db: Session, document_id: int) -> list[TableInput]:
     return inputs
 
 
+def _review_key(field_type, page_number, value) -> tuple:
+    return (str(field_type or ""), int(page_number or 0), str(value or "").strip())
+
+
 def _refresh_parsed_fields(db: Session, document_id: int, blocks: list[BlockInput], tables: list[TableInput]) -> None:
-    db.query(ParsedField).filter(ParsedField.document_id == document_id).delete()
+    # Keep human reviews across a rebuild: remember them by (field_type, page, value),
+    # delete them explicitly (SQLite may not enforce ON DELETE CASCADE) and re-attach
+    # them to the rebuilt field that matches.
+    old_fields = db.query(ParsedField).filter(ParsedField.document_id == document_id).all()
+    saved_reviews: dict[tuple, tuple[str, str]] = {}
+    old_ids = [field.id for field in old_fields]
+    if old_ids:
+        by_id = {field.id: field for field in old_fields}
+        for review in db.query(FieldReview).filter(FieldReview.field_id.in_(old_ids)).all():
+            field = by_id.get(review.field_id)
+            if field is not None:
+                saved_reviews[_review_key(field.field_type, field.page_number, field.value)] = (
+                    review.value,
+                    review.status,
+                )
+        db.query(FieldReview).filter(FieldReview.field_id.in_(old_ids)).delete(synchronize_session="fetch")
+    db.query(ParsedField).filter(ParsedField.document_id == document_id).delete(synchronize_session="fetch")
+    new_fields: list[ParsedField] = []
     for parsed in run_all_parsers(blocks, filter_credible_tables(tables)):
-        db.add(
+        new_fields.append(
             ParsedField(
                 document_id=document_id,
                 field_type=parsed.field_type,
@@ -135,7 +159,14 @@ def _refresh_parsed_fields(db: Session, document_id: int, blocks: list[BlockInpu
                 variant_group=parsed.variant_group,
             )
         )
+    db.add_all(new_fields)
     db.flush()
+    if saved_reviews:
+        for field in new_fields:
+            saved = saved_reviews.pop(_review_key(field.field_type, field.page_number, field.value), None)
+            if saved is not None:
+                db.add(FieldReview(field_id=field.id, value=saved[0], status=saved[1]))
+        db.flush()
 
 
 def _persist_artifacts(db: Session, document: Document, artifacts: PipelineArtifacts) -> None:

@@ -33,8 +33,28 @@ class OllamaHealth(BaseModel):
     message: str
 
 
+MODEL_SETTING_KEY = "ollama_model"
+
+
+def get_configured_model(default: str | None = None) -> str:
+    """Current model: app_settings.ollama_model if set, else env/default."""
+    fallback = default or load_settings().ollama_model
+    try:
+        from ..database import SessionLocal
+        from ..models import AppSetting
+
+        with SessionLocal() as db:
+            row = db.get(AppSetting, MODEL_SETTING_KEY)
+            if row is not None and (row.value or "").strip():
+                return row.value.strip()
+    except Exception:
+        logger.debug("Could not read model setting", exc_info=True)
+    return fallback
+
+
 class OllamaService:
     def __init__(self, settings: Settings | None = None, cache_seconds: float = 30.0) -> None:
+        self._explicit_settings = settings is not None
         self.settings = settings or load_settings()
         self.cache_seconds = cache_seconds
         self._cached_health: OllamaHealth | None = None
@@ -44,8 +64,25 @@ class OllamaService:
         self._cached_health = None
         self._cached_at = 0.0
 
+    @property
+    def model(self) -> str:
+        if self._explicit_settings:
+            return self.settings.ollama_model
+        return get_configured_model(self.settings.ollama_model)
+
+    def list_installed_models(self) -> list[dict]:
+        response = self._build_client().list()
+        models = []
+        for item in getattr(response, "models", []) or []:
+            name = getattr(item, "model", None) or getattr(item, "name", None)
+            if isinstance(name, str) and name.strip():
+                models.append({"name": name.strip(), "size": getattr(item, "size", None)})
+        return models
+
     def check_ollama(self, force: bool = False) -> OllamaHealth:
         now = time.monotonic()
+        if self._cached_health is not None and self._cached_health.model != self.model:
+            force = True
         if not force and self._cached_health is not None:
             if now - self._cached_at < self.cache_seconds:
                 return self._cached_health
@@ -54,7 +91,7 @@ class OllamaService:
             health = OllamaHealth(
                 status="error",
                 base_url=DEFAULT_OLLAMA_BASE_URL,
-                model=self.settings.ollama_model,
+                model=self.model,
                 model_installed=False,
                 message=self.settings.validation_error,
             )
@@ -76,7 +113,7 @@ class OllamaService:
 
     def build_chat_model(self) -> ChatOllama:
         return ChatOllama(
-            model=self.settings.ollama_model,
+            model=self.model,
             base_url=self.settings.ollama_base_url,
             format="json",
             temperature=self.settings.ollama_temperature,
@@ -89,7 +126,7 @@ class OllamaService:
 
     def build_text_model(self) -> ChatOllama:
         return ChatOllama(
-            model=self.settings.ollama_model,
+            model=self.model,
             base_url=self.settings.ollama_base_url,
             temperature=self.settings.ollama_temperature,
             num_ctx=self.settings.ollama_num_ctx,
@@ -147,17 +184,17 @@ class OllamaService:
             return OllamaHealth(
                 status="unavailable",
                 base_url=self.settings.ollama_base_url,
-                model=self.settings.ollama_model,
+                model=self.model,
                 model_installed=False,
                 message=AIOllamaUnavailableError.public_message,
             )
 
-        model_installed = self.settings.ollama_model in installed_models
+        model_installed = self.model in installed_models
         if model_installed:
             return OllamaHealth(
                 status="available",
                 base_url=self.settings.ollama_base_url,
-                model=self.settings.ollama_model,
+                model=self.model,
                 model_installed=True,
                 message="Ollama is available and the required local model is installed.",
             )
@@ -165,7 +202,7 @@ class OllamaService:
         return OllamaHealth(
             status="unavailable",
             base_url=self.settings.ollama_base_url,
-            model=self.settings.ollama_model,
+            model=self.model,
             model_installed=False,
             message=AIModelMissingError.public_message,
         )

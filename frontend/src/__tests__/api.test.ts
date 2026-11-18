@@ -86,3 +86,45 @@ describe("api", () => {
     expect(fetchMock.mock.calls[0][0]).toBe("https://api.example.test/health");
   });
 });
+
+describe("api v2 contract", () => {
+  beforeEach(() => { vi.resetModules(); vi.unstubAllEnvs(); });
+  afterEach(() => vi.unstubAllGlobals());
+
+  it("serialise les filtres de /components en query string", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(jsonResponse({ items: [], total: 0, page: 1, page_size: 24 }));
+    vi.stubGlobal("fetch", fetchMock);
+    const { listComponents } = await import("../api");
+    await listComponents({ q: "LM358", manufacturer: "TI", category: undefined, page: 2, page_size: 24 });
+    expect(fetchMock.mock.calls[0][0]).toBe("/api/components?q=LM358&manufacturer=TI&page=2&page_size=24");
+  });
+
+  it("refuse une comparaison hors de 2 à 5 composants sans appeler le réseau", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(jsonResponse({}));
+    vi.stubGlobal("fetch", fetchMock);
+    const { compareComponents } = await import("../api");
+    await expect(compareComponents([1])).rejects.toThrow();
+    await expect(compareComponents([1, 2, 3, 4, 5, 6])).rejects.toThrow();
+    expect(fetchMock).not.toHaveBeenCalled();
+    await compareComponents([1, 2]);
+    expect(fetchMock.mock.calls[0][0]).toBe("/api/compare");
+    expect(JSON.parse((fetchMock.mock.calls[0][1] as RequestInit).body as string)).toEqual({ component_ids: [1, 2] });
+  });
+
+  it("appelle les endpoints de revue de spécification", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(jsonResponse({ id: 9 }));
+    vi.stubGlobal("fetch", fetchMock);
+    const { acceptSpec, rejectSpec, editSpec, addSpec } = await import("../api");
+    await acceptSpec(9, "ok");
+    await rejectSpec(9);
+    await editSpec(9, { value_text: "3.3" });
+    await addSpec(4, { parameter: "vcc", category: "electrical", condition_type: "general", value_text: "5" });
+    const calls = fetchMock.mock.calls.map((c) => [c[0], (c[1] as RequestInit).method]);
+    expect(calls).toEqual([
+      ["/api/specs/9/accept", "POST"],
+      ["/api/specs/9/reject", "POST"],
+      ["/api/specs/9", "PATCH"],
+      ["/api/components/4/specs", "POST"],
+    ]);
+  });
+});

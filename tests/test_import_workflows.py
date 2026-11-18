@@ -183,7 +183,11 @@ class ImportWorkflowTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200, response.text)
         payload = response.json()
         self.assertEqual(payload["input_source"], "manual")
-        self.assertEqual(payload["status"], "completed")
+        # Manual entries carry no documentary evidence: never auto-validated.
+        self.assertEqual(payload["status"], "needs_review")
+        self.assertEqual(
+            {item["validation_status"] for item in payload["report"]["specifications"]}, {"needs_review"}
+        )
         self.assertEqual(payload["manufacturer"], "STMicroelectronics")
         self.assertEqual(payload["component_reference"], "STM32F103C8")
         self.assertIsNotNone(payload["document_id"])

@@ -1,84 +1,52 @@
-import { useEffect, useState, type FormEvent } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useState, type FormEvent } from "react";
+import { Navigate } from "react-router-dom";
+import { Languages, Moon, Sun } from "lucide-react";
 import { useAuth } from "../state/AuthContext";
-import { Button, Card, Icon, LoadingState } from "../components/ui";
+import { Button, Field, IconButton, Loading } from "../components/ui";
+import { Logo } from "../components/layout/AppShell";
+import { useI18n } from "../lib/i18n";
+import { useTheme } from "../lib/theme";
 
 export default function LoginPage() {
   const { status, user, loading, error, login } = useAuth();
-  const navigate = useNavigate();
+  const { t, lang, setLang } = useI18n();
+  const { theme, toggle } = useTheme();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!loading && status && !status.enabled) navigate("/", { replace: true });
-  }, [loading, navigate, status]);
-
-  if (loading) return <LoadingState label="Vérification de l’authentification…" />;
+  if (loading) return <Loading />;
   if (status?.enabled && user) return <Navigate to="/" replace />;
   if (status && !status.enabled) return <Navigate to="/" replace />;
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  async function submit(e: FormEvent) {
+    e.preventDefault();
     setSubmitting(true);
     setLocalError(null);
-    try {
-      await login({ email, password });
-    } catch (reason) {
-      setLocalError(reason instanceof Error ? reason.message : "Connexion impossible");
-    } finally {
-      setSubmitting(false);
-    }
+    try { await login({ email, password }); }
+    catch (reason) { setLocalError(reason instanceof Error ? reason.message : t("login.failed")); }
+    finally { setSubmitting(false); }
   }
 
   return (
     <div className="login-page">
-      <Card className="login-card">
-        <div className="brand">
-          <span className="brand-mark"><Icon name="shield" size={20} /></span>
-          <span className="brand-text"><strong>Metadatasheet</strong><small>Accès sécurisé</small></span>
-        </div>
-        <div className="page-header">
-          <div>
-            <div className="eyebrow">Authentification</div>
-            <h1>Connexion</h1>
-            <p>
-              {status?.bootstrapped === false
-                ? "Aucun compte n’existe encore : initialisez d’abord le backend via /api/auth/bootstrap."
-                : "Utilisez les identifiants enregistrés sur le backend."}
-            </p>
-          </div>
-        </div>
-        <form className="login-form" onSubmit={(event) => void handleSubmit(event)}>
-          <label className="filter-field grow">
-            <span>Adresse e-mail</span>
-            <input
-              className="input"
-              type="email"
-              autoComplete="username"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              required
-            />
-          </label>
-          <label className="filter-field grow">
-            <span>Mot de passe</span>
-            <input
-              className="input"
-              type="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              required
-            />
-          </label>
-          {(localError ?? error) && <div className="inline-error" role="alert">{localError ?? error}</div>}
-          <Button variant="primary" type="submit" disabled={submitting || !status?.enabled}>
-            {submitting ? "Connexion…" : "Se connecter"}
-          </Button>
+      <div className="login-tools">
+        <IconButton icon={theme === "dark" ? Sun : Moon} label={t("settings.theme")} onClick={toggle} />
+        <IconButton icon={Languages} label={lang === "fr" ? "English" : "Français"} onClick={() => setLang(lang === "fr" ? "en" : "fr")} />
+      </div>
+      <div className="login-panel">
+        <Logo />
+        <h1>{t("login.title")}</h1>
+        <p className="muted">{status?.bootstrapped === false ? t("login.bootstrap") : t("login.subtitle")}</p>
+        <form className="form-stack" onSubmit={(e) => void submit(e)}>
+          <Field label={t("login.email")}><input className="input" type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} required /></Field>
+          <Field label={t("login.password")}><input className="input" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required /></Field>
+          {(localError ?? error) && <div className="alert alert-red" role="alert">{localError ?? error}</div>}
+          <Button variant="primary" type="submit" loading={submitting} disabled={!status?.enabled}>{t("login.submit")}</Button>
         </form>
-      </Card>
+      </div>
+      <p className="login-foot muted small">{t("login.foot")}</p>
     </div>
   );
 }

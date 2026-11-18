@@ -13,13 +13,14 @@ from ..schemas import (
     ExtractedTableOut, UploadResponse,
 )
 from ..services.document_service import DocumentIngestError, ingest_pdf_bytes
+from ..services.upload_limits import max_pdf_bytes, read_limited
 
 router = APIRouter(prefix="/api/documents", tags=["documents"])
 
 
 @router.post("/upload", response_model=UploadResponse)
 async def upload_document(file: UploadFile = File(...), db: Session = Depends(get_db)):
-    data = await file.read()
+    data = await read_limited(file, max_pdf_bytes())
     try:
         result = ingest_pdf_bytes(data, file.filename, db)
     except DocumentIngestError as exc:

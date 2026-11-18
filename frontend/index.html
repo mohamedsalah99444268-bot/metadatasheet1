@@ -1,11 +1,19 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0A0A0A" />
-    <meta name="description" content="Espace local d’extraction et d’analyse de fiches techniques de composants électroniques." />
-    <title>Metadatasheet · Intelligence de fiches techniques</title>
+    <meta name="theme-color" content="#0A0B0D" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="description" content="SmartDatasheet AI — extraction, validation et comparaison de fiches techniques de composants électroniques." />
+    <title>SmartDatasheet AI</title>
+    <script>
+      try {
+        var t = localStorage.getItem("sd_theme");
+        if (t !== "dark" && t !== "light") t = "dark";
+        document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

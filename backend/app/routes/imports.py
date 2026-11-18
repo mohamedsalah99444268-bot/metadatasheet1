@@ -15,7 +15,13 @@ from ..models import AnalysisJob, DatasheetDownload, DatasetImport, Document, Pa
 from ..schemas import AnalysisJobOut, DatasheetDownloadOut, DatasetImportOut, DatasetUploadResponse
 from ..services import dataset_service, datasheet_service, job_service
 from ..services.document_service import DocumentIngestError, ingest_pdf_bytes
-from ..services.report_service import report_to_csv_bytes, report_to_excel_bytes, report_to_json_bytes
+from ..services.report_service import (
+    report_to_csv_bytes,
+    report_to_excel_bytes,
+    report_to_json_bytes,
+    report_to_pdf_bytes,
+)
+from ..services.upload_limits import max_dataset_bytes, max_pdf_bytes, read_limited
 
 router = APIRouter(prefix="/api/imports", tags=["imports"])
 
@@ -34,6 +40,36 @@ def _queued_job_response(db: Session, job: AnalysisJob) -> AnalysisJobOut:
     return AnalysisJobOut(**job_service.job_to_dict(job))
 
 
+def _check_verified_url(url: str, manufacturer: str) -> None:
+    """Static SSRF / official-domain check before a URL is stored or queued.
+
+    DNS-level checks (private address resolution, redirects) are re-applied by
+    ``datasheet_service`` at fetch time for every hop.
+    """
+    import ipaddress
+
+    parsed = urlparse(url)
+    host = (parsed.hostname or "").lower()
+    if parsed.scheme != "https" or not host or parsed.username or parsed.password:
+        raise HTTPException(status_code=400, detail="Seules les URL HTTPS publiques sont acceptées.")
+    if host in {"localhost", "localhost.localdomain"} or host.endswith(".local") or host.endswith(".internal"):
+        raise HTTPException(status_code=400, detail="Les URL locales ne sont pas autorisées.")
+    try:
+        address = ipaddress.ip_address(host)
+    except ValueError:
+        address = None
+    if address is not None and not address.is_global:
+        raise HTTPException(status_code=400, detail="Les URL privées ne sont pas autorisées.")
+    if any(host == s or host.endswith(f".{s}") for s in datasheet_service.BLOCKED_DOMAIN_SUFFIXES):
+        raise HTTPException(status_code=400, detail="Les miroirs tiers de fiches techniques ne sont pas acceptés.")
+    domains = datasheet_service.official_domains_for(manufacturer)
+    if not any(host == d or host.endswith(f".{d}") for d in domains):
+        raise HTTPException(
+            status_code=400,
+            detail="L’URL n’appartient pas à un domaine officiel configuré pour ce fabricant.",
+        )
+
+
 def _verified_download(url: str, manufacturer: str, part_number: str) -> DatasheetDownload:
     parsed = urlparse(url)
     source_key = f"{(parsed.hostname or '').lower()}{parsed.path.rstrip('/').lower()}?{parsed.query.lower()}"[:500]
@@ -50,7 +86,7 @@ def _verified_download(url: str, manufacturer: str, part_number: str) -> Datashe
 
 @router.post("/dataset", response_model=DatasetUploadResponse)
 async def import_dataset(file: UploadFile = File(...), db: Session = Depends(get_db)):
-    data = await file.read()
+    data = await read_limited(file, max_dataset_bytes())
     try:
         dataset, parsed = dataset_service.create_dataset_import(db, data, file.filename)
     except dataset_service.DatasetServiceError as exc:
@@ -64,14 +100,22 @@ async def import_dataset(file: UploadFile = File(...), db: Session = Depends(get
 
 @router.get("/datasets", response_model=list[DatasetImportOut])
 def list_datasets(db: Session = Depends(get_db)):
+    from ..services.dataset_analysis_service import is_analysis_dataset
+
     datasets = db.query(DatasetImport).order_by(DatasetImport.created_at.desc()).all()
-    return [DatasetImportOut(**dataset_service.dataset_to_dict(db, dataset)) for dataset in datasets]
+    return [
+        DatasetImportOut(**dataset_service.dataset_to_dict(db, dataset))
+        for dataset in datasets
+        if not is_analysis_dataset(dataset)
+    ]
 
 
 @router.get("/datasets/{dataset_id}", response_model=DatasetImportOut)
 def get_dataset(dataset_id: int, db: Session = Depends(get_db)):
+    from ..services.dataset_analysis_service import is_analysis_dataset
+
     dataset = db.query(DatasetImport).filter(DatasetImport.id == dataset_id).first()
-    if not dataset:
+    if not dataset or is_analysis_dataset(dataset):
         raise HTTPException(status_code=404, detail="Jeu de données introuvable")
     return DatasetImportOut(**dataset_service.dataset_to_dict(db, dataset, include_rows=True))
 
@@ -80,12 +124,17 @@ def get_dataset(dataset_id: int, db: Session = Depends(get_db)):
 def import_manual(
     manufacturer: str = Form(...),
     component_reference: str = Form(...),
+    confidence: float | None = Form(default=None),
     db: Session = Depends(get_db),
 ):
     manufacturer = manufacturer.strip()
     component_reference = component_reference.strip()
     if not manufacturer or not component_reference:
         raise HTTPException(status_code=400, detail="Le fabricant et la référence du composant sont requis")
+    if confidence is None:
+        confidence = 1.0
+    if not 0.0 <= confidence <= 1.0:
+        raise HTTPException(status_code=400, detail="La confiance doit être comprise entre 0 et 1")
 
     key = f"manual:{manufacturer.casefold()}|{component_reference.casefold()}"
     digest = sha256(key.encode("utf-8")).hexdigest()
@@ -108,7 +157,7 @@ def import_manual(
                     document_id=document.id,
                     field_type=field_type,
                     value=value,
-                    confidence=1.0,
+                    confidence=confidence,
                     parser_rule="manual_entry",
                     section_name="saisie manuelle",
                     page_number=0,
@@ -130,8 +179,8 @@ def import_manual(
             page_number=0,
             source_text="Saisie manuelle utilisateur",
             extraction_method="manual",
-            confidence=1.0,
-            validation_status="validated",
+            confidence=confidence,
+            validation_status="needs_review",
             parser_rule="manual_entry",
         ),
         SpecificationEvidence(
@@ -140,8 +189,8 @@ def import_manual(
             page_number=0,
             source_text="Saisie manuelle utilisateur",
             extraction_method="manual",
-            confidence=1.0,
-            validation_status="validated",
+            confidence=confidence,
+            validation_status="needs_review",
             parser_rule="manual_entry",
         ),
     ]
@@ -150,22 +199,26 @@ def import_manual(
         component_reference=component_reference,
         specifications=specifications,
         validation_results=[
-            ValidationResult(field_name=item.field_name, status="validated", reason="Saisie manuelle utilisateur")
+            ValidationResult(
+                field_name=item.field_name,
+                status="needs_review",
+                reason="Saisie manuelle utilisateur : aucune preuve documentaire, à vérifier",
+            )
             for item in specifications
         ],
-        warnings=["Aucun PDF source : la fiche provient d’une saisie manuelle."],
-        status="completed",
+        warnings=["Aucun PDF source : la fiche provient d’une saisie manuelle et doit être vérifiée."],
+        status="needs_review",
     )
     event = AgentEvent(
         agent="report",
         status="completed",
-        message="Composant saisi manuellement et enregistré sans extraction PDF.",
+        message="Composant saisi manuellement, enregistré sans extraction PDF et marqué à vérifier.",
     )
     updated = job_service.update_job_from_state(
         db,
         job.job_id,
         {
-            "status": "completed",
+            "status": "needs_review",
             "events": [event.model_dump(mode="json")],
             "report": report,
         },
@@ -187,7 +240,7 @@ async def import_datasheet(
     if not manufacturer or not component_reference:
         raise HTTPException(status_code=400, detail="Le fabricant et la référence du composant sont requis")
 
-    data = await file.read()
+    data = await read_limited(file, max_pdf_bytes())
     try:
         ingested = ingest_pdf_bytes(data, file.filename, db)
     except DocumentIngestError as exc:
@@ -239,6 +292,8 @@ async def import_datasheet_from_web(
     verified_url = verified_datasheet_url.strip()
     if not manufacturer or not component_reference:
         raise HTTPException(status_code=400, detail="Le fabricant et la référence du composant sont requis")
+    if verified_url:
+        _check_verified_url(verified_url, manufacturer)
 
     job = job_service.create_job(
         db,
@@ -293,6 +348,7 @@ def start_import_job(job_id: str, db: Session = Depends(get_db)):
     if job.status != "running":
         job.status = "queued"
         job.cancel_requested = False
+        job.attempts = 0
         job.finished_at = None
     db.commit()
     db.refresh(job)
@@ -309,7 +365,7 @@ def cancel_import_job(job_id: str, db: Session = Depends(get_db)):
         job.finished_at = datetime.now(timezone.utc)
     db.commit()
     db.refresh(job)
-    worker.enqueue_job(job_id)
+    # No re-enqueue: the worker observes cancel_requested on its own.
     return AnalysisJobOut(**job_service.job_to_dict(job))
 
 
@@ -339,7 +395,7 @@ def get_import_job(job_id: str, db: Session = Depends(get_db)):
 @router.get("/jobs/{job_id}/report")
 def get_import_job_report(
     job_id: str,
-    format: Literal["json", "csv", "excel"] = "json",
+    format: Literal["json", "csv", "excel", "pdf"] = "json",
     db: Session = Depends(get_db),
 ):
     job = job_service.get_job(db, job_id)
@@ -356,6 +412,12 @@ def get_import_job_report(
             content=report_to_csv_bytes(report),
             media_type="text/csv; charset=utf-8",
             headers={"Content-Disposition": f'attachment; filename="report-{job_id}.csv"'},
+        )
+    if format == "pdf":
+        return Response(
+            content=report_to_pdf_bytes(report, job_id=job_id, events=job.events or []),
+            media_type="application/pdf",
+            headers={"Content-Disposition": f'attachment; filename="report-{job_id}.pdf"'},
         )
     return Response(
         content=report_to_excel_bytes(report),
