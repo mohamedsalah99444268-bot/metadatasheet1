@@ -1,14 +1,18 @@
 import { lazy, Suspense, useMemo, useState } from "react";
+import { paramLabel } from "../lib/paramLabels";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Check, Download, FileText, Pencil, Plus, RotateCw, Trash2, X } from "lucide-react";
+import { CircleDashed, Download, FileText, Files, History, ListChecks, Plus, RotateCw, Trash2 } from "lucide-react";
 import {
   deleteComponent, downloadFile, DOWNLOAD_PATHS, getComponent, getPages, reanalyzeComponent,
   type ComponentDetail, type ReportFormat, type Spec,
 } from "../api";
-import { Badge, Button, Card, EmptyState, IconButton, Loading, PageHeader, QueryView, StatusBadge, Tabs, ThumbIcon } from "../components/ui";
+import { Badge, Button, Card, Drawer, EmptyState, Loading, PageHeader, QueryView, StatusBadge, Tabs, ThumbIcon, SourceQuote } from "../components/ui";
 import { useConfirm, useToast } from "../components/feedback";
-import { AddSpecModal, EditSpecModal, useSpecActions } from "../components/SpecForms";
-import { fmtDate, fmtRange } from "../lib/format";
+import { AddSpecModal, EditSpecModal, SpecOverflow, SpecRowActions, useSpecActions } from "../components/SpecForms";
+import { fmtDate, fmtPct, fmtRange, pickDescription, fmtLabel } from "../lib/format";
+import { humanize, tEnum } from "../lib/enums";
+import { useMedia } from "../lib/useMedia";
+import { useCrumbLabel } from "../lib/crumbs";
 import { useI18n } from "../lib/i18n";
 import { errorMessage, useQuery } from "../lib/useQuery";
 
@@ -20,7 +24,7 @@ function SpecTable({ specs, onPage, actions }: {
   specs: Spec[]; onPage: (p: number) => void;
   actions: { busy: number | null; accept: (s: Spec) => void; reject: (s: Spec) => void; edit: (s: Spec) => void };
 }) {
-  const { t, locale } = useI18n();
+  const { t, locale, lang } = useI18n();
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const groups = useMemo(() => {
     const byCat = new Map<string, Spec[]>();
@@ -29,46 +33,47 @@ function SpecTable({ specs, onPage, actions }: {
   }, [specs]);
   return (
     <div className="spec-groups">
+      {groups.length > 1 && <nav className="section-nav" aria-label={t("common.sections")}>{groups.map(([cat, list]) => <a key={cat} href={`#sec-${cat}`} onClick={(e) => { e.preventDefault(); document.getElementById(`sec-${cat}`)?.scrollIntoView({ behavior: "smooth", block: "start" }); }}>{tEnum(t, "cat", cat)}<span className="tnum">{list.length}</span></a>)}</nav>}
       {groups.map(([cat, list]) => (
-        <section key={cat} className="spec-group">
-          <h3 className="spec-group-title">{t(`cat.${cat}` as "cat.other") === `cat.${cat}` ? cat : t(`cat.${cat}` as "cat.other")}<span className="muted tnum">{list.length}</span></h3>
+        <section key={cat} id={`sec-${cat}`} className="spec-group">
+          <h3 className="spec-group-title">{tEnum(t, "cat", cat)}<span className="muted tnum">{list.length}</span></h3>
           {COND_ORDER.map((cond) => {
             const all = list.filter((s) => s.condition_type === cond);
             if (!all.length) return null;
             const key = `${cat}:${cond}`;
-            const rows = expanded[key] ? all : all.slice(0, 10);
-            const hasCond = all.some((s) => s.test_condition);
+            const rows = expanded[key] ? all : all.slice(0, 5);
+
             return (
               <div key={cond} className={`cond-block cond-${cond}`}>
-                <div className="cond-label">{t(`cond.${cond}`)}</div>
-                <div className="table-wrap">
-                  <table className="table table-dense spec-table">
-                    <thead><tr><th>{t("spec.parameter")}</th><th>{t("spec.value")}</th>{hasCond && <th>{t("spec.condition")}</th>}<th className="num">{t("spec.page")}</th><th>{t("common.status")}</th><th className="w-actions sticky-actions" aria-label={t("common.actions")} /></tr></thead>
+                <div className="cond-label"><span>{tEnum(t, "cond", cond)}</span>{all.length > 5 && <button type="button" className="show-more-inline" onClick={() => setExpanded((e) => ({ ...e, [key]: !e[key] }))}>{expanded[key] ? t("common.showLess") : t("common.showAll", { n: all.length })}</button>}</div>
+                <ul className="m-cards">
+                  {rows.map((s) => (
+                    <li key={s.id} className="m-card">
+                      <div className="m-line1"><span className="m-title clamp-2" title={`${s.label ?? s.parameter} (${s.parameter})`}>{paramLabel(s.parameter, s.label, lang)}</span><span className="m-value mono">{fmtRange(s, locale)}</span></div>
+                      <div className="m-line2"><span className="m-meta">{s.page_number ? <button type="button" className="page-link" onClick={() => onPage(s.page_number!)}>p.{s.page_number}</button> : "—"}{s.confidence != null ? ` · ${fmtPct(s.confidence)}` : ""}</span><StatusBadge status={s.validation_status} /><SpecOverflow spec={s} busy={actions.busy === s.id} onAccept={() => actions.accept(s)} onReject={() => actions.reject(s)} onEdit={() => actions.edit(s)} onPage={s.page_number ? () => onPage(s.page_number!) : undefined} /></div>
+                    </li>
+                  ))}
+                </ul>
+                <div className="table-wrap d-table">
+                  <table className="table table-dense spec-table ds-table">
+                    <colgroup><col className="c-param" /><col className="c-value" /><col className="c-cond" /><col className="c-page" /><col className="c-status" /><col className="c-actions" /></colgroup>
+                    <thead><tr><th>{t("spec.parameter")}</th><th>{t("spec.value")}</th><th>{t("spec.condition")}</th><th className="num">{t("spec.page")}</th><th className="status-col">{t("common.status")}</th><th className="w-actions" aria-label={t("common.actions")} /></tr></thead>
                     <tbody>
                       {rows.map((s) => (
                         <tr key={s.id}>
-                          <td className="param-col"><span className="cell-title">{s.label ?? s.parameter}</span><span className="muted small mono block">{s.parameter}</span></td>
+                          <td className="param-col"><span className="cell-title" title={`${s.label ?? s.parameter} (${s.parameter})`}>{paramLabel(s.parameter, s.label, lang)}</span></td>
                           <td className="value-col"><div className="mono value-clamp" title={fmtRange(s, locale)}>{fmtRange(s, locale)}</div></td>
-                          {hasCond && <td className="cond-col"><div className="muted small value-clamp" title={s.test_condition ?? ""}>{s.test_condition ?? "—"}</div></td>}
-                          <td className="num">{s.page_number ? <button type="button" className="page-link" onClick={() => onPage(s.page_number!)}>p.{s.page_number}</button> : "—"}{s.confidence != null && <span className="muted small block tnum" title={t("spec.conf")}>{Math.round(s.confidence * 100)}%</span>}</td>
-                          <td><StatusBadge status={s.validation_status} /></td>
-                          <td className="w-actions sticky-actions">
-                            <div className="row-actions">
-                              <IconButton icon={Check} label={t("validation.accept")} disabled={actions.busy === s.id} onClick={() => actions.accept(s)} />
-                              <IconButton icon={X} label={t("validation.reject")} disabled={actions.busy === s.id} onClick={() => actions.reject(s)} />
-                              <IconButton icon={Pencil} label={t("validation.edit")} onClick={() => actions.edit(s)} />
-                            </div>
+                          <td className="cond-col">{s.test_condition ? <SourceQuote text={s.test_condition} /> : <span className="muted">—</span>}</td>
+                          <td className="num">{s.page_number ? <button type="button" className="page-link" onClick={() => onPage(s.page_number!)}>p.{s.page_number}</button> : "—"}{s.confidence != null && <span className="conf-pct muted tnum" title={t("spec.conf")}> · {fmtPct(s.confidence)}</span>}</td>
+                          <td className="status-col"><StatusBadge status={s.validation_status} /></td>
+                          <td className="w-actions">
+                            <SpecRowActions spec={s} busy={actions.busy === s.id} onAccept={() => actions.accept(s)} onReject={() => actions.reject(s)} onEdit={() => actions.edit(s)} />
                           </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
-                {all.length > 10 && (
-                  <button type="button" className="show-more" onClick={() => setExpanded((e) => ({ ...e, [key]: !e[key] }))}>
-                    {expanded[key] ? t("common.showLess") : t("common.showAll", { n: all.length })}
-                  </button>
-                )}
               </div>
             );
           })}
@@ -86,13 +91,16 @@ export default function ComponentProfilePage() {
   const confirm = useConfirm();
   const navigate = useNavigate();
   const query = useQuery((s) => getComponent(id, s), [id], { enabled: Number.isFinite(id) });
-  const [tab, setTab] = useState<"specs" | "missing" | "history" | "documents">("specs");
+  const [tab, setTab] = useState<"specs" | "missing" | "history" | "documents" | "pdf">("specs");
   const [docId, setDocId] = useState<number | null>(null);
   const [page, setPage] = useState<number | null>(null);
   const [focus, setFocus] = useState(0);
   const [editing, setEditing] = useState<Spec | null>(null);
   const [adding, setAdding] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
+  const narrow = useMedia("(max-width: 1679px)");
+  const [pdfOpen, setPdfOpen] = useState(false);
+  useCrumbLabel(`/components/${componentId}`, query.data?.part_number);
 
   const activeDoc = docId ?? query.data?.document_id ?? query.data?.documents[0]?.id ?? null;
   const pages = useQuery((s) => (activeDoc ? getPages(activeDoc) : Promise.resolve([])).then((p) => (s.aborted ? [] : p)), [activeDoc]);
@@ -102,6 +110,7 @@ export default function ComponentProfilePage() {
 
   function jump(p: number, documentId?: number | null) {
     if (documentId) setDocId(documentId);
+    if (narrow) setPdfOpen(true);
     setPage(p);
     setFocus((f) => f + 1);
   }
@@ -136,7 +145,7 @@ export default function ComponentProfilePage() {
     <QueryView query={query} rows={8}>
       {(c) => {
         const descSpec = c.specs.find((s) => s.parameter === "description");
-        const description = c.description ?? descSpec?.value_text ?? null;
+        const description = pickDescription(c.description, descSpec?.value_text);
         const tableSpecs = c.specs.filter((s) => s.parameter !== "description");
         const counts = c.specs.reduce<Record<string, number>>((acc, s) => ({ ...acc, [s.validation_status]: (acc[s.validation_status] ?? 0) + 1 }), {});
         const docName = c.documents.find((d) => d.id === activeDoc)?.name ?? c.document_name ?? "";
@@ -145,9 +154,10 @@ export default function ComponentProfilePage() {
             <PageHeader
               title={<span className="profile-title"><ThumbIcon category={c.thumbnail_category ?? c.category} size={48} /><span><span className="pn pn-xl">{c.part_number}</span><span className="profile-sub">{c.manufacturer}</span></span></span>}
               description={description ? <span className="clamp-3" title={description}>{description}</span> : undefined}
-              meta={<div className="row gap-8 wrap">{c.category && <Badge tone="blue">{c.category}</Badge>}{c.package && <Badge>{c.package}</Badge>}{c.pin_count != null && <Badge>{c.pin_count} pins</Badge>}<span className="muted small">{t("common.updated")} {fmtDate(c.updated_at, locale)}</span></div>}
+              meta={<div className="row gap-8 wrap">{c.category && <Badge tone="blue">{tEnum(t, "cat", c.category)}</Badge>}{c.package && <Badge>{c.package}</Badge>}{c.pin_count != null && <Badge>{t("common.pins", { n: c.pin_count })}</Badge>}<span className="muted small">{t("common.updated")} {fmtDate(c.updated_at, locale)}</span></div>}
               actions={
                 <>
+                  <Button variant="primary" icon={Plus} onClick={() => { setTab("specs"); setAdding(true); }}>{t("validation.add")}</Button>
                   <Button icon={RotateCw} loading={busy === "reanalyze"} onClick={() => void reanalyze()} disabled={!c.document_id}>{t("profile.reanalyze")}</Button>
                   <Button variant="danger" icon={Trash2} loading={busy === "delete"} onClick={() => void remove(c)}>{t("common.delete")}</Button>
                 </>
@@ -156,12 +166,13 @@ export default function ComponentProfilePage() {
 
             <div className="status-strip">
               {(["accepted", "edited", "pending", "needs_review", "conflict", "rejected"] as const).map((s) => (
-                <div key={s} className="status-cell"><StatusBadge status={s} /><span className="tnum strong">{counts[s] ?? 0}</span></div>
+                <div key={s} className={`status-cell${counts[s] ? "" : " is-zero"}`}>{counts[s] ? <StatusBadge status={s} /> : <Badge dot>{tEnum(t, "status", s)}</Badge>}<span className="tnum strong">{counts[s] ?? 0}</span></div>
               ))}
-              <div className="status-cell"><Badge tone="amber">{t("profile.missing")}</Badge><span className="tnum strong">{c.missing_parameters.length}</span></div>
+              <div className={`status-cell${c.missing_parameters.length ? "" : " is-zero"}`}><Badge tone={c.missing_parameters.length ? "amber" : "neutral"}>{t("profile.missing")}</Badge><span className="tnum strong">{c.missing_parameters.length}</span></div>
+              <div className="status-cell total-cell"><Badge>{t("common.total")}</Badge><span className="tnum strong">{c.spec_count ?? Object.values(counts).reduce((x: number, y) => x + (y ?? 0), 0)}</span></div>
               <div className="status-cell report-cell">
                 <Download size={15} className="muted" aria-hidden />
-                {FORMATS.map((f) => <Button key={f} size="sm" variant="ghost" loading={busy === `dl-${f}`} onClick={() => void download(c, f)}>{f.toUpperCase()}</Button>)}
+                {FORMATS.map((f) => <Button key={f} size="sm" variant="ghost" loading={busy === `dl-${f}`} onClick={() => void download(c, f)}>{fmtLabel(f)}</Button>)}
               </div>
             </div>
 
@@ -169,19 +180,19 @@ export default function ComponentProfilePage() {
               <Card flush className="profile-main">
                 <div className="card-tabs">
                   <Tabs value={tab} onChange={setTab} tabs={[
-                    { value: "specs", label: t("profile.specs"), count: c.specs.length },
-                    { value: "missing", label: t("profile.missing"), count: c.missing_parameters.length },
-                    { value: "history", label: t("profile.history"), count: c.history.length },
-                    { value: "documents", label: t("profile.documents"), count: c.documents.length },
+                    { value: "specs", label: <span className="tab-lbl" title={t("profile.specs")}><ListChecks size={14} aria-hidden /><span className="t-long">{t("profile.specs")}</span><span className="t-short">{t("tab.short.specs")}</span></span>, count: c.specs.length },
+                    { value: "missing", label: <span className="tab-lbl" title={t("profile.missing")}><CircleDashed size={14} aria-hidden /><span className="t-long">{t("profile.missing")}</span><span className="t-short">{t("tab.short.missing")}</span></span>, count: c.missing_parameters.length },
+                    { value: "history", label: <span className="tab-lbl" title={t("profile.history")}><History size={14} aria-hidden /><span className="t-long">{t("profile.history")}</span><span className="t-short">{t("tab.short.history")}</span></span>, count: c.history.length },
+                    { value: "documents", label: <span className="tab-lbl" title={t("profile.documents")}><Files size={14} aria-hidden /><span className="t-long">{t("profile.documents")}</span><span className="t-short">{t("tab.short.docs")}</span></span>, count: c.documents.length },
+                    ...(narrow ? [{ value: "pdf" as const, label: <span className="tab-lbl" title={t("profile.viewPdf")}><FileText size={14} aria-hidden /><span className="t-long">{t("profile.viewPdf")}</span><span className="t-short">{t("profile.viewPdf")}</span></span> }] : []),
                   ]} />
-                  {tab === "specs" && <Button size="sm" icon={Plus} onClick={() => setAdding(true)}>{t("validation.add")}</Button>}
                 </div>
                 <div className="pad-16">
                   {tab === "specs" && (c.specs.length ? (
                     <SpecTable specs={tableSpecs} onPage={(p) => jump(p)} actions={{ busy: actions.busy, accept: (s) => void actions.accept(s), reject: (s) => void actions.reject(s), edit: setEditing }} />
                   ) : <EmptyState compact title={t("profile.noSpecs")} description={t("profile.noSpecsHint")} />)}
                   {tab === "missing" && (c.missing_parameters.length ? (
-                    <ul className="chip-list">{c.missing_parameters.map((m) => <li key={m} className="chip mono">{m}</li>)}</ul>
+                    <ul className="chip-list">{c.missing_parameters.map((m) => <li key={m} className="chip" title={m}>{humanize(m)}</li>)}</ul>
                   ) : <EmptyState compact title={t("profile.noMissing")} />)}
                   {tab === "history" && (c.history.length ? (
                     <ol className="timeline">
@@ -190,6 +201,13 @@ export default function ComponentProfilePage() {
                       ))}
                     </ol>
                   ) : <EmptyState compact title={t("profile.noHistory")} />)}
+                  {tab === "pdf" && narrow && (activeDoc ? (
+                    <div className="profile-pdf-inline">
+                      <Suspense fallback={<Loading />}>
+                        <PdfViewer documentId={activeDoc} pages={pages.data ?? []} highlight={null} targetPage={page} focusToken={focus} title={docName} />
+                      </Suspense>
+                    </div>
+                  ) : <EmptyState compact title={t("profile.noPdf")} />)}
                   {tab === "documents" && (c.documents.length ? (
                     <ul className="doc-list">
                       {c.documents.map((d) => (
@@ -202,14 +220,23 @@ export default function ComponentProfilePage() {
                   ) : <EmptyState compact title={t("profile.noDocs")} />)}
                 </div>
               </Card>
-              <div className="profile-pdf">
+              {!narrow && <div className="profile-pdf">
                 {activeDoc ? (
                   <Suspense fallback={<Loading />}>
                     <PdfViewer documentId={activeDoc} pages={pages.data ?? []} highlight={null} targetPage={page} focusToken={focus} title={docName} />
                   </Suspense>
                 ) : <Card><EmptyState compact title={t("profile.noPdf")} /></Card>}
-              </div>
+              </div>}
             </div>
+            <Drawer size="sm" open={pdfOpen && narrow} onClose={() => setPdfOpen(false)} title={docName || t("profile.viewPdf")}>
+              {activeDoc ? (
+                <div className="pdf-drawer-body">
+                  <Suspense fallback={<Loading />}>
+                    <PdfViewer documentId={activeDoc} pages={pages.data ?? []} highlight={null} targetPage={page} focusToken={focus} title={docName} />
+                  </Suspense>
+                </div>
+              ) : <EmptyState compact title={t("profile.noPdf")} />}
+            </Drawer>
             <EditSpecModal spec={editing} onClose={() => setEditing(null)} onSave={(s, body) => actions.edit(s, body)} />
             <AddSpecModal componentId={c.id} open={adding} onClose={() => setAdding(false)} onAdded={replaceSpec} />
           </>

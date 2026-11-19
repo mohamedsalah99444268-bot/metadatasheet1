@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
 import { listComponents, type ComponentSummary } from "../../api";
+import { tEnum } from "../../lib/enums";
 import { useI18n } from "../../lib/i18n";
 import { errorMessage } from "../../lib/useQuery";
 import { Modal, ThumbIcon } from "../ui";
@@ -80,8 +81,8 @@ export default function GlobalSearch() {
           {items.map((item, index) => (
             <button key={item.id} type="button" role="option" aria-selected={index === active} className={`search-item ${index === active ? "active" : ""}`} onMouseEnter={() => setActive(index)} onClick={() => go(item)}>
               <ThumbIcon category={item.thumbnail_category ?? item.category} size={32} />
-              <span className="search-item-main"><span className="pn">{item.part_number}</span><span className="muted small">{item.manufacturer}{item.category ? ` / ${item.category}` : ""}</span></span>
-              <span className="muted small tnum">{item.spec_count} specs</span>
+              <span className="search-item-main"><span className="pn">{item.part_number}</span><span className="muted small">{item.manufacturer}{item.category ? ` / ${tEnum(t, "cat", item.category)}` : ""}</span></span>
+              <span className="muted small tnum">{t("common.specsShort", { n: item.spec_count })}</span>
             </button>
           ))}
         </div>

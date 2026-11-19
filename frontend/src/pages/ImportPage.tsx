@@ -1,13 +1,13 @@
 import { useRef, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
-import { FileSpreadsheet, FileUp, Globe, PenLine, RefreshCw, UploadCloud, X } from "lucide-react";
+import { FileCheck2, FileSpreadsheet, FileUp, Globe, HardDrive, Hash, PenLine, RefreshCw, UploadCloud, X } from "lucide-react";
 import {
   importDatasheet, importDatasheetWeb, importDataset, importManual, listDatasheetDownloads, listImportJobs,
 } from "../api";
 import type { AnalysisJob, DatasetUploadResponse } from "../types";
 import { Badge, Button, Card, EmptyState, Field, PageHeader, QueryView, Segmented, StatusBadge } from "../components/ui";
 import { useToast } from "../components/feedback";
-import { fmtDate } from "../lib/format";
+import { fmtDate, fmtDec } from "../lib/format";
 import { useI18n } from "../lib/i18n";
 import { errorMessage, useQuery } from "../lib/useQuery";
 
@@ -27,7 +27,7 @@ function Dropzone({ accept, file, onFile, label, hint }: { accept: string; file:
       {file ? (
         <div className="dz-file">
           <FileUp size={20} aria-hidden />
-          <div><strong>{file.name}</strong><div className="muted small tnum">{(file.size / 1024 / 1024).toFixed(2)} MB</div></div>
+          <div><strong>{file.name}</strong><div className="muted small tnum">{fmtDec(file.size / 1024 / 1024, 2)} Mo</div></div>
           <button type="button" className="icon-btn" aria-label="×" onClick={() => { onFile(null); if (ref.current) ref.current.value = ""; }}><X size={16} /></button>
         </div>
       ) : (
@@ -98,7 +98,8 @@ export default function ImportPage() {
   return (
     <>
       <PageHeader title={t("import.title")} description={t("import.desc")} />
-      <div className="split-2-1">
+      <div className="split-2-1 import-grid">
+        <div className="stack-col">
         <Card title={t("import.newAnalysis")} subtitle={t(`import.modeHint.${mode}`)}>
           <form className="form-stack" onSubmit={(e) => void submit(e)}>
             <Segmented label={t("import.title")} value={mode} options={modes} onChange={(m) => { setMode(m); setFile(null); }} />
@@ -153,8 +154,21 @@ export default function ImportPage() {
             </div>
           )}
         </Card>
+        <Card title={t("import.how")} className="how-card">
+          <ol className="how-steps">
+            {(["import.how1", "import.how2", "import.how3", "import.how4"] as const).map((k, i) => <li key={k}><span className="how-n tnum">{i + 1}</span><span>{t(k)}</span></li>)}
+          </ol>
+        </Card>
+        <Card title={t("import.tips")} className="tips-card">
+          <ul className="feature-list">
+            <li><FileCheck2 size={16} aria-hidden />{t("import.tip1")}</li>
+            <li><Hash size={16} aria-hidden />{t("import.tip2")}</li>
+            <li><HardDrive size={16} aria-hidden />{t("import.tip3")}</li>
+          </ul>
+        </Card>
+        </div>
 
-        <Card title={t("import.recentJobs")} flush actions={<Button size="sm" variant="ghost" icon={RefreshCw} onClick={jobs.reload}>{t("common.refresh")}</Button>}>
+        <Card title={t("import.recentJobs")} flush actions={<Button size="sm" icon={RefreshCw} onClick={jobs.reload}>{t("common.refresh")}</Button>}>
           <QueryView query={jobs} empty={(d) => d.length === 0 ? <EmptyState compact title={t("import.noJobs")} /> : null}>
             {(list) => (
               <ul className="job-list">
@@ -173,7 +187,7 @@ export default function ImportPage() {
       </div>
 
       <Card title={t("import.downloads")} subtitle={t("import.downloadsSub")} flush>
-        <QueryView query={downloads} empty={(d) => d.length === 0 ? <EmptyState compact title={t("import.noDownloads")} /> : null}>
+        <QueryView query={downloads} empty={(d) => d.length === 0 ? <EmptyState compact title={t("import.noDownloads")} description={t("import.noDlHint")} action={<Button size="sm" icon={Globe} onClick={() => { setMode("web"); window.scrollTo({ top: 0, behavior: "smooth" }); }}>{t("import.goWeb")}</Button>} /> : null}>
           {(list) => (
             <div className="table-wrap">
               <table className="table">

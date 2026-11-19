@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
+import { parseTs } from "../../lib/format";
 import { Link } from "react-router-dom";
 import { Bell, CheckCircle2, Loader2, XCircle } from "lucide-react";
 import { getStatsOverview, listMonitoredJobs } from "../../api";
+import { tEnum } from "../../lib/enums";
 import { useI18n } from "../../lib/i18n";
 import { relTime } from "../../lib/format";
 import { useQuery } from "../../lib/useQuery";
@@ -29,7 +31,7 @@ export default function Notifications() {
   }, [open]);
 
   const events = (overview.data?.recent_activity ?? []).slice(0, 12);
-  const unread = events.filter((e) => new Date(e.at).getTime() > seen && (e.status === "failed" || e.status === "completed")).length;
+  const unread = events.filter((e) => parseTs(e.at).getTime() > seen && (e.status === "failed" || e.status === "completed")).length;
   const activeJobs = active.data?.items ?? [];
 
   function toggle() {
@@ -54,7 +56,7 @@ export default function Notifications() {
               {activeJobs.map((job) => (
                 <Link key={job.id} to={`/monitoring?job=${encodeURIComponent(job.id)}`} className="notif-item" onClick={() => setOpen(false)}>
                   <Loader2 size={15} className="spin text-blue" aria-hidden />
-                  <span className="notif-text"><span className="pn">{job.reference ?? job.id.slice(0, 8)}</span><span className="muted small">{job.current_agent ?? "—"} · {Math.round(job.progress)}%</span></span>
+                  <span className="notif-text"><span className="pn">{job.reference ?? job.id.slice(0, 8)}</span><span className="muted small">{tEnum(t, "agent", job.current_agent)} · {Math.round(job.progress)}%</span></span>
                 </Link>
               ))}
             </div>

@@ -410,3 +410,14 @@ def test_comparison_current_prefers_supply_current_and_temperature_needs_both_en
          "condition_type": "recommended_operating", "validation_status": "pending", "confidence": 0.9},
     ])
     assert "operating_temperature" not in chosen
+
+
+def test_comparison_drops_current_rows_with_wrong_unit():
+    from backend.app.agents.comparison_agent import best_specs
+    specs = [
+        {"id": 1, "parameter": "current", "unit": "W", "typ_value": 0.5, "condition_type": "general", "confidence": 0.9},
+        {"id": 2, "parameter": "supply_current", "unit": "A", "typ_value": 0.0028, "condition_type": "electrical_characteristics", "confidence": 0.8},
+    ]
+    chosen = best_specs(specs)
+    assert "current" not in chosen
+    assert chosen["supply_current"]["unit"] == "A"

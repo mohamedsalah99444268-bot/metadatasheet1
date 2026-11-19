@@ -1,24 +1,46 @@
 import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowDownUp, GitCompareArrows, LayoutGrid, List, Search, X } from "lucide-react";
-import { getComponentFacets, listComponents, type ComponentQuery, type ComponentSummary } from "../api";
-import { Badge, Button, Card, EmptyState, ErrorState, Loading, PageHeader, Pagination, Segmented, ThumbIcon } from "../components/ui";
+import { getComponentFacets, listComponents, type ComponentQuery, type ComponentSummary, type Facets } from "../api";
+import { Badge, Button, Card, EmptyState, ErrorState, Loading, PageHeader, Pagination, Segmented, ThumbIcon, Checkbox } from "../components/ui";
 import { useToast } from "../components/feedback";
-import { fmtDate } from "../lib/format";
-import { useI18n } from "../lib/i18n";
+import { fmtDate, fmtNumber } from "../lib/format";
+import { tEnum } from "../lib/enums";
+import { useI18n, type TFn } from "../lib/i18n";
 import { canCompare, COMPARE_MAX, toggleSelection } from "../lib/selection";
 import { useQuery } from "../lib/useQuery";
 
 const PAGE_SIZE = 24;
 type SortKey = NonNullable<ComponentQuery["sort"]>;
 
-function SpecBar({ c }: { c: ComponentSummary }) {
-  const total = Math.max(1, c.spec_count);
+function SpecBar({ c, label }: { c: ComponentSummary; label: string }) {
+  const pct = c.spec_count ? Math.round((c.accepted_count / c.spec_count) * 100) : 0;
   return (
-    <div className="spec-bar" title={`${c.accepted_count} / ${c.pending_count} / ${c.rejected_count}`}>
-      <span className="seg seg-green" style={{ width: `${(c.accepted_count / total) * 100}%` }} />
-      <span className="seg seg-slate" style={{ width: `${(c.pending_count / total) * 100}%` }} />
-      <span className="seg seg-red" style={{ width: `${(c.rejected_count / total) * 100}%` }} />
+    <div className="spec-progress">
+      <div className="spec-bar" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label={label}><span className="seg seg-blue" style={{ width: `${pct}%` }} /></div>
+      <span className="small tnum muted">{label}</span>
+    </div>
+  );
+}
+
+function Summary({ items, facets, t, locale }: { items: ComponentSummary[]; facets: Facets | null; t: TFn; locale: string }) {
+  const specs = items.reduce((n, c) => n + c.spec_count, 0);
+  const accepted = items.reduce((n, c) => n + c.accepted_count, 0);
+  const pending = items.reduce((n, c) => n + c.pending_count, 0);
+  return (
+    <div className="comp-summary">
+      <div className="sum-stats">
+        <div><span>{t("components.sumComponents")}</span><strong className="tnum">{fmtNumber(items.length, locale)}</strong></div>
+        <div><span>{t("components.sumSpecs")}</span><strong className="tnum">{fmtNumber(specs, locale)}</strong></div>
+        <div><span>{t("components.sumAccepted")}</span><strong className="tnum">{fmtNumber(accepted, locale)}</strong></div>
+        <div><span>{t("components.sumPending")}</span><strong className="tnum">{fmtNumber(pending, locale)}</strong></div>
+      </div>
+      {facets && (
+        <div className="sum-facets">
+          <div><span className="sum-title">{t("components.byCategory")}</span><div className="row gap-8 wrap">{facets.categories.map((f) => <Link key={f.value} className="facet-chip" to={`/components?category=${encodeURIComponent(f.value)}`}>{tEnum(t, "cat", f.value)}<span className="tnum">{f.count}</span></Link>)}</div></div>
+          <div><span className="sum-title">{t("components.byManufacturer")}</span><div className="row gap-8 wrap">{facets.manufacturers.map((f) => <Link key={f.value} className="facet-chip" to={`/components?manufacturer=${encodeURIComponent(f.value)}`}>{f.value}<span className="tnum">{f.count}</span></Link>)}</div></div>
+        </div>
+      )}
     </div>
   );
 }
@@ -69,7 +91,7 @@ export default function ComponentsPage() {
         actions={<Link to="/import" className="btn btn-primary btn-md">{t("nav.import")}</Link>}
       />
       <Card className="toolbar-card">
-        <form className="toolbar" onSubmit={(e) => { e.preventDefault(); set("q", qInput.trim() || null); }}>
+        <form className="toolbar comp-toolbar" onSubmit={(e) => { e.preventDefault(); set("q", qInput.trim() || null); }}>
           <div className="input-icon grow">
             <Search size={15} aria-hidden />
             <input className="input" value={qInput} onChange={(e) => setQInput(e.target.value)} placeholder={t("components.searchPh")} aria-label={t("components.searchPh")} />
@@ -80,7 +102,7 @@ export default function ComponentsPage() {
           </select>
           <select className="input select" aria-label={t("common.category")} value={query.category ?? ""} onChange={(e) => set("category", e.target.value || null)}>
             <option value="">{t("components.allCategories")}</option>
-            {facets.data?.categories.map((m) => <option key={m.value} value={m.value}>{m.value} ({m.count})</option>)}
+            {facets.data?.categories.map((m) => <option key={m.value} value={m.value}>{tEnum(t, "cat", m.value)} ({m.count})</option>)}
           </select>
           <select className="input select" aria-label={t("common.status")} value={query.status ?? ""} onChange={(e) => set("status", e.target.value || null)}>
             <option value="">{t("components.allStatuses")}</option>
@@ -92,7 +114,7 @@ export default function ComponentsPage() {
             <option value="manufacturer:asc">{t("components.sort.manufacturer")}</option>
             <option value="spec_count:desc">{t("components.sort.specs")}</option>
           </select>
-          <Segmented label={t("components.view")} value={view} onChange={(v) => set("view", v === "grid" ? null : v, false)} options={[{ value: "grid", label: "", icon: LayoutGrid }, { value: "table", label: "", icon: List }]} />
+          <div className="toolbar-end"><Segmented label={t("components.view")} value={view} onChange={(v) => set("view", v === "grid" ? null : v, false)} options={[{ value: "grid", label: "", icon: LayoutGrid }, { value: "table", label: "", icon: List }]} /></div>
           {hasFilters && <Button variant="ghost" size="sm" icon={X} onClick={() => { setQInput(""); setParams(new URLSearchParams(view === "table" ? { view } : {}), { replace: true }); }}>{t("common.reset")}</Button>}
         </form>
       </Card>
@@ -108,6 +130,7 @@ export default function ComponentsPage() {
         </div>
       )}
 
+      {items.length > 0 && <Summary items={items} facets={facets.data ?? null} t={t} locale={locale} />}
       {list.error && !list.data ? <ErrorState message={list.error} onRetry={list.reload} /> : !list.data ? <Loading rows={6} /> : items.length === 0 ? (
         <EmptyState
           illustration={hasFilters ? "empty-search" : "empty-components"}
@@ -122,7 +145,7 @@ export default function ComponentsPage() {
             return (
               <article key={c.id} className={`comp-card ${on ? "selected" : ""}`}>
                 <label className="comp-check" title={t("components.selectToCompare")}>
-                  <input type="checkbox" checked={on} onChange={() => toggle(c.id)} aria-label={t("components.selectX", { pn: c.part_number })} />
+                  <Checkbox checked={on} onChange={() => toggle(c.id)} aria-label={t("components.selectX", { pn: c.part_number })} />
                 </label>
                 <Link to={`/components/${c.id}`} className="comp-link">
                   <div className="comp-head">
@@ -133,11 +156,11 @@ export default function ComponentsPage() {
                     </div>
                   </div>
                   <div className="comp-meta">
-                    {c.category && <Badge>{c.category}</Badge>}
+                    {c.category && <Badge>{tEnum(t, "cat", c.category)}</Badge>}
                     {c.package && <Badge tone="neutral">{c.package}</Badge>}
-                    {c.pin_count != null && <span className="muted small tnum">{c.pin_count} pins</span>}
+                    {c.pin_count != null && <span className="muted small tnum">{t("common.pins", { n: c.pin_count })}</span>}
                   </div>
-                  <SpecBar c={c} />
+                  <SpecBar c={c} label={t("components.validated", { p: c.spec_count ? Math.round((c.accepted_count / c.spec_count) * 100) : 0 })} />
                   <div className="comp-foot muted small tnum">
                     <span>{t("components.specsCount", { n: c.spec_count, a: c.accepted_count })}</span>
                     <span>{fmtDate(c.updated_at, locale, false)}</span>
@@ -147,7 +170,25 @@ export default function ComponentsPage() {
             );
           })}
         </div>
-      ) : (
+      ) : null}
+      {view === "grid" && items.length > 0 && items.length <= 4 && (
+        <Card title={t("components.progressTitle")} subtitle={t("components.progressSub")} className="progress-card" flush>
+          <ul className="progress-list">
+            {items.map((c) => {
+              const pend = Math.max(0, c.spec_count - c.accepted_count);
+              return (
+                <li key={c.id}>
+                  <Link to={`/components/${c.id}`} className="pn">{c.part_number}</Link>
+                  <span className="stack-bar" role="img" aria-label={`${c.accepted_count} / ${c.spec_count}`}><span style={{ flex: c.accepted_count, background: "var(--green)" }} /><span style={{ flex: pend, background: "var(--border-strong)" }} /></span>
+                  <span className="muted small tnum">{t("components.progressRow", { a: c.accepted_count, n: c.spec_count })}</span>
+                  <Link to={`/validation?q=${encodeURIComponent(c.part_number)}`} className="btn btn-secondary btn-sm">{t("components.reviewCta", { n: pend })}</Link>
+                </li>
+              );
+            })}
+          </ul>
+        </Card>
+      )}
+      {list.data && items.length > 0 && view !== "grid" && (
         <Card flush>
           <div className="table-wrap">
             <table className="table">
@@ -162,9 +203,9 @@ export default function ComponentsPage() {
               <tbody>
                 {items.map((c) => (
                   <tr key={c.id} className={selected.includes(c.id) ? "row-selected" : ""}>
-                    <td className="w-check"><input type="checkbox" checked={selected.includes(c.id)} onChange={() => toggle(c.id)} aria-label={t("components.selectX", { pn: c.part_number })} /></td>
+                    <td className="w-check"><Checkbox checked={selected.includes(c.id)} onChange={() => toggle(c.id)} aria-label={t("components.selectX", { pn: c.part_number })} /></td>
                     <td><Link to={`/components/${c.id}`} className="pn link-plain">{c.part_number}</Link></td>
-                    <td>{c.manufacturer}</td><td>{c.category ?? "—"}</td><td>{c.package ?? "—"}</td>
+                    <td>{c.manufacturer}</td><td>{tEnum(t, "cat", c.category)}</td><td>{c.package ?? "—"}</td>
                     <td className="num">{c.spec_count}</td><td className="num text-green">{c.accepted_count}</td><td className="num">{c.pending_count}</td><td className="num text-red">{c.rejected_count}</td>
                     <td className="muted tnum">{fmtDate(c.updated_at, locale, false)}</td>
                   </tr>

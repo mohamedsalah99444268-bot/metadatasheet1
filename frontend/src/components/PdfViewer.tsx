@@ -44,7 +44,7 @@ export default function PdfViewer({ documentId, pages, highlight, targetPage, fo
         if (cancelled) return;
         setBaseSize({ w: vp.width, h: vp.height });
         const avail = (containerRef.current?.clientWidth ?? 0) - 32;
-        if (avail > 0) setScale(Math.max(0.5, Math.min(1.4, Math.floor((avail / vp.width) * 10) / 10)));
+        if (avail > 0) setScale(Math.max(0.5, Math.min(2, Math.floor((avail / vp.width) * 100) / 100)));
         setPdfDoc(doc);
       })
       .catch((e: unknown) => { if (!cancelled) setError(e instanceof Error ? e.message : String(e)); });
@@ -91,18 +91,26 @@ export default function PdfViewer({ documentId, pages, highlight, targetPage, fo
     return () => observer.disconnect();
   }, [pdfDoc, renderPage]);
 
-  const goTo = useCallback((n: number) => {
+  const goTo = useCallback((n: number, smooth = true) => {
     const el = pageRefs.current.get(n);
     if (el && containerRef.current) {
-      containerRef.current.scrollTo({ top: el.offsetTop - 12, behavior: "smooth" });
+      containerRef.current.scrollTo({ top: el.offsetTop - 12, behavior: smooth ? "smooth" : "auto" });
+      setCurrentPage(n);
       void renderPage(n);
     }
     setJump("");
   }, [renderPage]);
 
+  // Initial / external target: jump instantly (no smooth scroll that a drawer animation can interrupt),
+  // re-applied after the fit-to-width scale settles, and render the target page eagerly.
   useEffect(() => {
-    if (targetPage != null && pdfDoc) goTo(targetPage);
-  }, [targetPage, focusToken, pdfDoc, goTo]);
+    if (targetPage == null || !pdfDoc) return;
+    const n = Math.min(Math.max(1, targetPage), pdfDoc.numPages);
+    goTo(n, false);
+    const raf = requestAnimationFrame(() => goTo(n, false));
+    const t = window.setTimeout(() => goTo(n, false), 350);
+    return () => { cancelAnimationFrame(raf); window.clearTimeout(t); };
+  }, [targetPage, focusToken, pdfDoc, goTo, scale]);
 
   function handleScroll() {
     const c = containerRef.current;
@@ -132,7 +140,7 @@ export default function PdfViewer({ documentId, pages, highlight, targetPage, fo
         <button type="button" aria-label="Zoom -" onClick={() => setScale((s) => Math.max(0.5, +(s - 0.2).toFixed(1)))}><ZoomOut size={14} /></button>
         <span className="tnum">{Math.round(scale * 100)}%</span>
         <button type="button" aria-label="Zoom +" onClick={() => setScale((s) => Math.min(3, +(s + 0.2).toFixed(1)))}><ZoomIn size={14} /></button>
-        <form className="row gap-4" onSubmit={(e) => { e.preventDefault(); const n = Number(jump); if (n >= 1 && n <= total) goTo(n); }}>
+        <form className="row gap-4" data-initial-page={targetPage ?? undefined} onSubmit={(e) => { e.preventDefault(); const n = Number(jump); if (n >= 1 && n <= total) goTo(n); }}>
           <input className="input input-sm tnum" aria-label="Page" value={jump} placeholder={String(currentPage)} onChange={(e) => setJump(e.target.value)} />
           <span className="tnum">/ {total || "…"}</span>
         </form>

@@ -1,12 +1,12 @@
 import { useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
-import { Download, Lightbulb, Sparkles, Trash2, UploadCloud } from "lucide-react";
+import { Download, FileSpreadsheet, Lightbulb, ScanSearch, Sparkles, Trash2, UploadCloud } from "lucide-react";
 import {
   cleanDataset, deleteAnalysisDataset, downloadFile, DOWNLOAD_PATHS, getDatasetPreview, getDatasetProfile, listAnalysisDatasets, uploadAnalysisDataset,
   type CleanOptions, type ColumnProfile, type DatasetProfile, type DatasetSummary,
 } from "../api";
-import { Badge, Button, Card, EmptyState, Modal, PageHeader, Pagination, QueryView, Tabs } from "../components/ui";
+import { Badge, Button, Card, EmptyState, Modal, PageHeader, Pagination, QueryView, Tabs, Checkbox } from "../components/ui";
 import { useConfirm, useToast } from "../components/feedback";
 import { tooltipStyle, useChartColors } from "../lib/chart";
 import { fmtDate, fmtNumber, fmtSig } from "../lib/format";
@@ -95,7 +95,7 @@ function CleanDialog({ ds, profile, onClose, onDone }: { ds: DatasetSummary; pro
     } catch (e) { toast("error", errorMessage(e)); } finally { setSaving(false); }
   }
   const check = (k: "drop_duplicates" | "drop_empty_rows" | "trim_whitespace", label: string) => (
-    <label className="check-inline"><input type="checkbox" checked={opts[k]} onChange={(e) => setOpts((o) => ({ ...o, [k]: e.target.checked }))} />{label}</label>
+    <label className="check-inline"><Checkbox checked={opts[k]} onChange={(e) => setOpts((o) => ({ ...o, [k]: e.target.checked }))} />{label}</label>
   );
   return (
     <Modal open onClose={onClose} title={t("ds.cleanTitle")} width={620} footer={<><Button variant="ghost" onClick={onClose}>{t("common.cancel")}</Button><Button variant="primary" icon={Sparkles} loading={saving} onClick={() => void run()}>{t("ds.cleanRun")}</Button></>}>
@@ -121,7 +121,7 @@ function CleanDialog({ ds, profile, onClose, onDone }: { ds: DatasetSummary; pro
         {outlierCols.length > 0 && (
           <fieldset className="fieldset"><legend>{t("ds.removeOutliers")}</legend>
             {outlierCols.map((c) => (
-              <label key={c.name} className="check-inline"><input type="checkbox" checked={opts.remove_outliers.includes(c.name)} onChange={(e) => setOpts((o) => ({ ...o, remove_outliers: e.target.checked ? [...o.remove_outliers, c.name] : o.remove_outliers.filter((x) => x !== c.name) }))} /><span className="mono">{c.name}</span><span className="muted small">({c.outliers})</span></label>
+              <label key={c.name} className="check-inline"><Checkbox checked={opts.remove_outliers.includes(c.name)} onChange={(e) => setOpts((o) => ({ ...o, remove_outliers: e.target.checked ? [...o.remove_outliers, c.name] : o.remove_outliers.filter((x) => x !== c.name) }))} /><span className="mono">{c.name}</span><span className="muted small">({c.outliers})</span></label>
             ))}
           </fieldset>
         )}
@@ -219,6 +219,7 @@ export default function DatasetsPage() {
   const selected = list.data?.find((d) => d.id === selectedId) ?? null;
   const select = (id: number | null) => setParams(id ? { id: String(id) } : {}, { replace: true });
 
+  const [dragging, setDragging] = useState(false);
   async function upload(file: File) {
     setUploading(true);
     try {
@@ -230,10 +231,30 @@ export default function DatasetsPage() {
   }
 
   return (
-    <>
+    <div className="page-narrow">
       <PageHeader title={t("ds.title")} description={t("ds.desc")}
-        actions={<><input ref={fileRef} type="file" accept=".csv,.xlsx,.xls" hidden aria-label={t("ds.upload")} onChange={(e) => { const f = e.target.files?.[0]; if (f) void upload(f); }} /><Button variant="primary" icon={UploadCloud} loading={uploading} onClick={() => fileRef.current?.click()}>{t("ds.upload")}</Button></>} />
-      <QueryView query={list} rows={4} empty={(d) => d.length === 0 ? <EmptyState illustration="empty-data" title={t("ds.empty")} description={t("ds.emptyHint")} action={<Button variant="primary" icon={UploadCloud} onClick={() => fileRef.current?.click()}>{t("ds.upload")}</Button>} /> : null}>
+        actions={<><input ref={fileRef} type="file" accept=".csv,.xlsx,.xls" hidden aria-label={t("ds.upload")} onChange={(e) => { const f = e.target.files?.[0]; if (f) void upload(f); }} />{(list.data?.length ?? 0) > 0 && <Button variant="primary" icon={UploadCloud} loading={uploading} onClick={() => fileRef.current?.click()}>{t("ds.upload")}</Button>}</>} />
+      <QueryView query={list} rows={4} empty={(d) => d.length === 0 ? <div className="ds-empty">
+          <button type="button" className={`dropzone ds-drop${dragging ? " is-drag" : ""}`} onClick={() => fileRef.current?.click()} onDragOver={(e) => { e.preventDefault(); setDragging(true); }} onDragLeave={() => setDragging(false)} onDrop={(e) => { e.preventDefault(); setDragging(false); const f = e.dataTransfer.files?.[0]; if (f) void upload(f); }} disabled={uploading}>
+            <img src="/assets/illustrations/empty-data.svg" alt="" className="ds-drop-art" aria-hidden />
+            <span className="ds-drop-text">
+              <strong><UploadCloud size={18} aria-hidden /> {t("ds.dropTitle")}</strong>
+              <span className="muted small">{t("ds.dropHint")}</span>
+              <span className="ds-drop-meta"><span className="code-chip">.csv</span><span className="code-chip">.xlsx</span><span className="code-chip">.xls</span><span className="muted small">{t("ds.limit")}</span></span>
+            </span>
+          </button>
+          <Card title={t("ds.empty")} subtitle={t("ds.emptyHint")}>
+            <ul className="feature-list"><li><FileSpreadsheet size={16} aria-hidden />{t("ds.feat1")}</li><li><ScanSearch size={16} aria-hidden />{t("ds.feat2")}</li><li><Sparkles size={16} aria-hidden />{t("ds.feat3")}</li></ul>
+            <div className="formats"><span className="sum-title">{t("ds.formats")}</span><span className="code-chip">.csv</span><span className="code-chip">.xlsx</span><span className="code-chip">.xls</span></div>
+          </Card>
+          <Card title={t("ds.samplePreview")} actions={<span className="badge">{t("ds.previewTag")}</span>} className="ds-sample">
+            <ul className="sample-cols">
+              {([["supply_voltage_max", "float", 0, [3, 6, 9, 12, 8, 4]], ["package", "text", 2, [9, 5, 3, 2, 1, 1]], ["temp_min", "float", 0, [2, 4, 10, 6, 3, 1]], ["temp_max", "float", 1, [1, 3, 6, 11, 7, 2]], ["manufacturer", "text", 0, [12, 7, 4, 2, 1, 1]], ["pin_count", "int", 0, [5, 10, 7, 3, 2, 1]]] as const).map(([name, type, missing, bars]) => (
+                <li key={name}><span className="mono small">{name}</span><span className="muted small">{type} · {missing} %</span><span className="sample-bars" aria-hidden>{bars.map((b, i) => <span key={i} style={{ height: `${b * 8}%` }} />)}</span></li>
+              ))}
+            </ul>
+          </Card>
+        </div> : null}>
         {(items) => (
           <div className="ds-layout">
             <Card flush title={t("ds.list")} className="ds-list">
@@ -252,6 +273,6 @@ export default function DatasetsPage() {
           </div>
         )}
       </QueryView>
-    </>
+    </div>
   );
 }

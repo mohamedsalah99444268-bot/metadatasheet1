@@ -36,7 +36,12 @@ def _rank(spec: dict) -> tuple:
 def _implausible(spec: dict) -> bool:
     """Degenerate ranges that cannot be a real rating (e.g. "0 to 0 C", "0 to 3 C")."""
     low, high = spec.get("min_value"), spec.get("max_value")
-    is_temperature = "temperature" in (spec.get("parameter") or "")
+    parameter = spec.get("parameter") or ""
+    unit = (spec.get("unit") or "").strip()
+    expected = "A" if "current" in parameter else "V" if "voltage" in parameter else None
+    if expected and unit and not unit.startswith(expected):
+        return True  # e.g. a "current" row whose unit is W is a mis-extraction
+    is_temperature = "temperature" in parameter
     if low is None or high is None:
         # a temperature *range* needs both ends; a lone "85 °C" is not a range
         return is_temperature and (spec.get("condition_type") != "absolute_maximum")

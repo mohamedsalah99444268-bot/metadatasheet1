@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
-import { useEffect, useId, useRef, type ButtonHTMLAttributes, type ReactNode } from "react";
+import { useEffect, useId, useRef, type ButtonHTMLAttributes, type InputHTMLAttributes, type ReactNode, type Ref } from "react";
 import { AlertTriangle, ChevronLeft, ChevronRight, Loader2, RotateCw, X, type LucideIcon } from "lucide-react";
+import { humanize } from "../lib/enums";
 import { useI18n } from "../lib/i18n";
 import type { DictKey } from "../lib/dict";
 
@@ -57,15 +58,15 @@ export function Card({ title, subtitle, actions, children, className = "", flush
 
 export type Tone = "neutral" | "blue" | "cyan" | "green" | "amber" | "red" | "violet";
 
-export function Badge({ tone = "neutral", children, dot }: { tone?: Tone; children: ReactNode; dot?: boolean }) {
-  return <span className={`badge badge-${tone}`}>{dot && <span className="badge-dot" aria-hidden />}{children}</span>;
+export function Badge({ tone = "neutral", children, dot, className }: { tone?: Tone; children: ReactNode; dot?: boolean; className?: string }) {
+  return <span className={`badge badge-${tone}${className ? ` ${className}` : ""}`}>{dot && <span className="badge-dot" aria-hidden />}{children}</span>;
 }
 
 const STATUS_TONES: Record<string, Tone> = {
   accepted: "green", completed: "green", compatible: "green", answered: "green", same: "green", ok: "green", available: "green",
   edited: "cyan", running: "blue", started: "blue", in_progress: "blue", active: "blue",
   pending: "neutral", queued: "neutral", skipped: "neutral", cancelled: "neutral", partial: "amber",
-  needs_review: "amber", retried: "amber", retrying: "amber", insufficient_evidence: "amber", missing: "amber", conflict: "violet",
+  needs_review: "violet", retried: "amber", retrying: "amber", insufficient_evidence: "amber", missing: "amber", conflict: "amber",
   rejected: "red", failed: "red", incompatible: "red", different: "red", error: "red", unavailable: "red",
 };
 
@@ -77,14 +78,14 @@ export function StatusBadge({ status }: { status: string | null | undefined }) {
   const { t } = useI18n();
   const key = `status.${status ?? "unknown"}` as DictKey;
   const label = t(key);
-  return <Badge tone={statusTone(status)} dot>{label === key ? (status ?? "—") : label}</Badge>;
+  return <Badge tone={statusTone(status)} dot className={`status-${status ?? "unknown"}`}>{label === key ? (status ? humanize(status) : "—") : label}</Badge>;
 }
 
-export function PageHeader({ title, description, actions, meta }: { title: ReactNode; description?: ReactNode; actions?: ReactNode; meta?: ReactNode }) {
+export function PageHeader({ title, description, actions, meta, band }: { title: ReactNode; description?: ReactNode; actions?: ReactNode; meta?: ReactNode; band?: boolean }) {
   return (
-    <div className="page-header">
+    <div className={`page-header${band ? " band" : ""}`}>
       <div className="page-header-text">
-        <h1>{title}</h1>
+        <h1><span className="h1-glyph" aria-hidden />{title}</h1>
         {description && <p>{description}</p>}
         {meta && <div className="page-meta">{meta}</div>}
       </div>
@@ -107,7 +108,7 @@ export function EmptyState({ title, description, action, illustration = "empty-d
     <div className={`state empty-state ${compact ? "compact" : ""}`}>
       {!compact && <Illus name={illustration} />}
       <strong>{title}</strong>
-      {description && <p>{description}</p>}
+      {description && <div className="state-desc">{description}</div>}
       {action && <div className="state-action">{action}</div>}
     </div>
   );
@@ -240,13 +241,13 @@ export function Modal({ open, onClose, title, children, footer, width = 520 }: {
   );
 }
 
-export function Drawer({ open, onClose, title, children, actions }: { open: boolean; onClose: () => void; title: ReactNode; children: ReactNode; actions?: ReactNode }) {
+export function Drawer({ open, onClose, title, children, actions, size }: { open: boolean; onClose: () => void; title: ReactNode; children: ReactNode; actions?: ReactNode; size?: "sm" }) {
   const { t } = useI18n();
   useEscape(open, onClose);
   if (!open) return null;
   return (
     <div className="overlay overlay-drawer" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <aside className="drawer" role="dialog" aria-modal="true" aria-label={typeof title === "string" ? title : undefined}>
+      <aside className={`drawer${size ? ` drawer-${size}` : ""}`} role="dialog" aria-modal="true" aria-label={typeof title === "string" ? title : undefined}>
         <header className="drawer-head">
           <h2>{title}</h2>
           <div className="row gap-8">{actions}<IconButton icon={X} label={t("common.close")} onClick={onClose} /></div>
@@ -257,8 +258,8 @@ export function Drawer({ open, onClose, title, children, actions }: { open: bool
   );
 }
 
-export function Kpi({ label, value, icon: Icon, hint, tone = "neutral", to }: {
-  label: ReactNode; value: ReactNode; icon: LucideIcon; hint?: ReactNode; tone?: Tone; to?: string;
+export function Kpi({ label, value, icon: Icon, hint, tone = "neutral", to, accent }: {
+  label: ReactNode; value: ReactNode; icon: LucideIcon; hint?: ReactNode; tone?: Tone; to?: string; accent?: boolean;
 }) {
   const content = (
     <>
@@ -267,7 +268,8 @@ export function Kpi({ label, value, icon: Icon, hint, tone = "neutral", to }: {
       {hint && <div className="kpi-hint">{hint}</div>}
     </>
   );
-  return to ? <Link className="kpi kpi-link" to={to}>{content}</Link> : <div className="kpi">{content}</div>;
+  const cls = `kpi${accent ? ` kpi-accent tone-${tone}` : ""}`;
+  return to ? <Link className={`${cls} kpi-link`} to={to}>{content}</Link> : <div className={cls}>{content}</div>;
 }
 
 export function ThumbIcon({ category, size = 40 }: { category: string | null | undefined; size?: number }) {
@@ -288,4 +290,33 @@ export function thumbnailName(category: string | null | undefined): string {
   if (/sensor|rf|radio|wireless|antenna/.test(c)) return "sensor";
   if (/memory|eeprom|flash|ram/.test(c)) return "memory";
   return "generic";
+}
+
+/** The one checkbox of the app: 16px, 1px border token, radius 4, cyan fill + white check, indeterminate, focus ring. */
+export function Checkbox({ indeterminate = false, className = "", ref, ...rest }: Omit<InputHTMLAttributes<HTMLInputElement>, "type"> & { indeterminate?: boolean; ref?: Ref<HTMLInputElement> }) {
+  const inner = useRef<HTMLInputElement | null>(null);
+  useEffect(() => { if (inner.current) inner.current.indeterminate = indeterminate; }, [indeterminate]);
+  return (
+    <input
+      {...rest}
+      type="checkbox"
+      className={`cbx ${className}`}
+      ref={(el) => { inner.current = el; if (typeof ref === "function") ref(el); else if (ref) (ref as { current: HTMLInputElement | null }).current = el; }}
+    />
+  );
+}
+
+/** Extracted datasheet text, shown as a source quote (mono, left rule). */
+export function SourceQuote({ text, label, lines = 2, title }: { text: string; label?: ReactNode; lines?: 1 | 2 | 3; title?: string }) {
+  return (
+    <span className={`src-quote clamp-l${lines}`} title={title ?? text}>
+      {label && <span className="src-k">{label}</span>}
+      <span className="src-t">{text}</span>
+    </span>
+  );
+}
+
+/** Small status pill (dot + label) shared by settings, profile and lists. */
+export function StatusPill({ tone, children }: { tone: Tone; children: ReactNode }) {
+  return <Badge tone={tone} dot>{children}</Badge>;
 }

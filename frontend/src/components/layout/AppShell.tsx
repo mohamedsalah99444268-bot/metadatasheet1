@@ -5,6 +5,8 @@ import { useI18n } from "../../lib/i18n";
 import { useAuth } from "../../state/AuthContext";
 import { Loading, IconButton } from "../ui";
 import { NAV, ROUTE_LABELS } from "./nav";
+import { observeTableLabels } from "../../lib/tableLabels";
+import { useCrumbLabels } from "../../lib/crumbs";
 import GlobalSearch from "./GlobalSearch";
 import Notifications from "./Notifications";
 import UserMenu from "./UserMenu";
@@ -21,11 +23,12 @@ export function Logo({ compact }: { compact?: boolean }) {
 function Breadcrumbs() {
   const { t } = useI18n();
   const { pathname } = useLocation();
+  const named = useCrumbLabels();
   const parts = pathname.split("/").filter(Boolean);
   const crumbs = parts.map((part, index) => {
     const href = `/${parts.slice(0, index + 1).join("/")}`;
     const key = ROUTE_LABELS[part];
-    return { href, label: key ? t(key) : decodeURIComponent(part), last: index === parts.length - 1 };
+    return { href, label: named.get(href) ?? (key ? t(key) : decodeURIComponent(part)), last: index === parts.length - 1 };
   });
   return (
     <nav className="crumbs" aria-label={t("shell.breadcrumbs")}>
@@ -46,6 +49,7 @@ export default function AppShell() {
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
   useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => observeTableLabels(document.body), []);
   const isAdmin = !status?.enabled || user?.role === "admin";
 
   return (
@@ -53,7 +57,7 @@ export default function AppShell() {
       <a href="#main" className="skip-link">{t("shell.skip")}</a>
       <aside className="sidebar" aria-label={t("shell.navigation")}>
         <div className="sidebar-brand">
-          <Link to="/dashboard" aria-label="SmartDatasheet AI"><Logo /></Link>
+          <Link to="/dashboard" aria-label="SmartDatasheet AI" className="brand-link"><Logo /><span className="brand-tagline">{t("shell.tagline")}</span></Link>
           <IconButton icon={PanelLeftClose} label={t("common.close")} className="sidebar-close" onClick={() => setOpen(false)} />
         </div>
         <nav className="sidebar-nav">
@@ -74,7 +78,7 @@ export default function AppShell() {
           })}
         </nav>
         <div className="sidebar-foot">
-          <span className="muted small">v2 · {t("shell.local")}</span>
+          <span className="muted small">{t("shell.local")}</span>
         </div>
       </aside>
       <div className="scrim" onClick={() => setOpen(false)} aria-hidden />

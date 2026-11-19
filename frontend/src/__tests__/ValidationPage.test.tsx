@@ -15,6 +15,10 @@ const mocks = vi.hoisted(() => ({
   listSpecs: vi.fn(), acceptSpec: vi.fn(), rejectSpec: vi.fn(), editSpec: vi.fn(), addSpec: vi.fn(), getSpecLog: vi.fn(), getPages: vi.fn(),
 }));
 vi.mock("../api", () => mocks);
+const pdfProps = vi.hoisted(() => ({ calls: [] as { documentId: number; targetPage: number | null }[] }));
+vi.mock("../components/PdfViewer", () => ({
+  default: (p: { documentId: number; targetPage: number | null }) => { pdfProps.calls.push({ documentId: p.documentId, targetPage: p.targetPage }); return <div data-testid="pdf" data-page={p.targetPage ?? ""} />; },
+}));
 
 describe("ValidationPage", () => {
   beforeEach(() => {
@@ -27,10 +31,15 @@ describe("ValidationPage", () => {
 
   it("charge les specs en attente et accepte via POST /specs/{id}/accept", async () => {
     renderWithProviders(<ValidationPage />, "/validation");
-    expect(await screen.findByText("Supply voltage")).toBeInTheDocument();
+    expect((await screen.findAllByText("Tension d’alimentation")).length).toBe(2);
+    // phone card + desktop row render the same spec; the card carries value, meta and 3 actions
+    const card = document.querySelector(".m-cards .m-card")!;
+    expect(card.querySelector(".m-value")?.textContent).toBeTruthy();
+    fireEvent.click(card.querySelector(".m-more")!);
+    expect(document.querySelectorAll(".sheet .sheet-item")).toHaveLength(4);
     expect(mocks.listSpecs.mock.calls[0][0]).toMatchObject({ status: "pending", page: 1 });
 
-    fireEvent.click(screen.getByRole("button", { name: "Accepter" }));
+    fireEvent.click(screen.getAllByRole("button", { name: "Accepter" })[0]);
     await waitFor(() => expect(mocks.acceptSpec).toHaveBeenCalledWith(42, undefined));
     expect(await screen.findByText("Spécification acceptée.")).toBeInTheDocument();
     expect(screen.getAllByText("Accepté").length).toBeGreaterThan(0);
@@ -39,10 +48,21 @@ describe("ValidationPage", () => {
   it("rejette via l'endpoint reject et affiche l'erreur réelle en cas d'échec", async () => {
     mocks.rejectSpec.mockRejectedValueOnce(new Error("Erreur API 500 : boom"));
     renderWithProviders(<ValidationPage />, "/validation");
-    await screen.findByText("Supply voltage");
-    fireEvent.click(screen.getByRole("button", { name: "Rejeter" }));
+    await screen.findAllByText("Tension d’alimentation");
+    fireEvent.click(screen.getAllByRole("button", { name: "Rejeter" })[0]);
     await waitFor(() => expect(mocks.rejectSpec).toHaveBeenCalledWith(42, undefined));
     expect(await screen.findByText("Erreur API 500 : boom")).toBeInTheDocument();
     expect(screen.queryByText("Spécification rejetée.")).toBeNull();
+  });
+
+  it("ouvre le PDF du tiroir à la page de la spécification", async () => {
+    mocks.listSpecs.mockResolvedValue({ items: [{ ...spec, document_id: 9, page_number: 13 }], total: 1, page: 1, page_size: 25 });
+    mocks.getSpecLog.mockResolvedValue([]);
+    mocks.getPages.mockResolvedValue([]);
+    renderWithProviders(<ValidationPage />, "/validation");
+    await screen.findAllByText("Tension d’alimentation");
+    fireEvent.click(document.querySelector(".validation-table tbody tr")!);
+    expect((await screen.findByTestId("pdf")).dataset.page).toBe("13");
+    expect(pdfProps.calls[pdfProps.calls.length - 1]).toEqual({ documentId: 9, targetPage: 13 });
   });
 });
